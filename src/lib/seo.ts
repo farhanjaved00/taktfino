@@ -70,7 +70,38 @@ export function articleSchema(a: { title: string; description: string; path: str
     datePublished: a.date.toISOString(),
     dateModified: (a.updated || a.date).toISOString(),
     image: abs(a.image),
-    author: { '@type': 'Person', name: a.author, url: abs(SITE.author.url) },
+    author: { '@type': 'Person', name: a.author, url: abs(SITE.author.url), ...(SITE.author.sameAs.length ? { sameAs: SITE.author.sameAs } : {}) },
     publisher: { '@type': 'Organization', name: SITE.name, logo: { '@type': 'ImageObject', url: abs('/icon-512.png') } },
+  };
+}
+
+/** WebPage with a real dateModified — tool pages change every day (the date in the answer). */
+export function webPageSchema(p: { name: string; path: string; description: string; modified: Date }) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: p.name,
+    url: abs(p.path),
+    description: p.description,
+    dateModified: p.modified.toISOString(),
+    inLanguage: 'en',
+    isPartOf: { '@type': 'WebSite', name: SITE.name, url: `${SITE.url}/` },
+    publisher: { '@type': 'Organization', name: SITE.name, url: `${SITE.url}/` },
+  };
+}
+
+export function personSchema() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'AboutPage',
+    url: abs('/about/'),
+    mainEntity: {
+      '@type': 'Person',
+      name: SITE.author.name,
+      description: SITE.author.bio,
+      url: abs('/about/'),
+      ...(SITE.author.sameAs.length ? { sameAs: SITE.author.sameAs } : {}),
+      worksFor: { '@type': 'Organization', name: SITE.name, url: `${SITE.url}/` },
+    },
   };
 }

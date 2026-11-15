@@ -10,6 +10,8 @@ const guides = defineCollection({
     date: z.coerce.date(),
     updated: z.coerce.date().optional(),
     author: z.string().optional(),
+    /** Name of the person who checked the article (shown under the byline) */
+    reviewedBy: z.string().optional(),
     category: z.enum(['Work', 'Holidays', 'Life', 'Time', 'Travel', 'Pregnancy', 'Calendar', 'School']).default('Calendar'),
     relatedTools: z.array(z.string()).min(1),
     draft: z.boolean().default(false),

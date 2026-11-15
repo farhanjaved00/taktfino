@@ -14,6 +14,9 @@ import { releasedNumbers } from '../lib/release';
 import { HUBS, CATEGORIES } from '../lib/links';
 import { webAppSchema } from '../lib/seo';
 import { googleCalendarUrl } from '../lib/calendar-links';
+import { BUILD_NOW } from '../lib/build';
+import RelatedGuides from './RelatedGuides.astro';
+import { nPath } from '../lib/links';
 
 interface Props { family: SpanFamily; n: number; hub?: boolean }
 const { family, n, hub = false } = Astro.props;
@@ -59,6 +62,9 @@ const faq = hub
         ? { q: `What if I only count business days?`, a: `${n} business days ${past ? 'ago' : 'from today'} is <b>${formatLong(biz)}</b>, skipping Saturdays and Sundays. Public holidays are not skipped automatically.` }
         : { q: `How many days is ${n} ${u(n)}?`, a: `${n} ${u(n)} is ${formatNumber(n * 7)} days, or about ${stats.months.toFixed(1)} months.` },
       { q: `How many weeks and months is that?`, a: `${formatNumber(stats.days)} days is ${weeksAndDays(stats.days)} (${formatNumber(stats.weeks, 1)} weeks), or about ${formatNumber(stats.months, 1)} months.` },
+      past
+        ? { q: `Is ${n} ${u(n)} ago the same as ${n} ${u(n)} before today?`, a: `Yes. Both mean counting back ${n} ${u(n)} from today's date, which gives ${formatLong(result)}.` }
+        : { q: `Is ${n} ${u(n)} from now the same as ${n} ${u(n)} from today?`, a: `For dates, yes — both land on ${formatLong(result)}. If you need an exact clock time ${weeks ? `${n * 7 * 24}` : `${n * 24}`} hours from this moment, use the <a href="/hours-from-now/">hours from now</a> calculator.` },
     ];
 
 const related = [
@@ -70,10 +76,23 @@ const related = [
 ].slice(0, 4);
 
 const schema = hub ? [webAppSchema(`${H.name} calculator`, H.path, description)] : [];
+// pages that land on the same date, or the mirror question (only if released)
+const twins = hub ? [] : [
+  family === 'days-from-today' && n % 7 === 0 ? { href: nPath('weeks-from-today', n / 7), label: `${n / 7} week${n / 7 === 1 ? '' : 's'} from today` } : null,
+  family === 'weeks-from-today' ? { href: nPath('days-from-today', n * 7), label: `${n * 7} days from today` } : null,
+  family === 'days-from-today' ? { href: nPath('days-ago', n), label: `${n} days ago` } : null,
+  family === 'days-ago' ? { href: nPath('days-from-today', n), label: `${n} days from today` } : null,
+].filter((x): x is { href: string; label: string } => !!x && !!x.href);
+const POPULAR: Record<SpanFamily, number[]> = {
+  'days-from-today': [90, 30, 60, 45, 14, 28, 180, 21, 10, 120, 7, 75],
+  'weeks-from-today': [6, 2, 12, 8, 4, 10, 3, 16, 20, 26],
+  'days-ago': [30, 90, 60, 45, 14, 7, 100, 180, 120, 10],
+};
+const popular = hub ? [] : POPULAR[family].filter((k) => k !== n).map((k) => ({ k, href: nPath(family, k) })).filter((x) => x.href).slice(0, 10);
 const stickyGcal = googleCalendarUrl({ title: `${n} ${u(n)} ${past ? 'ago' : 'from today'}`, date: result });
 const label = (k: number) => `${k} ${u(k)}${past ? ' ago' : ''}`;
 ---
-<BaseLayout title={title} description={description} ogImage={`/og/${family}.png`} schema={schema} bodyClass="has-sticky-cta">
+<BaseLayout title={title} description={description} ogImage={`/og/${family}.png`} schema={schema} bodyClass="has-sticky-cta" modified={BUILD_NOW}>
   <Breadcrumbs crumbs={crumbs} />
   <div class="container">
     <SpanTool family={family} n={n} today={today} hub={hub} />
@@ -81,7 +100,10 @@ const label = (k: number) => `${k} ${u(k)}${past ? ' ago' : ''}`;
     {!hub && (
       <section class="section card" aria-labelledby="explain-h">
         <h2 id="explain-h" style="margin-bottom:12px">About {n} {u(n)} {past ? 'ago' : 'from today'}</h2>
-        <div class="prose">{paragraphs.map((p) => <p>{p}</p>)}</div>
+        <div class="prose">
+          {paragraphs.map((p) => <p>{p}</p>)}
+          {twins.length > 0 && <p>See also: {twins.map((t, i) => <>{i > 0 && ' · '}<a href={t.href}>{t.label}</a></>)}.</p>}
+        </div>
         <h2 style="margin:24px 0 10px">How to calculate it</h2>
         <div class="prose">
           <p>
@@ -118,6 +140,15 @@ const label = (k: number) => `${k} ${u(k)}${past ? ' ago' : ''}`;
     <div class="ad-wrap"><AdSlot format="leaderboard" /></div>
 
     <Faq items={faq} />
+
+    {popular.length > 0 && (
+      <section class="section" aria-labelledby="pop-h">
+        <h2 id="pop-h" style="margin-bottom:14px">Popular {past ? 'days-ago' : weeks ? 'weeks-from-today' : 'days-from-today'} dates</h2>
+        <div class="link-grid">{popular.map((x) => <a href={x.href!}>{label(x.k)}{past ? '' : ' from today'}</a>)}</div>
+      </section>
+    )}
+
+    <RelatedGuides paths={[`/${family}/${n}/`, H.path]} />
 
     <section class="section" aria-labelledby="rel-h">
       <h2 id="rel-h" style="margin-bottom:14px">Related tools</h2>

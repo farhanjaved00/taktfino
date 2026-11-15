@@ -9,8 +9,8 @@ import '../styles/global.css';
 import sg700 from '@fontsource/space-grotesk/files/space-grotesk-latin-700-normal.woff2?url';
 import inter400 from '@fontsource/inter/files/inter-latin-400-normal.woff2?url';
 import inter600 from '@fontsource/inter/files/inter-latin-600-normal.woff2?url';
-import { SITE, GSC_VERIFICATION } from '../config/site';
-import { abs } from '../lib/seo';
+import { SITE, GSC_VERIFICATION, BING_VERIFICATION, CF_ANALYTICS_TOKEN } from '../config/site';
+import { abs, webPageSchema } from '../lib/seo';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import TabBar from '../components/TabBar.astro';
@@ -27,8 +27,10 @@ interface Props {
   schema?: unknown[];
   noindex?: boolean;
   bodyClass?: string;
+  /** When set, adds WebPage schema with this dateModified */
+  modified?: Date;
 }
-const { title, description, ogImage = '/og/default.png', ogType = 'website', schema = [], noindex = false, bodyClass } = Astro.props;
+const { title, description, ogImage = '/og/default.png', ogType = 'website', schema = [], noindex = false, bodyClass, modified } = Astro.props;
 const path = Astro.props.path ?? Astro.url.pathname;
 const canonical = abs(path.endsWith('/') ? path : `${path}/`);
 const image = abs(ogImage);
@@ -43,6 +45,7 @@ const image = abs(ogImage);
     <link rel="canonical" href={canonical} />
     {noindex && <meta name="robots" content="noindex, follow" />}
     {GSC_VERIFICATION && <meta name="google-site-verification" content={GSC_VERIFICATION} />}
+    {BING_VERIFICATION && <meta name="msvalidate.01" content={BING_VERIFICATION} />}
     <meta name="theme-color" content="#4338CA" />
     <link rel="preload" href={sg700} as="font" type="font/woff2" crossorigin />
     <link rel="preload" href={inter400} as="font" type="font/woff2" crossorigin />
@@ -67,7 +70,7 @@ const image = abs(ogImage);
     <meta name="twitter:image" content={image} />
     {SITE.twitter && <meta name="twitter:site" content={SITE.twitter} />}
     <slot name="head" />
-    <JsonLd data={schema} />
+    <JsonLd data={modified ? [webPageSchema({ name: title, path, description, modified }), ...schema] : schema} />
   </head>
   <body class={bodyClass}>
     <a class="skip-link" href="#main">Skip to content</a>
@@ -79,5 +82,6 @@ const image = abs(ogImage);
     <TabBar />
     <slot name="after" />
     <CookieConsent />
+    {CF_ANALYTICS_TOKEN && <script is:inline defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon={JSON.stringify({ token: CF_ANALYTICS_TOKEN })}></script>}
   </body>
 </html>

@@ -5,13 +5,13 @@
   "private": true,
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "astro build && node scripts/postbuild.mjs",
     "preview": "astro preview",
     "check": "astro check",
     "test": "vitest run",
     "check-links": "node scripts/check-links.mjs",
     "count-pages": "node scripts/count-pages.mjs",
-    "verify": "npm test && astro check && astro build && node scripts/check-links.mjs && node scripts/count-pages.mjs",
+    "verify": "npm test && astro check && npm run build && node scripts/check-links.mjs && node scripts/count-pages.mjs",
     "articles": "node scripts/generate-articles.mjs",
     "articles:dry": "node scripts/generate-articles.mjs --dry-run",
     "icons": "node scripts/make-icons.mjs"

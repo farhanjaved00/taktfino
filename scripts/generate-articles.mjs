@@ -208,6 +208,7 @@ ${body.trim()}
     '- [ ] No invented facts, statistics or legal/medical claims',
     '- [ ] Links work and point to a live tool',
     '- [ ] Reads naturally, no filler',
+    '- [ ] Added `reviewedBy: Your Name` to the front-matter of each article you checked',
     '',
     `Topics left in the queue: ${remaining.length}`,
   ].join('\n');

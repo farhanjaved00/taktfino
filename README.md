@@ -3,7 +3,7 @@
 A static Astro site of free date and time calculators for the US, UK and Canada: days from today, weeks from today, days until (holidays and dates), hours from now, days ago, date duration, age and countdowns — plus daily guides.
 
 - **No server, no database.** Pure static HTML on Cloudflare Pages + small vanilla-JS islands.
-- **Always the right date.** Rebuilt every day at 00:05 UTC, and every tool recalculates in the browser from the visitor's local date.
+- **Always the right date.** Rebuilt every day just after midnight US Eastern (05:10 UTC), and every tool recalculates in the browser from the visitor's local date.
 - **Safe indexing.** Long-tail pages are released automatically in batches every 2 weeks, from one plan file.
 - **Articles by PR.** A daily GitHub Action drafts 2 guides with OpenAI and opens a pull request. Nothing goes live until you merge it.
 
@@ -62,7 +62,7 @@ Copy `.env.example` to `.env` to set the site URL, AdSense ID or Search Console 
 
 1. Cloudflare → your Pages project → **Settings → Builds → Deploy hooks** → add a hook for branch `main`, copy the URL.
 2. GitHub repo → **Settings → Secrets and variables → Actions → New repository secret**: `CF_PAGES_DEPLOY_HOOK` = that URL.
-3. `.github/workflows/daily-rebuild.yml` calls it every day at 00:05 UTC. You can also run it by hand from the **Actions** tab.
+3. `.github/workflows/daily-rebuild.yml` calls it every day at 05:10 UTC (just after midnight US Eastern). You can also run it by hand from the **Actions** tab.
 
 ## 4. Connect your domain
 
@@ -130,18 +130,31 @@ If `main` has branch protection that blocks direct pushes, allow `github-actions
 2. Optional GitHub **variables**: `OPENAI_MODEL` (default `gpt-4.1-mini`), `AUTHOR_NAME`.
 3. GitHub → Settings → Actions → General → **Workflow permissions**: tick "Allow GitHub Actions to create and approve pull requests".
 4. Every day at 06:00 UTC the workflow takes the next 2 rows of `content/queue.csv`, writes two Markdown guides into `src/content/guides/`, checks the site still builds, and opens a PR.
-5. The PR description lists automatic checks: weekday/date mistakes, word count, missing table/FAQ/tool link, and any statistics that need a source. Read each article (the **Files changed** tab), fix anything directly in GitHub, then **merge** → Cloudflare deploys it.
+5. The PR description lists automatic checks: weekday/date mistakes, word count, missing table/FAQ/tool link, and any statistics that need a source. Read each article (the **Files changed** tab), fix anything directly in GitHub, add `reviewedBy: Your Name` to its front-matter (shown on the page — a trust signal for Google), then **merge** → Cloudflare deploys it.
 6. To reject a draft, close the PR. The topic stays in `content/published.csv`; copy its row back into `queue.csv` if you want it written again.
 7. Add more topics any time by appending rows to `content/queue.csv` (`keyword,title,related_tool_url,category`; categories: Work, Holidays, Life, Time, Travel, Pregnancy, Calendar, School).
 
 You can also run it locally: `OPENAI_API_KEY=… npm run articles`.
 
-## 8. Ads, consent and Search Console
+## 8. Ads, consent, analytics and search engines
 
-- **AdSense:** set `PUBLIC_ADSENSE_CLIENT=ca-pub-…` in Cloudflare and redeploy. Ad boxes (728×90, 300×250, 300×600, 320×50) then appear with reserved space so nothing jumps. Optionally set `PUBLIC_AD_SLOT_*` IDs per size. With no ID, no ad code or banner is loaded at all.
-- **Consent:** when ads are on, a banner asks visitors to accept personalised ads or keep them non-personalised; the choice is stored locally and AdSense loads only after it. Google requires a **Google-certified CMP** for personalised ads to users in the UK/EEA — before applying, either enable Google's own "Privacy & messaging" consent message in AdSense (free) and remove this banner, or keep ads non-personalised for those regions.
+All of these are environment variables in Cloudflare Pages (Settings → Variables). Redeploy after changing them.
+
+| Variable | What it does |
+| --- | --- |
+| `PUBLIC_ADSENSE_CLIENT` | `ca-pub-…`. Turns ads on. Without it no ad code loads at all. Optional `PUBLIC_AD_SLOT_*` per size. |
+| `PUBLIC_CONSENT_MODE` | `google` (default): use Google's certified consent message — in AdSense go to **Privacy & messaging → GDPR → Create message** and publish it. Required by Google for personalised ads in the UK/EEA. `banner`: the site's own simple banner instead. |
+| `PUBLIC_CF_ANALYTICS_TOKEN` | Cloudflare → Analytics & Logs → Web Analytics → add site → copy the token. Free, cookieless. |
+| `PUBLIC_GSC_VERIFICATION` | Google Search Console "HTML tag" token. |
+| `PUBLIC_BING_VERIFICATION` | Bing Webmaster Tools `msvalidate.01` token (Bing also powers ChatGPT search). |
+| `INDEXNOW_KEY` | Any 32-character hex string. Also add it as a GitHub **secret** `INDEXNOW_KEY` and a GitHub **variable** `SITE_URL`. New pages are then pushed to Bing/IndexNow automatically. |
+
+- Ad boxes (728×90, 300×250, 300×600, 320×50) have reserved space so nothing jumps, and never sit above the answer.
 - Add `/ads.txt` in `public/` with the line AdSense gives you.
-- **Search Console:** add the domain property, choose "HTML tag", put the token in `PUBLIC_GSC_VERIFICATION`, redeploy, verify, then submit `https://www.yourdomain.com/sitemap-index.xml`.
+- Search Console: add the domain property, verify, then submit `https://www.yourdomain.com/sitemap-index.xml`. Do the same in Bing Webmaster Tools (you can import from Search Console).
+- `/llms.txt` gives AI assistants a summary of the site. `robots.txt` allows AI search crawlers; see the comments in `src/pages/robots.txt.ts` to opt out of AI *training* only.
+
+The full SEO audit and growth plan is in [docs/SEO-GROWTH-PLAN.md](docs/SEO-GROWTH-PLAN.md).
 
 ## 9. How it's built
 

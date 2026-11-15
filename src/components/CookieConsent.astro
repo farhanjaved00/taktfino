@@ -1,9 +1,31 @@
 ---
-/** Shown only when ads are enabled. Stores the choice in localStorage and loads AdSense afterwards. */
-import { ADS, adsEnabled } from '../config/site';
+/**
+ * Loads AdSense only when PUBLIC_ADSENSE_CLIENT is set.
+ * - CONSENT_MODE 'google' (default): Google's certified consent message (set it up in AdSense › Privacy & messaging)
+ *   is shown by Google's script itself; the footer "Privacy choices" link reopens it.
+ * - CONSENT_MODE 'banner': our own simple banner, ads load after a choice.
+ */
+import { ADS, adsEnabled, CONSENT_MODE } from '../config/site';
 const on = adsEnabled();
 ---
-{on && (
+{on && CONSENT_MODE === 'google' && (
+  <>
+    <script is:inline async src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADS.client}`} crossorigin="anonymous"></script>
+    <script is:inline>
+      (function () {
+        window.adsbygoogle = window.adsbygoogle || [];
+        function fill() { document.querySelectorAll('ins.adsbygoogle:not([data-adsbygoogle-status])').forEach(function () { window.adsbygoogle.push({}); }); }
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fill); else fill();
+        document.addEventListener('click', function (e) {
+          if (!(e.target && e.target.closest && e.target.closest('[data-consent-open]'))) return;
+          window.googlefc = window.googlefc || {}; window.googlefc.callbackQueue = window.googlefc.callbackQueue || [];
+          window.googlefc.callbackQueue.push(function () { window.googlefc.showRevocationMessage(); });
+        });
+      })();
+    </script>
+  </>
+)}
+{on && CONSENT_MODE === 'banner' && (
   <>
     <div class="consent" id="consent" hidden role="region" aria-label="Cookie consent">
       <p>We use cookies to show ads that keep this site free. You can accept personalised ads or keep them non-personalised. See our <a href="/privacy/">privacy policy</a>.</p>

@@ -1,10 +1,10 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Breadcrumbs from './Breadcrumbs.astro';
-interface Props { title: string; description: string; h1: string; path: string; updated?: string }
+interface Props { title: string; description: string; h1: string; path: string; updated?: string; schema?: unknown[] }
 const p = Astro.props;
 ---
-<BaseLayout title={p.title} description={p.description} path={p.path}>
+<BaseLayout title={p.title} description={p.description} path={p.path} schema={p.schema}>
   <Breadcrumbs crumbs={[{ name: p.h1, path: p.path }]} />
   <div class="container">
     <article class="article" style="max-width:860px;margin-top:8px">

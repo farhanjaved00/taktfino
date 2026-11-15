@@ -13,6 +13,7 @@ import { releasedNumbers } from '../lib/release';
 import { HUBS, CATEGORIES } from '../lib/links';
 import { webAppSchema } from '../lib/seo';
 import { googleCalendarUrl } from '../lib/calendar-links';
+import RelatedGuides from './RelatedGuides.astro';
 
 interface Props { n: number; hub?: boolean }
 const { n, hub = false } = Astro.props;
@@ -43,7 +44,7 @@ const faq = [
 const related = [HUBS['days-from-today'], HUBS.countdown, HUBS['date-duration-calculator'], HUBS['days-ago']];
 const gcal = googleCalendarUrl({ title: `${hrs(n)} from now`, at: new Date(BUILD_NOW.getTime() + n * 3_600_000) });
 ---
-<BaseLayout title={title} description={description} ogImage="/og/hours-from-now.png" schema={hub ? [webAppSchema('Hours from now calculator', H.path, description)] : []} bodyClass="has-sticky-cta">
+<BaseLayout title={title} description={description} ogImage="/og/hours-from-now.png" schema={hub ? [webAppSchema('Hours from now calculator', H.path, description)] : []} bodyClass="has-sticky-cta" modified={BUILD_NOW}>
   <Breadcrumbs crumbs={crumbs} />
   <div class="container" data-hours-tool data-n={n} data-hub={hub ? '1' : '0'} data-released={JSON.stringify(released)}>
     <div class="page-head">
@@ -130,6 +131,7 @@ const gcal = googleCalendarUrl({ title: `${hrs(n)} from now`, at: new Date(BUILD
 
     <div class="ad-wrap"><AdSlot format="leaderboard" /></div>
     <Faq items={faq} />
+    <RelatedGuides paths={[`/hours-from-now/${n}/`, H.path]} />
     <section class="section" aria-labelledby="rel-h">
       <h2 id="rel-h" style="margin-bottom:14px">Related tools</h2>
       <div class="related-grid">{related.map((r) => <a href={r.path}><b>{r.name}</b><span>{r.blurb}</span></a>)}</div>
@@ -145,6 +147,7 @@ const gcal = googleCalendarUrl({ title: `${hrs(n)} from now`, at: new Date(BUILD
 <script>
   import { formatLong, formatUS, formatUK, formatTime12, formatNumber, monthGrid, MONTHS, formatMedium } from '../lib/dates';
   import { googleCalendarUrl } from '../lib/calendar-links';
+import RelatedGuides from './RelatedGuides.astro';
   import { localToday, splitMs, pad2, copyText, downloadIcs, saveItem, addRecent, setQuery, renderCalendarCells, localTz } from '../scripts/common';
 
   const root = document.querySelector<HTMLElement>('[data-hours-tool]');

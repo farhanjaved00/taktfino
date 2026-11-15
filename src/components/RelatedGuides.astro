@@ -1,0 +1,19 @@
+---
+/** Links from a tool page to guides that reference it (reverse of the guides' relatedTools). */
+import { allGuides } from '../lib/guides';
+interface Props { paths: string[]; max?: number }
+const { paths, max = 3 } = Astro.props;
+const guides = (await allGuides())
+  .map((g) => ({ g, score: g.data.relatedTools.reduce((s, t) => s + (paths[0] === t ? 2 : paths.includes(t) ? 1 : 0), 0) }))
+  .filter((x) => x.score > 0)
+  .sort((a, b) => b.score - a.score)
+  .slice(0, max);
+---
+{guides.length > 0 && (
+  <section class="section" aria-labelledby="rg-h">
+    <h2 id="rg-h" style="margin-bottom:14px">Guides</h2>
+    <div class="related-grid">
+      {guides.map(({ g }) => <a href={`/guides/${g.id}/`}><b>{g.data.title}</b><span>{g.data.category} guide</span></a>)}
+    </div>
+  </section>
+)}

@@ -19,5 +19,13 @@ for (const f of files) {
     try { JSON.parse(m[1]); } catch { console.log(`BAD JSON-LD ${f}`); bad++; }
   }
 }
+// a redirect must never shadow a page that exists
+if (fs.existsSync(path.join(root, '_redirects'))) {
+  for (const line of fs.readFileSync(path.join(root, '_redirects'), 'utf8').split('\n')) {
+    const src = line.trim().split(/\s+/)[0];
+    if (!src || src.startsWith('#') || src.includes('*')) continue;
+    if (exists(src)) { console.log(`REDIRECT SHADOWS PAGE ${src}`); bad++; }
+  }
+}
 console.log(`${files.length} pages checked, ${bad} problem(s)`);
 process.exit(bad ? 1 : 0);

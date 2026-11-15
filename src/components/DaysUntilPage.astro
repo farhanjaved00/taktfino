@@ -13,6 +13,8 @@ import { explainDaysUntil } from '../lib/facts';
 import { releasedDaysUntil, type DaysUntilTarget, MONTH_DAY_SLUGS } from '../lib/release';
 import { HUBS, CATEGORIES } from '../lib/links';
 import { googleCalendarUrl } from '../lib/calendar-links';
+import { BUILD_NOW } from '../lib/build';
+import RelatedGuides from './RelatedGuides.astro';
 
 interface Props { target: DaysUntilTarget }
 const { target } = Astro.props;
@@ -36,8 +38,8 @@ const years = Array.from({ length: 6 }, (_, i) => date.y + i).map((y) => {
 const sameDay = !holiday ? HOLIDAYS.filter((h) => { const c = h.rule(date.y); return c.m === target.m && c.d === target.d; }) : [];
 
 const title = holiday
-  ? `How Many Days Until ${short}? ${formatNumber(days)} Days (${formatMedium(date)}) | ${SITE.name}`
-  : `How Many Days Until ${name}? ${formatNumber(days)} Days to Go | ${SITE.name}`;
+  ? `How Many Days Until ${short} ${date.y}? ${formatNumber(days)} Days to Go | ${SITE.name}`
+  : `How Many Days Until ${name}, ${date.y}? ${formatNumber(days)} Days to Go | ${SITE.name}`;
 const description = holiday
   ? `There are ${formatNumber(days)} days until ${name} on ${formatLong(date)}. Live countdown, business days, calendar and dates for the next five years.`
   : `There are ${formatNumber(days)} days until ${formatLong(date)}. Live countdown with hours, minutes and seconds, business days and a calendar.`;
@@ -55,15 +57,17 @@ const faq = [
   { q: `How many days until ${short}?`, a: days === 0 ? `${name} is today!` : `From today (${formatMedium(today)}) there are <b>${formatNumber(days)} days</b> until ${name} on ${formatLong(date)} — ${weeksAndDays(days)}.` },
   { q: `What day of the week is ${short} in ${date.y}?`, a: `${name} ${date.y} falls on a <b>${weekdayName(date)}</b>.` },
   ...(holiday ? [{ q: `How is the date of ${short} set?`, a: `${holiday.ruleText}. ${holiday.publicHoliday ? `${holiday.publicHoliday}.` : 'It is not a public holiday.'}` }] : []),
+  { q: `How many weeks until ${short}?`, a: `${weeksAndDays(days)} — about ${formatNumber(stats.weeks, 1)} weeks.` },
   { q: `How many business days until ${short}?`, a: `${formatNumber(stats.businessDays)} weekdays (Monday to Friday), not counting public holidays in between.` },
+  ...(target.slug === 'christmas' ? [{ q: 'How many sleeps until Christmas?', a: `${formatNumber(days)} sleeps — one for each night between tonight and Christmas morning, counted in your time zone.` }] : []),
 ];
 const gcal = googleCalendarUrl({ title: name, date, details: `Countdown: ${SITE.url}/days-until/${target.slug}/` });
 ---
-<BaseLayout title={title} description={description} ogImage="/og/days-until.png" bodyClass="has-sticky-cta">
+<BaseLayout title={title} description={description} ogImage="/og/days-until.png" bodyClass="has-sticky-cta" modified={BUILD_NOW}>
   <Breadcrumbs crumbs={crumbs} />
   <div class="container" data-until data-slug={target.slug} data-kind={target.kind} data-m={target.m} data-d={target.d} data-name={name}>
     <div class="page-head">
-      <h1>How many days until {short}?</h1>
+      <h1>How many days until {short} {date.y}?</h1>
       <p>Counted from <span data-bind="today">{formatLong(today)}</span> · updates every second in your time zone</p>
     </div>
     <div class="tool-layout">
@@ -127,6 +131,8 @@ const gcal = googleCalendarUrl({ title: name, date, details: `Countdown: ${SITE.
 
     <div class="ad-wrap"><AdSlot format="leaderboard" /></div>
     <Faq items={faq} />
+
+    <RelatedGuides paths={[`/days-until/${target.slug}/`, '/days-until/']} />
 
     <section class="section" aria-labelledby="up-h">
       <h2 id="up-h" style="margin-bottom:14px">Coming up next</h2>

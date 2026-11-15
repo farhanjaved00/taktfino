@@ -54,3 +54,11 @@ jobs:
           git commit -m "$MSG"
           git push
           echo "### $MSG" >> "$GITHUB_STEP_SUMMARY"
+      - name: Ping IndexNow (Bing / ChatGPT search) after Cloudflare deploys
+        if: steps.diff.outputs.changed == 'true'
+        env:
+          INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY }}
+          SITE_URL: ${{ vars.SITE_URL }}
+        run: |
+          sleep 240
+          node scripts/indexnow.mjs --all
