@@ -1,0 +1,43 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { SITE } from '../../config/site';
+import { popularLinks } from '../../lib/links';
+---
+<BaseLayout title={`Search tools | ${SITE.name}`} description="Search every date, time and countdown tool." noindex>
+  <div class="container" style="padding-top:24px">
+    <h1 style="margin-bottom:16px">Search</h1>
+    <form role="search" onsubmit="return false" class="card card--sm" style="display:flex;gap:10px;flex-wrap:wrap">
+      <label for="sq" class="sr-only">Search tools and guides</label>
+      <input id="sq" class="input" style="flex:1 1 240px" type="search" placeholder="Try “90 days”, “Christmas”, “age”…" autocomplete="off" />
+    </form>
+    <p class="small muted" id="s-status" role="status" style="margin-top:12px"></p>
+    <ul id="s-results" class="link-grid" style="list-style:none;padding:0;margin-top:8px"></ul>
+    <section class="section" id="s-popular">
+      <h2 style="margin-bottom:12px">Popular</h2>
+      <div class="chip-row">{popularLinks().map((p) => <a class="chip" href={p.href}>{p.label}</a>)}</div>
+    </section>
+  </div>
+</BaseLayout>
+<script>
+  const input = document.getElementById('sq') as HTMLInputElement;
+  const list = document.getElementById('s-results')!;
+  const status = document.getElementById('s-status')!;
+  let index: { u: string; t: string; g: string }[] = [];
+  const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!);
+  function run() {
+    const q = input.value.trim().toLowerCase();
+    if (!q) { list.innerHTML = ''; status.textContent = ''; return; }
+    const terms = q.split(/\s+/);
+    const hits = index.filter((p) => terms.every((t) => `${p.t} ${p.g}`.toLowerCase().includes(t))).slice(0, 40);
+    // a bare number: suggest the calculators even if that page isn't published
+    const n = /^\d+$/.test(q) ? Number(q) : null;
+    const extra = n ? [{ u: `/days-from-today/?n=${n}`, t: `${n} days from today`, g: 'Calculator' }, { u: `/days-ago/?n=${n}`, t: `${n} days ago`, g: 'Calculator' }, { u: `/hours-from-now/?n=${n}`, t: `${n} hours from now`, g: 'Calculator' }] : [];
+    const all = [...hits, ...extra.filter((e) => !hits.some((h) => h.t === e.t))];
+    list.innerHTML = all.map((p) => `<li><a href="${esc(p.u)}">${esc(p.t)}</a></li>`).join('');
+    status.textContent = all.length ? `${all.length} result${all.length === 1 ? '' : 's'}` : 'No results — try a number like “30” or a holiday name.';
+  }
+  fetch('/search-index.json').then((r) => r.json()).then((d) => { index = d; run(); });
+  input.value = new URLSearchParams(location.search).get('q') || '';
+  input.addEventListener('input', () => { history.replaceState(null, '', input.value ? `?q=${encodeURIComponent(input.value)}` : location.pathname); run(); });
+  input.focus();
+</script>

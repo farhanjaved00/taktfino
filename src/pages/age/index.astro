@@ -1,0 +1,8 @@
+---
+import CategoryPage from '../../components/CategoryPage.astro';
+import { SITE } from '../../config/site';
+import { HUBS } from '../../lib/links';
+---
+<CategoryPage title={`Age Calculators — Exact Age, Days Alive & Birthdays | ${SITE.name}`} description="Calculate your exact age in years, months and days, the days between two dates, and the countdown to your next birthday."
+  h1="Age" intro="Exact ages, birthdays and the time between dates." path="/age/"
+  tools={[HUBS['age-calculator'], HUBS['date-duration-calculator'], HUBS.countdown, HUBS['days-until']]} groups={[]} />

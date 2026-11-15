@@ -1,0 +1,9 @@
+---
+import DaysUntilPage from '../../components/DaysUntilPage.astro';
+import { releasedDaysUntil, type DaysUntilTarget } from '../../lib/release';
+export function getStaticPaths() {
+  return releasedDaysUntil().map((t) => ({ params: { slug: t.slug }, props: { target: t } }));
+}
+const { target } = Astro.props as { target: DaysUntilTarget };
+---
+<DaysUntilPage target={target} />

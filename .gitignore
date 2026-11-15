@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.astro/
+.env
+.env.*
+!.env.example
+.DS_Store
+lighthouse-*.html
+lighthouse-*.json
+.claude/
+article-review.md

@@ -1,0 +1,38 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { SITE } from '../../config/site';
+---
+<BaseLayout title={`Saved calculations | ${SITE.name}`} description="Your saved and recent calculations, stored only on this device." noindex>
+  <div class="container" style="padding-top:24px">
+    <div class="page-head"><h1>Saved</h1><p>Saved and recent calculations are stored only in this browser — nothing is sent to us.</p></div>
+    <section class="card" aria-labelledby="sv-h">
+      <h2 id="sv-h" style="margin-bottom:12px">Saved</h2>
+      <ul id="saved" style="list-style:none;padding:0;margin:0"></ul>
+    </section>
+    <section class="card section" aria-labelledby="rc-h">
+      <div class="section-head" style="margin-bottom:12px"><h2 id="rc-h">Recent</h2><button class="btn btn--outline" type="button" id="clear">Clear recent</button></div>
+      <ul id="recent" style="list-style:none;padding:0;margin:0"></ul>
+    </section>
+  </div>
+</BaseLayout>
+<script>
+  import { getSaved, getRecent, removeSaved, clearRecent, type SavedItem } from '../../scripts/common';
+  const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!);
+  const safe = (u: string) => { try { const x = new URL(u, location.origin); return x.origin === location.origin ? x.pathname + x.search : '/'; } catch { return '/'; } };
+  function row(i: SavedItem, removable: boolean) {
+    return `<li style="display:flex;gap:12px;align-items:center;justify-content:space-between;border-top:1px solid var(--border);padding:10px 0">
+      <a href="${esc(safe(i.url))}" style="min-height:44px;display:flex;flex-direction:column;justify-content:center"><b>${esc(i.label)}</b>${i.detail ? `<span class="small muted">${esc(i.detail)}</span>` : ''}</a>
+      ${removable ? `<button class="btn btn--outline" type="button" data-remove="${esc(i.url)}" aria-label="Remove ${esc(i.label)}">Remove</button>` : ''}</li>`;
+  }
+  function render() {
+    const s = getSaved(), r = getRecent();
+    document.getElementById('saved')!.innerHTML = s.length ? s.map((i) => row(i, true)).join('') : '<li class="muted">Nothing saved yet. Use the Save button on any calculator.</li>';
+    document.getElementById('recent')!.innerHTML = r.length ? r.map((i) => row(i, false)).join('') : '<li class="muted">No recent calculations.</li>';
+  }
+  document.addEventListener('click', (e) => {
+    const b = (e.target as HTMLElement).closest<HTMLElement>('[data-remove]');
+    if (b) { removeSaved(b.dataset.remove!); render(); }
+  });
+  document.getElementById('clear')!.addEventListener('click', () => { clearRecent(); render(); });
+  render();
+</script>

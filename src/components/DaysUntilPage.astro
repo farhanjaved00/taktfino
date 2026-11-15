@@ -1,0 +1,197 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from './Breadcrumbs.astro';
+import Faq from './Faq.astro';
+import AdSlot from './AdSlot.astro';
+import Icon from './Icon.astro';
+import Calendar from './Calendar.astro';
+import { SITE } from '../config/site';
+import { BUILD_TODAY } from '../lib/build';
+import { type CalDate, MONTHS, diffDays, formatLong, formatMedium, formatNumber, formatUS, formatUK, spanStats, weekdayName, weeksAndDays, compare } from '../lib/dates';
+import { HOLIDAYS, getHoliday, nextOccurrence, nextMonthDay } from '../lib/holidays';
+import { explainDaysUntil } from '../lib/facts';
+import { releasedDaysUntil, type DaysUntilTarget, MONTH_DAY_SLUGS } from '../lib/release';
+import { HUBS, CATEGORIES } from '../lib/links';
+import { googleCalendarUrl } from '../lib/calendar-links';
+
+interface Props { target: DaysUntilTarget }
+const { target } = Astro.props;
+const today = BUILD_TODAY;
+const holiday = target.kind === 'holiday' ? getHoliday(target.slug)! : undefined;
+const name = holiday ? holiday.name : `${MONTHS[target.m! - 1]} ${target.d}`;
+const short = holiday ? (holiday.short || holiday.name) : name;
+const date: CalDate = holiday ? nextOccurrence(holiday, today) : nextMonthDay(target.m!, target.d!, today);
+const days = diffDays(today, date);
+const stats = spanStats(today, date);
+const releasedSlugs = new Set(releasedDaysUntil().map((t) => t.slug));
+
+const years = Array.from({ length: 6 }, (_, i) => date.y + i).map((y) => {
+  let c: CalDate | null;
+  if (holiday) c = holiday.rule(y);
+  else c = target.d! <= new Date(Date.UTC(y, target.m!, 0)).getUTCDate() ? { y, m: target.m!, d: target.d! } : null;
+  return { y, c };
+}).filter((r) => r.c).slice(0, 5) as { y: number; c: CalDate }[];
+
+// holidays that land on this month-day (for date pages)
+const sameDay = !holiday ? HOLIDAYS.filter((h) => { const c = h.rule(date.y); return c.m === target.m && c.d === target.d; }) : [];
+
+const title = holiday
+  ? `How Many Days Until ${short}? ${formatNumber(days)} Days (${formatMedium(date)}) | ${SITE.name}`
+  : `How Many Days Until ${name}? ${formatNumber(days)} Days to Go | ${SITE.name}`;
+const description = holiday
+  ? `There are ${formatNumber(days)} days until ${name} on ${formatLong(date)}. Live countdown, business days, calendar and dates for the next five years.`
+  : `There are ${formatNumber(days)} days until ${formatLong(date)}. Live countdown with hours, minutes and seconds, business days and a calendar.`;
+const crumbs = [{ name: 'Countdowns', path: CATEGORIES.countdowns.path }, { name: 'Days until', path: HUBS['days-until'].path }, { name: `Days until ${short}`, path: `/days-until/${target.slug}/` }];
+const paras = explainDaysUntil({ name, target: date, today, about: holiday?.about, ruleText: holiday?.ruleText });
+
+// other countdowns: next few holidays by date (link only if released)
+const upcoming = HOLIDAYS.map((h) => ({ h, c: nextOccurrence(h, today) }))
+  .filter((x) => x.h.slug !== target.slug).sort((a, b) => compare(a.c, b.c)).slice(0, 8);
+// neighbouring date pages
+const idx = MONTH_DAY_SLUGS.findIndex((x) => x.slug === target.slug);
+const neighbours = !holiday ? [-7, -1, 1, 7].map((o) => MONTH_DAY_SLUGS[(idx + o + 366) % 366]).filter((x) => releasedSlugs.has(x.slug)) : [];
+
+const faq = [
+  { q: `How many days until ${short}?`, a: days === 0 ? `${name} is today!` : `From today (${formatMedium(today)}) there are <b>${formatNumber(days)} days</b> until ${name} on ${formatLong(date)} — ${weeksAndDays(days)}.` },
+  { q: `What day of the week is ${short} in ${date.y}?`, a: `${name} ${date.y} falls on a <b>${weekdayName(date)}</b>.` },
+  ...(holiday ? [{ q: `How is the date of ${short} set?`, a: `${holiday.ruleText}. ${holiday.publicHoliday ? `${holiday.publicHoliday}.` : 'It is not a public holiday.'}` }] : []),
+  { q: `How many business days until ${short}?`, a: `${formatNumber(stats.businessDays)} weekdays (Monday to Friday), not counting public holidays in between.` },
+];
+const gcal = googleCalendarUrl({ title: name, date, details: `Countdown: ${SITE.url}/days-until/${target.slug}/` });
+---
+<BaseLayout title={title} description={description} ogImage="/og/days-until.png" bodyClass="has-sticky-cta">
+  <Breadcrumbs crumbs={crumbs} />
+  <div class="container" data-until data-slug={target.slug} data-kind={target.kind} data-m={target.m} data-d={target.d} data-name={name}>
+    <div class="page-head">
+      <h1>How many days until {short}?</h1>
+      <p>Counted from <span data-bind="today">{formatLong(today)}</span> · updates every second in your time zone</p>
+    </div>
+    <div class="tool-layout">
+      <section class="card" aria-labelledby="answer-label">
+        <div class="answer-label" id="answer-label">Days until {name}</div>
+        <div class="answer" aria-live="polite"><span data-bind="days">{formatNumber(days)}</span> <span data-bind="daysWord">{days === 1 ? 'day' : 'days'}</span></div>
+        <div class="answer-sub"><b data-bind="long">{formatLong(date)}</b> · <span data-bind="us">{formatUS(date)}</span> (US) · <span data-bind="uk">{formatUK(date)}</span> (UK)</div>
+        <div class="countdown" aria-label="Countdown">
+          <div><b data-cd="d">{days}</b><span>days</span></div>
+          <div><b data-cd="h">00</b><span>hours</span></div>
+          <div><b data-cd="m">00</b><span>minutes</span></div>
+          <div><b data-cd="s">00</b><span>seconds</span></div>
+        </div>
+        <div class="countdown-caption">Counting down to midnight at the start of {short}, in your time zone.</div>
+        <div class="stats">
+          <div><b data-bind="stWeeks">{formatNumber(stats.weeks, 1)}</b><span>weeks</span></div>
+          <div><b data-bind="stMonths">{formatNumber(stats.months, 1)}</b><span>months</span></div>
+          <div><b data-bind="stHours">{formatNumber(stats.hours)}</b><span>hours</span></div>
+          <div><b data-bind="stBiz">{formatNumber(stats.businessDays)}</b><span>business days</span></div>
+        </div>
+        <div class="actions no-print">
+          <a class="btn btn--primary" href={gcal} target="_blank" rel="noopener nofollow" data-bind-href="gcal"><Icon name="calAdd" size={18} />Add to Google Calendar</a>
+          <button class="btn" type="button" data-action="ics"><Icon name="download" size={18} />Download .ics</button>
+          <button class="btn" type="button" data-action="copy"><Icon name="link" size={18} />Copy share link</button>
+          <button class="btn" type="button" data-action="print"><Icon name="print" size={18} />Print</button>
+          <button class="btn btn--outline" type="button" data-action="save"><Icon name="bookmark" size={18} />Save</button>
+        </div>
+      </section>
+      <aside class="tool-aside" aria-label="Calendar and other countdowns">
+        <Calendar result={date} today={today} />
+        <div class="ad-desktop-only" style="justify-content:center"><AdSlot format="rectangle" /></div>
+        <div class="card card--sm no-print">
+          <h2 style="font-family:var(--font-body);font-size:17px;margin-bottom:10px">{holiday ? 'Other countdowns' : 'Nearby dates'}</h2>
+          <div class="chip-row">
+            {neighbours.map((x) => <a class="chip chip--soft" href={`/days-until/${x.slug}/`}>{MONTHS[x.m - 1].slice(0, 3)} {x.d}</a>)}
+            {upcoming.filter((x) => releasedSlugs.has(x.h.slug)).slice(0, 6).map((x) => <a class="chip chip--soft" href={`/days-until/${x.h.slug}/`}>{x.h.short || x.h.name}</a>)}
+            <a class="chip chip--soft" href={HUBS.countdown.path}>Custom countdown</a>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <div class="ad-wrap ad-mobile-only"><AdSlot format="mobile" /></div>
+
+    <section class="section card" aria-labelledby="years-h">
+      <h2 id="years-h" style="margin-bottom:14px">{short} dates for the next {years.length} years</h2>
+      <div class="table-wrap"><table class="data-table">
+        <thead><tr><th scope="col">Year</th><th scope="col">Date</th><th scope="col">Day of week</th><th scope="col">Days from today</th></tr></thead>
+        <tbody>{years.map((r) => <tr><td>{r.y}</td><td>{formatMedium(r.c)}</td><td>{weekdayName(r.c)}</td><td>{formatNumber(diffDays(today, r.c))}</td></tr>)}</tbody>
+      </table></div>
+    </section>
+
+    <section class="section card" aria-labelledby="about-h">
+      <h2 id="about-h" style="margin-bottom:12px">About {name}</h2>
+      <div class="prose">
+        {paras.map((p) => <p>{p}</p>)}
+        {sameDay.length > 0 && <p>{MONTHS[target.m! - 1]} {target.d} is also {sameDay.map((h) => h.name).join(' and ')}.</p>}
+        {target.slug === 'february-29' && <p>February 29 only exists in leap years, so the next one is in {date.y}.</p>}
+      </div>
+    </section>
+
+    <div class="ad-wrap"><AdSlot format="leaderboard" /></div>
+    <Faq items={faq} />
+
+    <section class="section" aria-labelledby="up-h">
+      <h2 id="up-h" style="margin-bottom:14px">Coming up next</h2>
+      <div class="related-grid">
+        {upcoming.slice(0, 4).map((x) => {
+          const p = releasedSlugs.has(x.h.slug) ? `/days-until/${x.h.slug}/` : HUBS['days-until'].path;
+          return <a href={p}><b>{x.h.short || x.h.name}</b><span>{formatMedium(x.c)} · {formatNumber(diffDays(today, x.c))} days</span></a>;
+        })}
+      </div>
+      <p class="small" style="margin-top:14px"><a href={HUBS['days-until'].path}>All holiday countdowns →</a></p>
+    </section>
+  </div>
+  <div class="sticky-cta" slot="after">
+    <a class="btn btn--primary" href={gcal} data-sticky-gcal target="_blank" rel="noopener nofollow"><Icon name="calAdd" size={18} />Add to calendar</a>
+    <button class="btn" type="button" data-sticky-action="save" style="flex:0 0 auto"><Icon name="bookmark" size={18} />Save</button>
+  </div>
+</BaseLayout>
+
+<script>
+  import { type CalDate, diffDays, formatLong, formatUS, formatUK, formatNumber, spanStats, monthGrid, MONTHS, formatISO } from '../lib/dates';
+  import { getHoliday, nextOccurrence, nextMonthDay } from '../lib/holidays';
+  import { localToday, msUntil, splitMs, pad2, copyText, downloadIcs, saveItem, addRecent, renderCalendarCells } from '../scripts/common';
+
+  const root = document.querySelector<HTMLElement>('[data-until]');
+  if (root) {
+    const { slug, kind, name } = root.dataset as { slug: string; kind: string; name: string };
+    const m = Number(root.dataset.m), d = Number(root.dataset.d);
+    const $ = (k: string) => root.querySelector<HTMLElement>(`[data-bind="${k}"]`);
+    let target: CalDate;
+    function compute() {
+      const today = localToday();
+      target = kind === 'holiday' ? nextOccurrence(getHoliday(slug)!, today) : nextMonthDay(m, d, today);
+      const days = diffDays(today, target);
+      const s = spanStats(today, target);
+      $('today')!.textContent = formatLong(today);
+      $('days')!.textContent = formatNumber(days);
+      $('daysWord')!.textContent = days === 1 ? 'day' : 'days';
+      $('long')!.textContent = formatLong(target);
+      $('us')!.textContent = formatUS(target);
+      $('uk')!.textContent = formatUK(target);
+      $('stWeeks')!.textContent = formatNumber(s.weeks, 1);
+      $('stMonths')!.textContent = formatNumber(s.months, 1);
+      $('stHours')!.textContent = formatNumber(s.hours);
+      $('stBiz')!.textContent = formatNumber(s.businessDays);
+      $('monthTitle')!.textContent = `${MONTHS[target.m - 1]} ${target.y}`;
+      $('calendar')!.innerHTML = renderCalendarCells(monthGrid(target.y, target.m, today, target));
+      tick();
+    }
+    function tick() {
+      const t = splitMs(msUntil(target));
+      const set = (k: string, v: string) => { root!.querySelector(`[data-cd="${k}"]`)!.textContent = v; };
+      set('d', formatNumber(t.d)); set('h', pad2(t.h)); set('m', pad2(t.m)); set('s', pad2(t.s));
+    }
+    function act(a: string) {
+      const url = location.origin + location.pathname;
+      if (a === 'copy') copyText(url);
+      else if (a === 'print') window.print();
+      else if (a === 'ics') downloadIcs({ title: name, date: target, url, uid: `${slug}-${formatISO(target)}@${location.hostname}` }, `${slug}-${target.y}.ics`);
+      else if (a === 'save') saveItem({ label: `Days until ${name}`, url, detail: formatLong(target) });
+    }
+    root.addEventListener('click', (e) => { const t = (e.target as HTMLElement).closest<HTMLElement>('[data-action]'); if (t) act(t.dataset.action!); });
+    document.addEventListener('click', (e) => { const t = (e.target as HTMLElement).closest<HTMLElement>('[data-sticky-action]'); if (t) act(t.dataset.stickyAction!); });
+    compute();
+    addRecent({ label: `Days until ${name}`, url: location.pathname, detail: formatLong(target!) });
+    let last = formatISO(localToday());
+    setInterval(() => { const t = formatISO(localToday()); if (t !== last) { last = t; compute(); } else tick(); }, 1000);
+  }
+</script>

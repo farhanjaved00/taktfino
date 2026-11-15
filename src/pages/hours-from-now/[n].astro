@@ -1,0 +1,9 @@
+---
+import HoursPage from '../../components/HoursPage.astro';
+import { releasedNumbers } from '../../lib/release';
+export function getStaticPaths() {
+  return releasedNumbers('hours-from-now').map((n) => ({ params: { n: String(n) }, props: { n } }));
+}
+const { n } = Astro.props as { n: number };
+---
+<HoursPage n={n} />

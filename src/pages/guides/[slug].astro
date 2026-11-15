@@ -1,0 +1,64 @@
+---
+import { render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import AdSlot from '../../components/AdSlot.astro';
+import GuideCard from '../../components/GuideCard.astro';
+import { SITE } from '../../config/site';
+import { allGuides, readingMinutes, toolLabel, type Guide } from '../../lib/guides';
+import { articleSchema } from '../../lib/seo';
+import { formatMedium } from '../../lib/dates';
+
+export async function getStaticPaths() {
+  const guides = await allGuides();
+  return guides.map((g) => ({ params: { slug: g.id }, props: { guide: g, more: guides.filter((x) => x.id !== g.id).slice(0, 3) } }));
+}
+const { guide, more } = Astro.props as { guide: Guide; more: Guide[] };
+const { Content, headings } = await render(guide);
+const d = guide.data;
+const author = d.author || SITE.author.name;
+const path = `/guides/${guide.id}/`;
+const cal = (x: Date) => ({ y: x.getUTCFullYear(), m: x.getUTCMonth() + 1, d: x.getUTCDate() });
+const toc = headings.filter((h) => h.depth === 2);
+const firstTool = d.relatedTools[0];
+const initials = author.replace(/[^A-Za-z ]/g, '').split(' ').filter(Boolean).map((w) => w[0]).slice(0, 2).join('') || 'A';
+---
+<BaseLayout title={`${d.title} | ${SITE.name}`} description={d.description} ogType="article" path={path}
+  schema={[articleSchema({ title: d.title, description: d.description, path, date: d.date, updated: d.updated, author, image: '/og/guides.png' })]} ogImage="/og/guides.png">
+  <Breadcrumbs crumbs={[{ name: 'Guides', path: '/guides/' }, { name: d.category, path: `/guides/#${d.category.toLowerCase()}` }, { name: d.title, path }]} />
+  <div class="container article-layout">
+    <article class="article">
+      <h1 style="margin:4px 0 0">{d.title}</h1>
+      <div class="byline">
+        <span class="avatar" aria-hidden="true">{initials}</span>
+        <div><div style="font-weight:600"><a href="/about/" rel="author">{author}</a></div>
+          <div class="muted">{d.updated ? `Updated ${formatMedium(cal(d.updated))}` : `Published ${formatMedium(cal(d.date))}`} · {readingMinutes(guide.body)} min read · <a href="/editorial-policy/">How we write</a></div></div>
+      </div>
+      <div class="try-box">
+        <div style="flex:1 1 260px"><div style="font-weight:700;font-size:18px">Try it with your own dates</div><div class="muted" style="font-size:15px">Open the {toolLabel(firstTool)} tool — free, instant, updated daily.</div></div>
+        <a class="btn btn--primary" href={firstTool}>Open calculator</a>
+      </div>
+      <div class="prose"><Content /></div>
+      <div class="ad-wrap"><AdSlot format="rectangle" /></div>
+    </article>
+    <aside class="sticky-aside" aria-label="Guide navigation">
+      {toc.length > 0 && (
+        <nav class="card card--sm" aria-label="On this page">
+          <div style="font-weight:700;margin-bottom:6px">On this page</div>
+          <ul style="list-style:none;padding:0;margin:0">{toc.map((h) => <li><a href={`#${h.slug}`} style="display:block;padding:8px 0;font-size:15px">{h.text}</a></li>)}</ul>
+        </nav>
+      )}
+      <div class="card card--sm card--dark">
+        <div class="small" style="color:var(--on-dark)">Tools in this guide</div>
+        <ul style="list-style:none;padding:0;margin:8px 0 0">{d.relatedTools.map((t) => <li><a href={t} style="display:block;padding:8px 0;font-weight:600">{toolLabel(t)} →</a></li>)}</ul>
+      </div>
+      <div class="ad-desktop-only" style="justify-content:center"><AdSlot format="skyscraper" /></div>
+    </aside>
+  </div>
+  {more.length > 0 && (
+    <section class="container section" aria-labelledby="more-h">
+      <h2 id="more-h" style="margin-bottom:14px">More guides</h2>
+      <div class="guide-grid">{more.map((g) => <GuideCard guide={g} />)}</div>
+    </section>
+  )}
+</BaseLayout>

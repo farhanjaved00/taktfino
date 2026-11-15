@@ -1,0 +1,41 @@
+name: Daily article drafts
+# Drafts the next topics from content/queue.csv with OpenAI and opens a PULL REQUEST.
+# Nothing is published until you review and merge the PR.
+on:
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+    inputs:
+      count:
+        description: 'How many articles'
+        default: '2'
+permissions:
+  contents: write
+  pull-requests: write
+jobs:
+  draft:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      - name: Write drafts
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_MODEL: ${{ vars.OPENAI_MODEL || 'gpt-4.1-mini' }}
+          AUTHOR_NAME: ${{ vars.AUTHOR_NAME }}
+          ARTICLES_PER_RUN: ${{ github.event.inputs.count || '2' }}
+          PR_BODY: ${{ runner.temp }}/pr-body.md
+        run: node scripts/generate-articles.mjs
+      - name: Check the site still builds
+        run: npm ci && npm test && npm run build && node scripts/check-links.mjs
+      - name: Open pull request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: articles/${{ github.run_id }}
+          title: 'New guide drafts for review'
+          commit-message: 'Add AI-drafted guides for review'
+          body-path: ${{ runner.temp }}/pr-body.md
+          labels: articles
+          delete-branch: true

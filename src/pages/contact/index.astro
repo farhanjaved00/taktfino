@@ -1,0 +1,17 @@
+---
+import TextPage from '../../components/TextPage.astro';
+import { SITE } from '../../config/site';
+const [user, domain] = SITE.contactEmail.split('@');
+---
+<TextPage title={`Contact | ${SITE.name}`} description={`How to contact ${SITE.name} with questions, corrections or tool requests.`} h1="Contact us" path="/contact/">
+  <p>We read every message. The quickest way to reach us is by email:</p>
+  <p style="font-size:20px"><b>{user}{domain ? <> [at] {domain}</> : null}</b></p>
+  <p class="small muted">Written out to reduce spam — replace “[at]” with “@”.</p>
+  <h2>What to include</h2>
+  <ul>
+    <li><b>Corrections:</b> the page address and what looks wrong. If a date is off, tell us your time zone.</li>
+    <li><b>Tool requests:</b> the question you were trying to answer.</li>
+    <li><b>Advertising or partnerships:</b> a short description of what you have in mind.</li>
+  </ul>
+  <p>We don’t provide legal, medical or financial advice. For official deadlines, check with the organisation that set them.</p>
+</TextPage>

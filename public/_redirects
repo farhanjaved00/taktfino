@@ -1,0 +1,3 @@
+# Old/alternate URLs → canonical (Cloudflare Pages). Trailing slashes are added automatically.
+/home /  301
+/guide/* /guides/:splat 301

@@ -1,0 +1,22 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import GuideCard from '../../components/GuideCard.astro';
+import { SITE } from '../../config/site';
+import { allGuides } from '../../lib/guides';
+const guides = await allGuides();
+const cats = [...new Set(guides.map((g) => g.data.category))];
+---
+<BaseLayout title={`Date & Time Guides — How-tos, Calendars and Explainers | ${SITE.name}`} description="Plain-English guides to counting days, business days, ages, holidays, time zones and calendars — each with worked examples and a free tool.">
+  <Breadcrumbs crumbs={[{ name: 'Guides', path: '/guides/' }]} />
+  <div class="container">
+    <div class="page-head"><h1>Guides</h1><p>Clear answers with worked examples. Every guide links to a tool so you can check your own dates.</p></div>
+    {cats.length > 1 && <div class="chip-row" style="margin-bottom:20px">{cats.map((c) => <a class="chip" href={`#${c.toLowerCase()}`}>{c}</a>)}</div>}
+    {cats.map((c) => (
+      <section class="section" id={c.toLowerCase()} aria-labelledby={`g-${c}`}>
+        <h2 id={`g-${c}`} style="margin-bottom:14px">{c}</h2>
+        <div class="guide-grid">{guides.filter((g) => g.data.category === c).map((g) => <GuideCard guide={g} />)}</div>
+      </section>
+    ))}
+  </div>
+</BaseLayout>

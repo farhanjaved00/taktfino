@@ -1,0 +1,94 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import Faq from '../../components/Faq.astro';
+import AdSlot from '../../components/AdSlot.astro';
+import { SITE } from '../../config/site';
+import { BUILD_TODAY } from '../../lib/build';
+import { HOLIDAYS, nextOccurrence } from '../../lib/holidays';
+import { compare, diffDays, formatISO, formatLong, formatMedium, formatNumber, addDays, weekdayName } from '../../lib/dates';
+import { releasedDaysUntil } from '../../lib/release';
+import { HUBS, CATEGORIES } from '../../lib/links';
+import { webAppSchema } from '../../lib/seo';
+
+const today = BUILD_TODAY;
+const rel = new Set(releasedDaysUntil().map((t) => t.slug));
+const list = HOLIDAYS.map((h) => ({ h, c: nextOccurrence(h, today) })).sort((a, b) => compare(a.c, b.c));
+const dateTargets = releasedDaysUntil().filter((t) => t.kind === 'date');
+const defaultTarget = addDays(today, 30);
+const title = `Days Until Calculator — Countdown to Any Date or Holiday | ${SITE.name}`;
+const description = 'How many days until Christmas, Thanksgiving, Easter or any date? Live countdowns for US, UK and Canadian holidays, plus a calculator for any date.';
+const faq = [
+  { q: 'How are the days counted?', a: 'The count is the number of midnights between today and the target date in your time zone. Today is not counted; the target day is the end point.' },
+  { q: 'Why do some holidays move every year?', a: 'Holidays like Thanksgiving and Memorial Day are set as “the nth weekday of a month”, and Easter follows a church calculation based on the moon, so their dates change each year.' },
+  { q: 'Which countries are covered?', a: 'Public holidays and popular observances in the United States, the United Kingdom and Canada.' },
+];
+---
+<BaseLayout title={title} description={description} ogImage="/og/days-until.png" schema={[webAppSchema('Days until calculator', '/days-until/', description)]}>
+  <Breadcrumbs crumbs={[{ name: 'Countdowns', path: CATEGORIES.countdowns.path }, { name: 'Days until', path: '/days-until/' }]} />
+  <div class="container">
+    <div class="page-head">
+      <h1>How many days until…?</h1>
+      <p>Pick any date, or choose a holiday below. Counted from today, {formatLong(today)}.</p>
+    </div>
+    <section class="card" aria-labelledby="calc-h" data-until-calc>
+      <h2 id="calc-h" class="sr-only">Days until a date</h2>
+      <form class="tool-inputs" style="margin-top:0" onsubmit="return false">
+        <div class="field"><label for="u-date">Target date</label><input id="u-date" class="input" type="date" value={formatISO(defaultTarget)} /></div>
+      </form>
+      <div class="quick-answer">
+        <div class="answer-label" data-out="phrase">Days until {formatMedium(defaultTarget)}</div>
+        <div class="answer" data-out="days" aria-live="polite">{formatNumber(diffDays(today, defaultTarget))} days</div>
+        <div class="answer-sub" data-out="sub">{weekdayName(defaultTarget)} · {formatNumber(diffDays(today, defaultTarget) / 7, 1)} weeks</div>
+      </div>
+      <p class="small muted" style="margin:12px 0 0">Want hours, minutes and seconds? Use the <a href={HUBS.countdown.path}>countdown timer</a>.</p>
+    </section>
+
+    <div class="ad-wrap"><AdSlot format="leaderboard" /></div>
+
+    <section class="section" aria-labelledby="hol-h">
+      <h2 id="hol-h" style="margin-bottom:14px">Holiday countdowns (US, UK &amp; Canada)</h2>
+      <div class="card" style="padding:0;overflow:hidden">
+        <div class="table-wrap"><table class="data-table">
+          <thead><tr><th scope="col">Holiday</th><th scope="col">Next date</th><th scope="col">Days to go</th><th scope="col">Where</th></tr></thead>
+          <tbody>
+            {list.map(({ h, c }) => (
+              <tr>
+                <td>{rel.has(h.slug) ? <a href={`/days-until/${h.slug}/`}>{h.name}</a> : h.name}</td>
+                <td>{weekdayName(c).slice(0, 3)}, {formatMedium(c)}</td>
+                <td><b>{formatNumber(diffDays(today, c))}</b></td>
+                <td>{h.countries.join(', ')}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table></div>
+      </div>
+    </section>
+
+    {dateTargets.length > 0 && (
+      <section class="section" aria-labelledby="dates-h">
+        <h2 id="dates-h" style="margin-bottom:14px">Days until a specific date</h2>
+        <div class="link-grid">{dateTargets.map((t) => <a href={`/days-until/${t.slug}/`}>Days until {t.slug.replace(/-(\d+)$/, ' $1').replace(/^\w/, (c) => c.toUpperCase())}</a>)}</div>
+      </section>
+    )}
+
+    <Faq items={faq} />
+  </div>
+</BaseLayout>
+<script>
+  import { diffDays, formatMedium, formatNumber, parseISO, weekdayName } from '../../lib/dates';
+  import { localToday } from '../../scripts/common';
+  const root = document.querySelector<HTMLElement>('[data-until-calc]');
+  if (root) {
+    const input = root.querySelector<HTMLInputElement>('input')!;
+    const out = (k: string) => root.querySelector<HTMLElement>(`[data-out="${k}"]`)!;
+    const update = () => {
+      const t = parseISO(input.value); if (!t) return;
+      const n = diffDays(localToday(), t);
+      out('phrase').textContent = n >= 0 ? `Days until ${formatMedium(t)}` : `Days since ${formatMedium(t)}`;
+      out('days').textContent = `${formatNumber(Math.abs(n))} day${Math.abs(n) === 1 ? '' : 's'}`;
+      out('sub').textContent = `${weekdayName(t)} · ${formatNumber(Math.abs(n) / 7, 1)} weeks`;
+    };
+    input.addEventListener('input', update); update();
+  }
+</script>

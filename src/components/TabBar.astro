@@ -1,0 +1,15 @@
+---
+import Icon from './Icon.astro';
+const path = Astro.url.pathname;
+const tabs = [
+  { l: 'Home', href: '/', icon: 'home' as const, match: (p: string) => p === '/' },
+  { l: 'Tools', href: '/date-tools/', icon: 'cal' as const, match: (p: string) => /^\/(date-tools|days-from-today|weeks-from-today|days-ago|hours-from-now|date-duration-calculator|age-calculator|time|age)\//.test(p) },
+  { l: 'Countdowns', href: '/countdowns/', icon: 'hour' as const, match: (p: string) => /^\/(countdowns|countdown|days-until)\//.test(p) },
+  { l: 'Saved', href: '/saved/', icon: 'bookmark' as const, match: (p: string) => p.startsWith('/saved/') },
+];
+---
+<nav class="tabbar" aria-label="Bottom">
+  {tabs.map((t) => (
+    <a href={t.href} aria-current={t.match(path) ? 'page' : undefined}><Icon name={t.icon} size={22} />{t.l}</a>
+  ))}
+</nav>

@@ -1,0 +1,71 @@
+---
+import SimpleToolPage from '../../components/SimpleToolPage.astro';
+import { SITE } from '../../config/site';
+import { BUILD_TODAY } from '../../lib/build';
+import { formatISO } from '../../lib/dates';
+import { CATEGORIES } from '../../lib/links';
+---
+<SimpleToolPage
+  title={`Age Calculator — Exact Age in Years, Months and Days | ${SITE.name}`}
+  description="Calculate your exact age in years, months and days, plus total days, weeks and hours lived, the weekday you were born and days to your next birthday."
+  h1="Age calculator"
+  intro="Enter a date of birth to get an exact age. Nothing you type leaves your device."
+  path="/age-calculator/" og="/og/age-calculator.png" appName="Age calculator"
+  crumbs={[{ name: 'Age', path: CATEGORIES.age.path }, { name: 'Age calculator', path: '/age-calculator/' }]}
+  related={['date-duration-calculator', 'days-until', 'days-ago', 'countdown']}
+  faq={[
+    { q: 'How is exact age calculated?', a: 'Whole years are counted first, then whole months, then the remaining days, up to the “age on” date (today by default).' },
+    { q: 'What if I was born on February 29?', a: 'In common years the birthday is counted on February 28, so you turn a year older on Feb 28. Some people celebrate on March 1 instead; legal rules differ by country.' },
+    { q: 'Is my date of birth stored?', a: 'No. The calculation runs in your browser and nothing is sent to a server.' },
+  ]}
+>
+  <section class="card" data-age aria-label="Age calculator">
+    <form class="tool-inputs" style="margin-top:0" onsubmit="return false">
+      <div class="field"><label for="a-b">Date of birth</label><input id="a-b" class="input" type="date" value="1990-01-01" max={formatISO(BUILD_TODAY)} data-in="b" /></div>
+      <div class="field"><label for="a-on">Age on</label><input id="a-on" class="input" type="date" value={formatISO(BUILD_TODAY)} data-in="on" /></div>
+    </form>
+    <div class="quick-answer">
+      <div class="answer-label">Exact age</div>
+      <div class="answer" data-out="age" aria-live="polite">—</div>
+      <div class="answer-sub" data-out="sub">Enter a date of birth.</div>
+    </div>
+    <div class="stats">
+      <div><b data-out="months">—</b><span>months</span></div>
+      <div><b data-out="weeks">—</b><span>weeks</span></div>
+      <div><b data-out="days">—</b><span>days</span></div>
+      <div><b data-out="hours">—</b><span>hours</span></div>
+    </div>
+    <div class="card card--sm" style="margin-top:14px;background:var(--bg);border:0">
+      <b>Next birthday:</b> <span data-out="next">—</span>
+    </div>
+  </section>
+  <div slot="content" class="section card">
+    <h2 style="margin-bottom:12px">How we count your age</h2>
+    <div class="prose"><p>Your age in years is the number of birthdays you have had. The months and days after that are counted from your most recent birthday. Totals (days, weeks, hours) count every day since you were born, including leap days.</p></div>
+  </div>
+</SimpleToolPage>
+<script>
+  import { age, formatLong, formatNumber, parseISO, WEEKDAYS, formatISO, compare } from '../../lib/dates';
+  import { localToday } from '../../scripts/common';
+  const root = document.querySelector<HTMLElement>('[data-age]')!;
+  const inB = root.querySelector<HTMLInputElement>('[data-in="b"]')!, inOn = root.querySelector<HTMLInputElement>('[data-in="on"]')!;
+  const out = (k: string) => root.querySelector<HTMLElement>(`[data-out="${k}"]`)!;
+  inOn.value = formatISO(localToday());
+  try { const s = sessionStorage.getItem('tw-dob'); if (s && parseISO(s)) inB.value = s; } catch {}
+  function render() {
+    const b = parseISO(inB.value), on = parseISO(inOn.value);
+    if (!b || !on) return;
+    if (compare(b, on) > 0) { out('age').textContent = '—'; out('sub').textContent = 'The birth date is after the “age on” date.'; return; }
+    try { sessionStorage.setItem('tw-dob', inB.value); } catch {}
+    const r = age(b, on);
+    out('age').textContent = `${r.years} years, ${r.months} months, ${r.days} days`;
+    out('sub').textContent = `Born on a ${WEEKDAYS[r.bornOn]}, ${formatLong(b)}`;
+    out('months').textContent = formatNumber(r.totalMonths);
+    out('weeks').textContent = formatNumber(r.totalWeeks);
+    out('days').textContent = formatNumber(r.totalDays);
+    out('hours').textContent = formatNumber(r.totalDays * 24);
+    out('next').textContent = r.daysToNextBirthday === 0 ? 'Today — happy birthday!' : `${formatLong(r.nextBirthday)} (in ${formatNumber(r.daysToNextBirthday)} days, turning ${r.years + 1})`;
+  }
+  [inB, inOn].forEach((i) => i.addEventListener('input', render));
+  render();
+</script>

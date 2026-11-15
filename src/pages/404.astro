@@ -1,0 +1,15 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../config/site';
+import { popularLinks, HUBS } from '../lib/links';
+---
+<BaseLayout title={`Page not found | ${SITE.name}`} description="This page does not exist." noindex path="/404/">
+  <div class="container" style="padding:48px 16px;text-align:center">
+    <h1>Page not found</h1>
+    <p class="muted" style="margin:12px auto 24px;max-width:520px">That page doesn’t exist (yet). Try one of the calculators below — they work for any number.</p>
+    <div class="chip-row" style="justify-content:center">
+      {Object.values(HUBS).map((h) => <a class="chip" href={h.path}>{h.name}</a>)}
+    </div>
+    <div class="chip-row" style="justify-content:center;margin-top:12px">{popularLinks().map((p) => <a class="chip chip--soft" href={p.href}>{p.label}</a>)}</div>
+  </div>
+</BaseLayout>

@@ -1,0 +1,64 @@
+---
+import { SITE } from '../config/site';
+import { MAIN_NAV, HUBS, CATEGORIES } from '../lib/links';
+import Icon from './Icon.astro';
+const path = Astro.url.pathname;
+const active = (p: string) => (path === p || path.startsWith(p) ? 'page' : undefined);
+const menu = [
+  { title: 'Date tools', items: [HUBS['days-from-today'], HUBS['weeks-from-today'], HUBS['days-ago'], HUBS['date-duration-calculator']] },
+  { title: 'Countdowns', items: [HUBS['days-until'], HUBS.countdown, CATEGORIES.countdowns] },
+  { title: 'Time', items: [HUBS['hours-from-now']] },
+  { title: 'Age', items: [HUBS['age-calculator']] },
+  { title: 'Guides', items: [{ name: 'All guides', path: '/guides/' }] },
+];
+---
+<header class="site-header">
+  <div class="container site-header__inner">
+    <a href="/" class="logo" aria-label={`${SITE.name} home`}>
+      <span class="logo__mark"><Icon name="clock" color="#fff" /></span>{SITE.name}
+    </a>
+    <nav class="main-nav" aria-label="Main">
+      {MAIN_NAV.map((n) => <a href={n.path} aria-current={active(n.path)}>{n.name}</a>)}
+    </nav>
+    <form class="header-search" action="/search/" method="get" role="search">
+      <Icon name="search" size={18} color="#565B78" />
+      <label for="hs" class="sr-only">Search tools</label>
+      <input id="hs" name="q" type="search" placeholder="Search tools…" autocomplete="off" />
+    </form>
+    <div class="header-mobile">
+      <a class="icon-btn" href="/search/" aria-label="Search"><Icon name="search" /></a>
+      <button class="icon-btn" type="button" aria-label="Open menu" aria-controls="mobile-menu" aria-expanded="false" data-menu-open><Icon name="menu" /></button>
+    </div>
+  </div>
+</header>
+<div class="mobile-menu" id="mobile-menu" hidden role="dialog" aria-modal="true" aria-label="Menu">
+  <div class="mobile-menu__head">
+    <span>Menu</span>
+    <button class="icon-btn" type="button" aria-label="Close menu" data-menu-close><Icon name="close" /></button>
+  </div>
+  <form action="/search/" method="get" role="search">
+    <label for="ms" class="sr-only">Search tools</label>
+    <input id="ms" class="input" style="flex:1" name="q" type="search" placeholder="Search tools…" />
+    <button class="btn btn--primary" type="submit">Search</button>
+  </form>
+  {menu.map((g) => (
+    <nav class="mobile-menu__group" aria-label={g.title}>
+      <h2>{g.title.toUpperCase()}</h2>
+      {g.items.map((i) => <a href={i.path}><span>{i.name}</span><Icon name="chevron" size={16} color="#565B78" /></a>)}
+    </nav>
+  ))}
+  <nav class="mobile-menu__group" aria-label="Company">
+    <a href="/about/"><span>About</span></a><a href="/contact/"><span>Contact</span></a><a href="/privacy/"><span>Privacy</span></a><a href="/terms/"><span>Terms</span></a>
+  </nav>
+</div>
+<script>
+  const menu = document.getElementById('mobile-menu')!;
+  const opener = document.querySelector<HTMLButtonElement>('[data-menu-open]')!;
+  const close = () => { menu.hidden = true; opener.setAttribute('aria-expanded', 'false'); document.body.style.overflow = ''; opener.focus(); };
+  opener.addEventListener('click', () => {
+    menu.hidden = false; opener.setAttribute('aria-expanded', 'true'); document.body.style.overflow = 'hidden';
+    menu.querySelector<HTMLElement>('[data-menu-close]')!.focus();
+  });
+  menu.querySelector('[data-menu-close]')!.addEventListener('click', close);
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !menu.hidden) close(); });
+</script>

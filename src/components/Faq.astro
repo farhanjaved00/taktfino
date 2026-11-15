@@ -1,0 +1,13 @@
+---
+import { faqSchema, type QA } from '../lib/seo';
+import JsonLd from './JsonLd.astro';
+interface Props { items: QA[]; title?: string; id?: string }
+const { items, title = 'Frequently asked questions', id = 'faq' } = Astro.props;
+---
+<section class="section" aria-labelledby={id}>
+  <h2 id={id} style="margin-bottom:14px">{title}</h2>
+  <div class="faq">
+    {items.map((x, i) => <details open={i === 0}><summary>{x.q}</summary><div set:html={x.a} /></details>)}
+  </div>
+</section>
+<JsonLd data={faqSchema(items.map((x) => ({ q: x.q, a: x.a.replace(/<[^>]+>/g, '') })))} />

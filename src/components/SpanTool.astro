@@ -1,0 +1,307 @@
+---
+/**
+ * The main calculator for days-from-today, weeks-from-today and days-ago (hub + long-tail pages).
+ * Everything is rendered into static HTML for the build date; the script below recalculates
+ * from the visitor's local date, supports ?n=&start=&biz= share links, and live-updates.
+ */
+import {
+  type CalDate, addDays, addBusinessDays, formatLong, formatMedium, formatUS, formatUK, formatISO, dayOfYear,
+  formatNumber, spanStats, weekdayName,
+} from '../lib/dates';
+import { spanResult, type SpanFamily } from '../lib/span';
+import { googleCalendarUrl } from '../lib/calendar-links';
+import { releasedNumbers } from '../lib/release';
+import { SITE } from '../config/site';
+import Calendar from './Calendar.astro';
+import AdSlot from './AdSlot.astro';
+import Icon from './Icon.astro';
+
+interface Props { family: SpanFamily; n: number; today: CalDate; hub?: boolean }
+const { family, n, today, hub = false } = Astro.props;
+const result = spanResult(family, n, today, false);
+const stats = spanStats(today, result);
+const past = family === 'days-ago';
+const weeks = family === 'weeks-from-today';
+const unit = weeks ? 'weeks' : 'days';
+const unit1 = (k: number) => (weeks ? (k === 1 ? 'week' : 'weeks') : (k === 1 ? 'day' : 'days'));
+const h1 = past ? `What date was ${n} ${unit1(n)} ago?` : `What is ${n} ${unit1(n)} from today?`;
+const phrase = past ? `${n} ${unit1(n)} ago was` : `${n} ${unit1(n)} from today is`;
+const released = releasedNumbers(family);
+const nearbyNums = [n - 1, n + 1, n + 7, 30, 60, 90].filter((v, i, a) => v > 0 && v !== n && a.indexOf(v) === i);
+const nearPath = (v: number) => (released.includes(v) ? `/${family}/${v}/` : null);
+
+const rows = (() => {
+  if (family === 'days-from-today') return [
+    [`${n} days from today`, addDays(today, n)],
+    [`${n} business days from today`, addBusinessDays(today, n)],
+    [`${n} weeks from today`, addDays(today, n * 7)],
+    [`${n} days ago`, addDays(today, -n)],
+  ] as const;
+  if (family === 'weeks-from-today') return [
+    [`${n} weeks from today`, addDays(today, n * 7)],
+    [`${n} work weeks (${n * 5} business days)`, addBusinessDays(today, n * 5)],
+    [`${n} days from today`, addDays(today, n)],
+    [`${n} weeks ago`, addDays(today, -n * 7)],
+  ] as const;
+  return [
+    [`${n} days ago`, addDays(today, -n)],
+    [`${n} business days ago`, addBusinessDays(today, -n)],
+    [`${n} weeks ago`, addDays(today, -n * 7)],
+    [`${n} days from today`, addDays(today, n)],
+  ] as const;
+})();
+const gcal = googleCalendarUrl({ title: `${n} ${unit1(n)} ${past ? 'ago' : 'from today'}`, date: result, details: `Calculated with ${SITE.name}` });
+---
+<div
+  data-span-tool
+  data-family={family}
+  data-n={n}
+  data-hub={hub ? '1' : '0'}
+  data-released={JSON.stringify(released)}
+  data-site={SITE.name}
+>
+  <div class="page-head">
+    <h1 data-bind="h1">{h1}</h1>
+    <p>Counted from <span data-bind="startText">{formatLong(today)}</span> · updated daily · US, UK and Canada formats</p>
+  </div>
+
+  <div class="tool-layout">
+    <section class="card" aria-labelledby="answer-label">
+      <div class="answer-label" id="answer-label" data-bind="phrase">{phrase}</div>
+      <div class="answer" data-bind="answer" aria-live="polite">{formatLong(result)}</div>
+      <div class="answer-sub">
+        <b data-bind="us">{formatUS(result)}</b> (US) · <b data-bind="uk">{formatUK(result)}</b> (UK) · <span data-bind="doy">day {dayOfYear(result)} of {result.y}</span>
+      </div>
+
+      <form class="tool-inputs no-print" data-form onsubmit="return false">
+        <div class="field">
+          <label for="tool-n">Number of {unit}</label>
+          <input id="tool-n" class="input input--num" type="number" inputmode="numeric" min="1" max="100000" value={n} data-input="n" />
+        </div>
+        <div class="field">
+          <label for="tool-start">Start date</label>
+          <input id="tool-start" class="input" type="date" value={formatISO(today)} data-input="start" />
+        </div>
+        {!weeks && (
+          <button type="button" class="toggle" aria-pressed="false" data-input="biz">
+            <span class="dot" aria-hidden="true"></span>Business days only
+          </button>
+        )}
+      </form>
+
+      <div class="countdown" data-bind="countdown" aria-label={past ? 'Time since that date' : 'Countdown to that date'}>
+        <div><b data-cd="d">{stats.days}</b><span>days</span></div>
+        <div><b data-cd="h">00</b><span>hours</span></div>
+        <div><b data-cd="m">00</b><span>minutes</span></div>
+        <div><b data-cd="s">00</b><span>seconds</span></div>
+      </div>
+      <div class="countdown-caption" data-bind="cdCaption">{past ? 'Time since the start of that day, in your time zone.' : 'Live countdown to the start of that day, in your time zone.'}</div>
+
+      <div class="stats">
+        <div><b data-bind="stWeeks">{formatNumber(stats.weeks, 1)}</b><span>weeks</span></div>
+        <div><b data-bind="stMonths">{formatNumber(stats.months, 1)}</b><span>months</span></div>
+        <div><b data-bind="stHours">{formatNumber(stats.hours)}</b><span>hours</span></div>
+        <div><b data-bind="stBiz">{formatNumber(stats.businessDays)}</b><span>business days</span></div>
+      </div>
+
+      <div class="actions no-print">
+        <a class="btn btn--primary" href={gcal} target="_blank" rel="noopener nofollow" data-bind-href="gcal"><Icon name="calAdd" size={18} />Add to Google Calendar</a>
+        <button class="btn" type="button" data-action="ics"><Icon name="download" size={18} />Download .ics</button>
+        <button class="btn" type="button" data-action="copy"><Icon name="link" size={18} />Copy share link</button>
+        <button class="btn" type="button" data-action="print"><Icon name="print" size={18} />Print</button>
+        <button class="btn btn--outline" type="button" data-action="save"><Icon name="bookmark" size={18} />Save</button>
+      </div>
+    </section>
+
+    <aside class="tool-aside" aria-label="Calendar and related">
+      <Calendar result={result} today={today} />
+      <div class="ad-desktop-only" style="justify-content:center"><AdSlot format="rectangle" /></div>
+      <div class="card card--sm no-print">
+        <h2 style="font-family:var(--font-body);font-size:17px;margin-bottom:10px">Nearby calculations</h2>
+        <div class="chip-row" data-bind="nearby">
+          {nearbyNums.map((v) => {
+            const p = nearPath(v);
+            const label = `${v} ${unit1(v)}${past ? ' ago' : ''}`;
+            return p ? <a class="chip chip--soft" href={p}>{label}</a> : <button type="button" class="chip chip--soft" data-set-n={v}>{label}</button>;
+          })}
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <div class="ad-wrap ad-mobile-only"><AdSlot format="mobile" /></div>
+
+  <section class="section card" aria-labelledby="units-h">
+    <h2 id="units-h" style="margin-bottom:14px"><span data-bind="unitsTitle">{n} {unit1(n)} {past ? 'ago' : 'from today'}</span> in other units</h2>
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead><tr><th scope="col">Count</th><th scope="col">Lands on</th><th scope="col">Day of week</th></tr></thead>
+        <tbody data-bind="rows">
+          {rows.map(([label, d]) => <tr><td>{label}</td><td>{formatMedium(d)}</td><td>{weekdayName(d)}</td></tr>)}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+
+<script>
+  import {
+    type CalDate, addDays, addBusinessDays, formatLong, formatMedium, formatUS, formatUK, formatISO, parseISO,
+    dayOfYear, formatNumber, spanStats, weekdayName, monthGrid, MONTHS, compare, sameDate,
+  } from '../lib/dates';
+  import { spanResult, type SpanFamily } from '../lib/span';
+  import { googleCalendarUrl } from '../lib/calendar-links';
+  import { localToday, msUntil, splitMs, pad2, copyText, downloadIcs, saveItem, addRecent, setQuery, renderCalendarCells } from '../scripts/common';
+
+  for (const root of document.querySelectorAll<HTMLElement>('[data-span-tool]')) init(root);
+
+  function init(root: HTMLElement) {
+    const family = root.dataset.family as SpanFamily;
+    const released: number[] = JSON.parse(root.dataset.released || '[]');
+    const isHub = root.dataset.hub === '1';
+    const pageN = Number(root.dataset.n);
+    const past = family === 'days-ago';
+    const weeks = family === 'weeks-from-today';
+    const unit1 = (k: number) => (weeks ? (k === 1 ? 'week' : 'weeks') : (k === 1 ? 'day' : 'days'));
+    const $ = (k: string) => root.querySelector<HTMLElement>(`[data-bind="${k}"]`)!;
+    const nInput = root.querySelector<HTMLInputElement>('[data-input="n"]')!;
+    const startInput = root.querySelector<HTMLInputElement>('[data-input="start"]')!;
+    const bizBtn = root.querySelector<HTMLButtonElement>('[data-input="biz"]');
+
+    const q = new URLSearchParams(location.search);
+    const state = {
+      n: clampN(Number(q.get('n')) || pageN),
+      start: parseISO(q.get('start')) || localToday(),
+      biz: q.get('biz') === '1' && !weeks,
+      startFromUrl: !!parseISO(q.get('start')),
+    };
+    let result: CalDate = state.start;
+    let timer: number | undefined;
+
+    function clampN(v: number) { return Math.min(100000, Math.max(1, Math.round(v) || 1)); }
+
+    function render() {
+      const { n, start, biz } = state;
+      const today = localToday();
+      result = spanResult(family, n, start, biz);
+      const isToday = sameDate(start, today);
+      const b = biz ? 'business ' : '';
+      const fromWord = isToday ? (past ? 'ago' : 'from today') : (past ? `before ${formatMedium(start)}` : `after ${formatMedium(start)}`);
+      $('h1').textContent = past
+        ? (isToday ? `What date was ${n} ${b}${unit1(n)} ago?` : `What date is ${n} ${b}${unit1(n)} before ${formatMedium(start)}?`)
+        : (isToday ? `What is ${n} ${b}${unit1(n)} from today?` : `What date is ${n} ${b}${unit1(n)} after ${formatMedium(start)}?`);
+      $('phrase').textContent = `${n} ${b}${unit1(n)} ${fromWord} ${past ? 'was' : 'is'}`;
+      $('startText').textContent = formatLong(start) + (isToday ? ' (today)' : '');
+      $('answer').textContent = formatLong(result);
+      $('us').textContent = formatUS(result);
+      $('uk').textContent = formatUK(result);
+      $('doy').textContent = `day ${dayOfYear(result)} of ${result.y}`;
+      const s = spanStats(start, result);
+      $('stWeeks').textContent = formatNumber(s.weeks, 1);
+      $('stMonths').textContent = formatNumber(s.months, 1);
+      $('stHours').textContent = formatNumber(s.hours);
+      $('stBiz').textContent = formatNumber(s.businessDays);
+      $('monthTitle').textContent = `${MONTHS[result.m - 1]} ${result.y}`;
+      $('calendar').innerHTML = renderCalendarCells(monthGrid(result.y, result.m, today, result));
+      $('calendar').setAttribute('aria-label', `Calendar for ${MONTHS[result.m - 1]} ${result.y}, result ${formatLong(result)}`);
+      const gcal = root.querySelector<HTMLAnchorElement>('[data-bind-href="gcal"]')!;
+      gcal.href = googleCalendarUrl({ title: eventTitle(), date: result, details: `${eventTitle()} — ${location.origin}${location.pathname}` });
+      $('unitsTitle').textContent = `${n} ${unit1(n)} ${past ? 'ago' : 'from today'}`;
+      $('rows').innerHTML = rows(n, start).map(([l, d]) => `<tr><td>${l}</td><td>${formatMedium(d)}</td><td>${weekdayName(d)}</td></tr>`).join('');
+      $('nearby').innerHTML = [n - 1, n + 1, n + 7, 30, 60, 90]
+        .filter((v, i, a) => v > 0 && v !== n && a.indexOf(v) === i)
+        .map((v) => {
+          const label = `${v} ${unit1(v)}${past ? ' ago' : ''}`;
+          return released.includes(v) && !state.startFromUrl && !biz
+            ? `<a class="chip chip--soft" href="/${family}/${v}/">${label}</a>`
+            : `<button type="button" class="chip chip--soft" data-set-n="${v}">${label}</button>`;
+        }).join('');
+      bizBtn?.setAttribute('aria-pressed', String(biz));
+      if (document.activeElement !== nInput) nInput.value = String(n);
+      startInput.value = formatISO(start);
+      tick();
+      // sticky mobile bar shares the same actions
+      document.querySelectorAll<HTMLAnchorElement>('[data-sticky-gcal]').forEach((a) => (a.href = gcal.href));
+    }
+
+    function rows(n: number, start: CalDate): [string, CalDate][] {
+      if (family === 'days-from-today') return [[`${n} days from today`, addDays(start, n)], [`${n} business days from today`, addBusinessDays(start, n)], [`${n} weeks from today`, addDays(start, n * 7)], [`${n} days ago`, addDays(start, -n)]];
+      if (family === 'weeks-from-today') return [[`${n} weeks from today`, addDays(start, n * 7)], [`${n} work weeks (${n * 5} business days)`, addBusinessDays(start, n * 5)], [`${n} days from today`, addDays(start, n)], [`${n} weeks ago`, addDays(start, -n * 7)]];
+      return [[`${n} days ago`, addDays(start, -n)], [`${n} business days ago`, addBusinessDays(start, -n)], [`${n} weeks ago`, addDays(start, -n * 7)], [`${n} days from today`, addDays(start, n)]];
+    }
+
+    function eventTitle() {
+      return `${state.n} ${state.biz ? 'business ' : ''}${unit1(state.n)} ${past ? 'ago' : 'from today'}: ${formatMedium(result)}`;
+    }
+
+    function tick() {
+      const ms = msUntil(result);
+      const t = splitMs(ms);
+      const set = (k: string, v: string) => { const el = root.querySelector(`[data-cd="${k}"]`); if (el) el.textContent = v; };
+      set('d', formatNumber(t.d)); set('h', pad2(t.h)); set('m', pad2(t.m)); set('s', pad2(t.s));
+      const cap = $('cdCaption');
+      if (past || ms < 0) cap.textContent = 'Time since the start of that day, in your time zone.';
+      else cap.textContent = 'Live countdown to the start of that day, in your time zone.';
+    }
+
+    function shareUrl() {
+      const u = new URL(location.origin + location.pathname);
+      if (isHub || state.n !== pageN) u.searchParams.set('n', String(state.n));
+      if (!sameDate(state.start, localToday())) u.searchParams.set('start', formatISO(state.start));
+      if (state.biz) u.searchParams.set('biz', '1');
+      return u.toString();
+    }
+
+    function syncUrl() {
+      setQuery({
+        n: isHub || state.n !== pageN ? String(state.n) : null,
+        start: state.startFromUrl ? formatISO(state.start) : null,
+        biz: state.biz ? '1' : null,
+      });
+    }
+
+    nInput.addEventListener('input', () => {
+      if (nInput.value === '') return;
+      state.n = clampN(Number(nInput.value)); render(); syncUrl();
+    });
+    nInput.addEventListener('blur', () => { nInput.value = String(state.n); });
+    startInput.addEventListener('change', () => {
+      const d = parseISO(startInput.value);
+      if (!d) return;
+      state.start = d; state.startFromUrl = !sameDate(d, localToday()); render(); syncUrl();
+    });
+    bizBtn?.addEventListener('click', () => { state.biz = !state.biz; render(); syncUrl(); });
+    root.addEventListener('click', (e) => {
+      const t = (e.target as HTMLElement).closest<HTMLElement>('[data-set-n],[data-action]');
+      if (!t) return;
+      if (t.dataset.setN) { state.n = clampN(Number(t.dataset.setN)); render(); syncUrl(); nInput.focus(); return; }
+      act(t.dataset.action!);
+    });
+    document.addEventListener('click', (e) => {
+      const t = (e.target as HTMLElement).closest<HTMLElement>('[data-sticky-action]');
+      if (t) act(t.dataset.stickyAction!);
+    });
+
+    function act(a: string) {
+      if (a === 'copy') copyText(shareUrl());
+      else if (a === 'print') window.print();
+      else if (a === 'ics') downloadIcs({ title: eventTitle(), date: result, details: shareUrl(), url: shareUrl(), uid: `${formatISO(result)}-${state.n}-${family}@${location.hostname}` }, `${state.n}-${unit1(state.n)}-${past ? 'ago' : 'from-today'}.ics`);
+      else if (a === 'save') saveItem({ label: eventTitle(), url: shareUrl(), detail: formatLong(result) });
+    }
+
+    // keep the date right across midnight and for long-open tabs
+    let lastToday = formatISO(localToday());
+    timer = window.setInterval(() => {
+      const t = formatISO(localToday());
+      if (t !== lastToday) {
+        if (!state.startFromUrl && compare(state.start, localToday()) !== 0) state.start = localToday();
+        lastToday = t; render();
+      } else tick();
+    }, 1000);
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) render(); });
+
+    render();
+    addRecent({ label: eventTitle(), url: shareUrl(), detail: formatLong(result) });
+    void timer;
+  }
+</script>

@@ -1,0 +1,139 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import AdSlot from '../components/AdSlot.astro';
+import GuideCard from '../components/GuideCard.astro';
+import { SITE } from '../config/site';
+import { BUILD_TODAY } from '../lib/build';
+import { addDays, compare, diffDays, formatLong, formatMedium, formatUS, formatUK } from '../lib/dates';
+import { HOLIDAYS, nextOccurrence } from '../lib/holidays';
+import { categoryCards, popularLinks, untilPath, HUBS } from '../lib/links';
+import { websiteSchema, organizationSchema } from '../lib/seo';
+import { allGuides } from '../lib/guides';
+import { releasedNumbers } from '../lib/release';
+
+const today = BUILD_TODAY;
+const r = addDays(today, 14);
+const featured = ['christmas', 'new-year', 'valentines-day', 'easter', 'thanksgiving', 'halloween', 'independence-day', 'mothers-day', 'summer', 'spring'];
+const countdowns = HOLIDAYS.filter((h) => featured.includes(h.slug))
+  .map((h) => ({ h, c: nextOccurrence(h, today) }))
+  .sort((a, b) => compare(a.c, b.c)).slice(0, 4);
+const guides = (await allGuides()).slice(0, 3);
+---
+<BaseLayout
+  title={`${SITE.name} — Days From Today, Countdowns & Date Calculators`}
+  description="Free date and time tools for the US, UK and Canada: days from today, weeks from today, days until Christmas, hours from now, age calculator and more. Updated daily."
+  ogImage="/og/home.png"
+  schema={[websiteSchema(), organizationSchema()]}
+>
+  <section class="hero container">
+    <p class="pill">Free · No sign-up · Updated daily</p>
+    <h1>Count any date, in seconds.</h1>
+    <p class="lede">Days from today, countdowns, age and hours from now — with calendars, reminders and share links built in.</p>
+
+    <div class="quick" data-quick data-rel-d={JSON.stringify(releasedNumbers('days-from-today'))} data-rel-w={JSON.stringify(releasedNumbers('weeks-from-today'))} data-rel-a={JSON.stringify(releasedNumbers('days-ago'))}>
+      <div class="quick-row">
+        <label for="qn">What date is</label>
+        <input id="qn" type="number" inputmode="numeric" min="1" max="100000" value="14" />
+        <div class="seg" role="group" aria-label="Unit">
+          <button type="button" aria-pressed="true" data-unit="d">days</button>
+          <button type="button" aria-pressed="false" data-unit="w">weeks</button>
+          <button type="button" aria-pressed="false" data-unit="m">months</button>
+        </div>
+        <div class="seg" role="group" aria-label="Direction">
+          <button type="button" aria-pressed="true" data-dir="1">from today</button>
+          <button type="button" aria-pressed="false" data-dir="-1">ago</button>
+        </div>
+      </div>
+      <div class="quick-answer">
+        <div class="answer-label" data-q="phrase">14 days from today is</div>
+        <div class="answer" data-q="answer" aria-live="polite">{formatLong(r)}</div>
+        <div class="answer-sub" data-q="sub">14 calendar days · {formatUS(r)} (US) · {formatUK(r)} (UK)</div>
+      </div>
+      <div class="actions" style="justify-content:center">
+        <a class="btn btn--primary" href="/days-from-today/14/" data-q="open">Open full calculator</a>
+        <a class="btn btn--outline" href={HUBS.countdown.path}><Icon name="calAdd" size={18} />Make a countdown</a>
+      </div>
+    </div>
+
+    <div class="chip-row" style="justify-content:center;margin-top:22px">
+      <span class="small muted" style="align-self:center">Popular:</span>
+      {popularLinks().map((p) => <a class="chip" href={p.href}>{p.label}</a>)}
+    </div>
+  </section>
+
+  <section class="container section" aria-labelledby="tools-h">
+    <div class="section-head"><h2 id="tools-h">All tools</h2><a href="/date-tools/" style="font-weight:600">Browse all →</a></div>
+    <div class="cat-grid">
+      {categoryCards().map((c) => (
+        <div class="cat-card">
+          <div class="cat-card__head">
+            <span class="cat-card__icon"><Icon name={c.icon} size={22} color="#4338CA" /></span>
+            <div><h3><a href={c.href} style="color:inherit">{c.title}</a></h3><div class="small muted">{c.meta}</div></div>
+          </div>
+          <ul>{c.links.map((l) => <li><a href={l.href}><span>{l.label}</span><span aria-hidden="true">→</span></a></li>)}</ul>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="container section" aria-labelledby="cd-h">
+    <div class="section-head"><h2 id="cd-h">Upcoming countdowns</h2><a href="/countdowns/" style="font-weight:600">All countdowns →</a></div>
+    <div class="countdown-cards">
+      {countdowns.map(({ h, c }) => (
+        <a class="cd-card" href={untilPath(h.slug) || '/days-until/'} data-cd-slug={h.slug}>
+          <div class="d">{formatMedium(c)}</div>
+          <div class="n">{h.short || h.name}</div>
+          <div class="big" data-days>{diffDays(today, c)}</div>
+          <div class="d">days to go</div>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <div class="container ad-wrap"><AdSlot format="leaderboard" /></div>
+
+  {guides.length > 0 && (
+    <section class="container section" aria-labelledby="g-h">
+      <div class="section-head"><h2 id="g-h">Guides</h2><a href="/guides/" style="font-weight:600">All guides →</a></div>
+      <div class="guide-grid">{guides.map((g) => <GuideCard guide={g} />)}</div>
+    </section>
+  )}
+</BaseLayout>
+
+<script>
+  import { addDays, addMonths, diffDays, formatLong, formatUS, formatUK, formatNumber } from '../lib/dates';
+  import { getHoliday, nextOccurrence } from '../lib/holidays';
+  import { localToday } from '../scripts/common';
+  const root = document.querySelector<HTMLElement>('[data-quick]')!;
+  const input = root.querySelector<HTMLInputElement>('#qn')!;
+  const out = (k: string) => root.querySelector<HTMLElement>(`[data-q="${k}"]`)!;
+  let unit = 'd', dir = 1;
+  const names: Record<string, [string, string]> = { d: ['day', 'days'], w: ['week', 'weeks'], m: ['month', 'months'] };
+  function render() {
+    const n = Math.max(0, Math.min(100000, Math.round(Number(input.value)) || 0));
+    const t = localToday();
+    const r = unit === 'm' ? addMonths(t, n * dir) : addDays(t, (unit === 'w' ? 7 : 1) * n * dir);
+    const w = names[unit][n === 1 ? 0 : 1];
+    out('phrase').textContent = `${n} ${w} ${dir > 0 ? 'from today is' : 'ago was'}`;
+    out('answer').textContent = formatLong(r);
+    out('sub').textContent = `${formatNumber(Math.abs(diffDays(t, r)))} calendar days · ${formatUS(r)} (US) · ${formatUK(r)} (UK)`;
+    const hub = unit === 'm' ? (dir > 0 ? '/days-from-today/' : '/days-ago/') : dir < 0 ? '/days-ago/' : unit === 'w' ? '/weeks-from-today/' : '/days-from-today/';
+    const nn = unit === 'm' ? Math.abs(diffDays(t, r)) : n;
+    const rel: number[] = JSON.parse((dir < 0 ? root.dataset.relA : unit === 'w' ? root.dataset.relW : root.dataset.relD) || '[]');
+    (out('open') as HTMLAnchorElement).href = unit !== 'm' && rel.includes(nn) ? `${hub}${nn}/` : `${hub}?n=${nn}`;
+    root.querySelectorAll<HTMLButtonElement>('[data-unit]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.unit === unit)));
+    root.querySelectorAll<HTMLButtonElement>('[data-dir]').forEach((b) => b.setAttribute('aria-pressed', String(Number(b.dataset.dir) === dir)));
+  }
+  input.addEventListener('input', render);
+  root.addEventListener('click', (e) => {
+    const b = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-unit],[data-dir]'); if (!b) return;
+    if (b.dataset.unit) unit = b.dataset.unit; else dir = Number(b.dataset.dir);
+    render();
+  });
+  render();
+  document.querySelectorAll<HTMLElement>('[data-cd-slug]').forEach((el) => {
+    const h = getHoliday(el.dataset.cdSlug!); if (!h) return;
+    el.querySelector('[data-days]')!.textContent = String(diffDays(localToday(), nextOccurrence(h, localToday())));
+  });
+</script>

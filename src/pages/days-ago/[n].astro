@@ -1,0 +1,9 @@
+---
+import SpanPage from '../../components/SpanPage.astro';
+import { releasedNumbers } from '../../lib/release';
+export function getStaticPaths() {
+  return releasedNumbers('days-ago').map((n) => ({ params: { n: String(n) }, props: { n } }));
+}
+const { n } = Astro.props as { n: number };
+---
+<SpanPage family="days-ago" n={n} />
