@@ -4,7 +4,7 @@ A static Astro site of free date and time calculators for the US, UK and Canada:
 
 - **No server, no database.** Pure static HTML on Cloudflare Pages + small vanilla-JS islands.
 - **Always the right date.** Rebuilt every day at 00:05 UTC, and every tool recalculates in the browser from the visitor's local date.
-- **Safe indexing.** Long-tail pages are released in batches from one config file.
+- **Safe indexing.** Long-tail pages are released automatically in batches every 2 weeks, from one plan file.
 - **Articles by PR.** A daily GitHub Action drafts 2 guides with OpenAI and opens a pull request. Nothing goes live until you merge it.
 
 ---
@@ -39,7 +39,7 @@ Copy `.env.example` to `.env` to set the site URL, AdSense ID or Search Console 
 | --- | --- |
 | Brand name, author name + bio, contact email | `src/config/site.ts` |
 | Live domain | `SITE_URL` environment variable (Cloudflare + GitHub variable) |
-| Which long-tail pages exist | `src/data/release.json` |
+| Which long-tail pages exist | `src/data/release.json` (live) and `src/data/release-plan.json` (automatic schedule) |
 | Topics for daily articles | `content/queue.csv` |
 | Colours, fonts, spacing | `src/styles/global.css` (`:root` tokens) |
 | Manifest name | `public/site.webmanifest` |
@@ -71,32 +71,49 @@ Copy `.env.example` to `.env` to set the site URL, AdSense ID or Search Console 
 3. Make one of them canonical (we use `www`). Add a Cloudflare **Redirect Rule**: `yourdomain.com/*` → `https://www.yourdomain.com/${1}` (301).
 4. Set `SITE_URL` to the canonical URL and redeploy, so canonicals and sitemaps use it.
 
-## 5. Releasing the next batch of pages
+## 5. Releasing new pages (automatic)
 
-Only pages listed in `src/data/release.json` are built, linked and put in sitemaps. To release more, edit one line and push:
+Only pages listed in `src/data/release.json` are built, linked and put in sitemaps. New pages are released **automatically** from `src/data/release-plan.json`:
 
-```json
-"days-from-today": ["1-60", 75, 90, 100, 120, 180],
+1. The **Release next batch** workflow runs every Monday.
+2. The first run after launch only starts the clock. After that, every **14 days** it adds the next batch to `release.json`.
+3. Before pushing, it runs the tests, builds the whole site and checks every link. If anything fails it does **not** push, and GitHub emails you.
+4. The push to `main` deploys to Cloudflare. The new pages appear in the sitemaps straight away.
+
+The plan (about 1,440 pages, finished ~14 weeks after launch):
+
+| Batch | Adds | ≈ pages |
+| --- | --- | --- |
+| 2 | days-from-today 31–90, weeks 13–26, all 42 holidays | 100 |
+| 3 | days-from-today 91–180, days-ago 1–60 | 150 |
+| 4 | days-from-today 181–365, 400, 500, 1000 | 190 |
+| 5 | hours 1–72, weeks 27–52, days-ago 61–180 | 200 |
+| 6 | weeks 53–104, hours 73–168, days-ago 181–365 | 330 |
+| 7 | days until every calendar date | 366 |
+
+**Controls**
+
+| You want to… | Do this |
+| --- | --- |
+| Pause releases | Set `"paused": true` in `release-plan.json` |
+| Release the next batch now | Actions → Release next batch → Run workflow → tick "force" |
+| Change the pace | Change `"intervalDays"` (e.g. 7 or 21) |
+| Change what's in a batch | Edit its `"add"` block (only batches without `releasedOn`) |
+| Release something by hand | Add it to `release.json` and push — the plan is unaffected |
+
+Before each batch, glance at Search Console → **Pages**. If most of the previous batch is still "Discovered – currently not indexed", pause for a couple of weeks.
+
+Allowed numbers: days-from-today 1–365 + 400, 500, 1000 · weeks-from-today 1–104 · hours-from-now 1–168 · days-ago 1–365. `days-until` takes holiday slugs (see `src/lib/holidays.ts`), date slugs like `"december-25"`, `"all-holidays"` and `"all-dates"`. The build fails with a clear message if something is outside these.
+
+Test locally without changing anything:
+
+```bash
+node scripts/release-next-batch.mjs --dry-run --force
 ```
 
-Rules:
+**File limit:** Cloudflare Pages' free plan allows 20,000 files. `npm run count-pages` (also run in CI) warns at 80%. The full plan stays under ~1,500 files. If we ever get close, the plan is to move the long-tail families to a Cloudflare Worker that renders them on request, keeping the same URLs.
 
-- Numbers can be single values or ranges (`"31-60"`).
-- Allowed ranges: days-from-today 1–365 + 400, 500, 1000 · weeks-from-today 1–104 · hours-from-now 1–168 · days-ago 1–365. The build fails with a clear message if you go outside these.
-- `days-until` takes holiday slugs (`christmas`, `easter`, … — the full list is in `src/lib/holidays.ts`) and date slugs like `"december-25"`. `"all-holidays"` and `"all-dates"` release all 42 holidays or all 366 dates.
-- Suggested pace: **100–500 pages every 2 weeks**. After each release, check Search Console → Pages to see they are being indexed before adding more.
-
-Suggested schedule (about 1,400 pages in total):
-
-| Batch | Add |
-| --- | --- |
-| 2 | days-from-today `31-90`, weeks `13-26`, `all-holidays` |
-| 3 | days-from-today `91-180`, days-ago `1-60` |
-| 4 | days-from-today `181-365`, 400, 500, 1000; hours `1-72` |
-| 5 | weeks `27-104`, hours `73-168`, days-ago `61-180` |
-| 6 | days-ago `181-365`, `all-dates` |
-
-**File limit:** Cloudflare Pages' free plan allows 20,000 files. `npm run count-pages` (also run in CI) warns at 80%. The full plan above stays under ~2,000 files. If we ever approach the limit, the plan is to move the long-tail families to a Cloudflare Worker that renders them on request, keeping the same URLs.
+If `main` has branch protection that blocks direct pushes, allow `github-actions[bot]` to bypass it, or the release step will fail.
 
 ## 6. Adding a new tool
 

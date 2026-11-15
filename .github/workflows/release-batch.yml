@@ -1,0 +1,56 @@
+name: Release next batch
+# Weekly check. Every `intervalDays` (14) it adds the next batch from src/data/release-plan.json
+# to src/data/release.json, verifies the site builds with no broken links, and pushes to main
+# (which deploys). Pause any time with "paused": true in release-plan.json.
+on:
+  schedule:
+    - cron: '0 1 * * 1' # Mondays 01:00 UTC
+  workflow_dispatch:
+    inputs:
+      force:
+        description: 'Release the next batch now (ignore the 14-day wait)'
+        type: boolean
+        default: false
+permissions:
+  contents: write
+concurrency:
+  group: release-batch
+  cancel-in-progress: false
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Pick the next batch
+        env:
+          RELEASE_SUMMARY: ${{ runner.temp }}/summary.txt
+        run: node scripts/release-next-batch.mjs ${{ github.event.inputs.force == 'true' && '--force' || '' }}
+      - name: Anything changed?
+        id: diff
+        run: |
+          if git diff --quiet -- src/data; then echo "changed=false" >> "$GITHUB_OUTPUT"; else echo "changed=true" >> "$GITHUB_OUTPUT"; fi
+      - name: Verify the site with the new pages
+        if: steps.diff.outputs.changed == 'true'
+        env:
+          SITE_URL: ${{ vars.SITE_URL || 'https://www.example.com' }}
+        run: |
+          npm ci
+          npm test
+          npm run build
+          node scripts/check-links.mjs
+          node scripts/count-pages.mjs
+      - name: Commit and push (deploys)
+        if: steps.diff.outputs.changed == 'true'
+        run: |
+          MSG="$(cat "$RUNNER_TEMP/summary.txt" 2>/dev/null)"
+          [ -z "$MSG" ] && MSG="Start the automatic release clock"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/data/release.json src/data/release-plan.json
+          git commit -m "$MSG"
+          git push
+          echo "### $MSG" >> "$GITHUB_STEP_SUMMARY"

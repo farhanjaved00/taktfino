@@ -1,5 +1,5 @@
 {
-  "$comment": "Which long-tail pages are LIVE. Only these are built and listed in sitemaps. Numbers can be single values or ranges like \"1-30\". days-until accepts holiday slugs (see src/lib/holidays.ts) and month-day slugs like \"december-25\" (or \"all-dates\" for all 366). Add a batch every 2 weeks — see README › Releasing the next batch.",
+  "$comment": "Which long-tail pages are LIVE. Only these are built and listed in sitemaps. Numbers can be single values or ranges like \"1-30\". days-until accepts holiday slugs (see src/lib/holidays.ts) and month-day slugs like \"december-25\" (or \"all-dates\" for all 366). New batches are added automatically from release-plan.json — see README §5.",
   "days-from-today": ["1-30", 35, 40, 45, 60, 75, 90, 100, 120, 180],
   "weeks-from-today": ["1-12"],
   "hours-from-now": ["1-6", 8, 10, 12, 24, 36, 48, 72],
