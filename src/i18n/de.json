@@ -79,6 +79,10 @@
     "surcharge": {
       "name": "Zuschlagsrechner",
       "short": "Nacht-, Sonntags- und Feiertagszuschläge – steuerfrei nach § 3b EStG"
+    },
+    "maternity": {
+      "name": "Mutterschutz-Rechner",
+      "short": "Beginn und Ende der Mutterschutzfrist nach § 3 MuSchG"
     }
   },
   "common": {
@@ -404,6 +408,21 @@
       "capNote": "Steuerfrei nur auf einen Grundlohn bis 50 € pro Stunde.",
       "legalRates": "Steuerfreie Höchstsätze einsetzen",
       "pauseNote": "Pausen sind keine Arbeitszeit: Tragen Sie Schichten mit Pause als zwei Blöcke ein."
+    },
+    "maternity": {
+      "due": "Errechneter Geburtstermin (ET)",
+      "birth": "Tatsächliche Geburt (optional)",
+      "extended": "Frühgeburt, Mehrlinge oder Behinderung des Kindes (12 Wochen)",
+      "start": "Beginn Mutterschutz",
+      "lastWork": "Letzter Arbeitstag vor dem Mutterschutz",
+      "end": "Ende Mutterschutz",
+      "total": "Tage Mutterschutz insgesamt",
+      "after": "Wochen nach der Geburt",
+      "extra": "Tage, die wegen der früheren Geburt angehängt werden",
+      "parental": "Elternzeit frühestens ab",
+      "resultLabel": "Ihr Mutterschutz",
+      "range": "vom {start} bis {end}",
+      "invalid": "Bitte einen gültigen Geburtstermin wählen."
     }
   }
 }

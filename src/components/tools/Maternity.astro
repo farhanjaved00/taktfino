@@ -1,0 +1,79 @@
+---
+/** Mutterschutz-Rechner (§ 3 MuSchG): start 6 weeks before ET, end 8/12 weeks after birth (+ days lost by early birth). */
+import type { LocaleCode } from '../../config/locales';
+import { t, dict } from '../../i18n';
+import { calcMaternity } from '../../tools/maternity';
+import { addDays, formatISO, todayIn } from '../../lib/dates';
+import { fmtDateLong } from '../../i18n/format';
+import Icon from '../Icon.astro';
+interface Props { locale: LocaleCode }
+const { locale } = Astro.props;
+const u = (k: string, v: Record<string, string | number> = {}) => t(locale, `ui.maternity.${k}`, v);
+const c = (k: string) => t(locale, `common.${k}`);
+const M = { ui: (dict(locale) as { ui: { maternity: Record<string, string> } }).ui.maternity, common: (dict(locale) as { common: Record<string, string> }).common };
+const due = addDays(todayIn('Europe/Berlin'), 120);
+const r = calcMaternity({ due });
+---
+<section class="card tool" data-maternity data-msgs={JSON.stringify(M)} aria-label={t(locale, 'tools.maternity.name')}>
+  <div class="tool-inputs" style="margin-top:0">
+    <div class="field"><label for="mu-due">{u('due')}</label><input id="mu-due" class="input" type="date" value={formatISO(due)} data-in="due" /></div>
+    <div class="field"><label for="mu-birth">{u('birth')}</label><input id="mu-birth" class="input" type="date" data-in="birth" /></div>
+  </div>
+  <div class="tool-inputs"><button type="button" class="toggle" aria-pressed="false" data-in="ext"><span class="dot" aria-hidden="true"></span>{u('extended')}</button></div>
+  <div class="result-box" aria-live="polite">
+    <div class="answer-label">{u('resultLabel')}</div>
+    <div class="answer" data-out="range" style="font-size:clamp(22px,3vw,32px)">{u('range', { start: fmtDateLong(locale, r.start), end: fmtDateLong(locale, r.end) })}</div>
+    <div class="stats">
+      <div><b data-out="total">{r.totalDays}</b><span>{u('total')}</span></div>
+      <div><b data-out="weeks">{r.weeksAfter}</b><span>{u('after')}</span></div>
+      <div><b data-out="extra">0</b><span>{u('extra')}</span></div>
+      <div><b data-out="parental">–</b><span>{u('parental')}</span></div>
+    </div>
+    <p class="small" data-out="last"></p>
+  </div>
+  <div class="actions no-print">
+    <button class="btn btn--primary" type="button" data-action="copy"><Icon name="check" size={18} />{c('copy')}</button>
+    <button class="btn" type="button" data-action="share"><Icon name="link" size={18} />{c('share')}</button>
+  </div>
+  <p class="small muted" style="margin:12px 0 0">{c('privacyLocal')}</p>
+</section>
+<script>
+  import { calcMaternity } from '../../tools/maternity';
+  import { parseISO } from '../../lib/dates';
+  import { copyText, setQuery, getQuery, saveHistory, track, trackCalculate } from '../../scripts/client';
+  const root = document.querySelector<HTMLElement>('[data-maternity]');
+  if (root) {
+    const M = JSON.parse(root.dataset.msgs!) as { ui: Record<string, string>; common: Record<string, string> };
+    const f = (s: string, v: Record<string, string | number>) => s.replace(/\{(\w+)\}/g, (_, k) => String(v[k] ?? ''));
+    const $ = (k: string) => root.querySelector<HTMLInputElement>(`[data-in="${k}"]`)!;
+    const out = (k: string) => root.querySelector<HTMLElement>(`[data-out="${k}"]`)!;
+    const long = (c: { y: number; m: number; d: number }) => new Date(Date.UTC(c.y, c.m - 1, c.d, 12)).toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+    const short = (c: { y: number; m: number; d: number }) => `${String(c.d).padStart(2, '0')}.${String(c.m).padStart(2, '0')}.${c.y}`;
+    const q = getQuery();
+    if (q.get('et') && parseISO(q.get('et'))) $('due').value = q.get('et')!;
+    if (q.get('geburt') && parseISO(q.get('geburt'))) $('birth').value = q.get('geburt')!;
+    if (q.get('lang') === '1') $('ext').setAttribute('aria-pressed', 'true');
+    let text = '';
+    function render() {
+      const due = parseISO($('due').value);
+      if (!due) { out('range').textContent = M.ui.invalid; return; }
+      const r = calcMaternity({ due, birth: parseISO($('birth').value) ?? undefined, extended: $('ext').getAttribute('aria-pressed') === 'true' });
+      out('range').textContent = f(M.ui.range, { start: long(r.start), end: long(r.end) });
+      out('total').textContent = String(r.totalDays);
+      out('weeks').textContent = String(r.weeksAfter);
+      out('extra').textContent = String(r.extraDays);
+      out('parental').textContent = short(r.parentalLeaveFrom);
+      out('last').textContent = `${M.ui.lastWork}: ${long(r.lastWorkday)}`;
+      text = `${M.ui.resultLabel}: ${f(M.ui.range, { start: short(r.start), end: short(r.end) })} (${r.totalDays} ${M.common.days})`;
+      trackCalculate('maternity');
+    }
+    root.addEventListener('input', render);
+    root.addEventListener('click', (e) => {
+      const b = (e.target as HTMLElement).closest<HTMLButtonElement>('button'); if (!b) return;
+      if (b.dataset.in === 'ext') { b.setAttribute('aria-pressed', String(b.getAttribute('aria-pressed') !== 'true')); render(); return; }
+      if (b.dataset.action === 'copy') { copyText(text, M.common.copied); track('copy_result', { tool: 'maternity' }); }
+      if (b.dataset.action === 'share') { const url = setQuery({ et: $('due').value, geburt: $('birth').value || null, lang: $('ext').getAttribute('aria-pressed') === 'true' ? '1' : null }); copyText(url, M.common.linkCopied); saveHistory({ tool: 'maternity', label: text, url }); track('share', { tool: 'maternity' }); }
+    });
+    render();
+  }
+</script>
