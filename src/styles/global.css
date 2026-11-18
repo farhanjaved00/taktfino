@@ -421,3 +421,11 @@ select.input { padding-right: 32px; background: #fff; }
 .kw-table summary::after { content: '+'; margin-left: auto; color: var(--brand); font-size: 22px; }
 .kw-table[open] summary::after { content: '–'; }
 .kw-table tr.is-current td { background: var(--brand-soft); font-weight: 700; }
+
+/* Stundenzettel */
+.ts-sheet { min-width: 720px; }
+.ts-sheet tr.is-off td { background: var(--bg); }
+.ts-sheet tr.is-off .sheet-wd { color: var(--brand-dark); font-weight: 600; }
+.ts-hol { display: block; font-size: 11px; color: var(--today); font-weight: 600; }
+.ts-note { width: 150px; }
+.ts-sheet td:first-child { min-width: 110px; }

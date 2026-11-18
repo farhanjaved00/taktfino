@@ -23,12 +23,12 @@ const seo = {
 const tools = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/tools' }),
   schema: z.object({
-    tool: z.enum(['worktime', 'hours', 'workdays', 'wage', 'overtime', 'days', 'age', 'week', 'minutes']),
+    tool: z.enum(['worktime', 'hours', 'workdays', 'wage', 'overtime', 'days', 'age', 'week', 'minutes', 'timesheet']),
     ...seo,
     h1: z.string(),
     /** 40–60 word direct answer shown above the tool (AI citation) */
     answer: z.string(),
-    related: z.array(z.enum(['worktime', 'hours', 'workdays', 'wage', 'overtime', 'days', 'age', 'week', 'minutes'])).max(6).default([]),
+    related: z.array(z.enum(['worktime', 'hours', 'workdays', 'wage', 'overtime', 'days', 'age', 'week', 'minutes', 'timesheet'])).max(6).default([]),
     faq, sources, ...review,
   }),
 });
@@ -40,7 +40,7 @@ const articles = defineCollection({
     ...seo,
     category: z.enum(['work', 'pay', 'dates']),
     /** The hub tool this spoke supports — linked in the first 100 words */
-    tool: z.enum(['worktime', 'hours', 'workdays', 'wage', 'overtime', 'days', 'age', 'week', 'minutes']),
+    tool: z.enum(['worktime', 'hours', 'workdays', 'wage', 'overtime', 'days', 'age', 'week', 'minutes', 'timesheet']),
     date: z.coerce.date(),
     /** Same value across languages → hreflang between translations */
     translationKey: z.string(),

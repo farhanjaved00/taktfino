@@ -6,7 +6,7 @@ title: "Arbeitszeitrechner – mit Pause, Nachtstunden & Export"
 description: "Arbeitszeit für mehrere Tage berechnen: gesetzliche Pause nach ArbZG automatisch prüfen, Nacht- und Sonntagsstunden, Summe in Industriestunden, CSV/PDF."
 h1: "Arbeitszeitrechner mit Pausenregel"
 answer: "Ihre Arbeitszeit ist die Zeit zwischen Arbeitsbeginn und Arbeitsende minus Pausen. In Deutschland sind bei mehr als 6 Stunden mindestens 30 Minuten und bei mehr als 9 Stunden 45 Minuten Pause Pflicht. Der Rechner summiert mehrere Tage, prüft Pausen, Höchstarbeitszeit und Ruhezeit und zeigt das Ergebnis in Stunden und Industriestunden."
-related: ["hours", "overtime", "workdays", "wage", "days"]
+related: ["timesheet", "hours", "overtime", "workdays", "wage"]
 updated: 2026-11-18
 author: author
 reviewer: reviewer

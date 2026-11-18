@@ -67,6 +67,10 @@
     "minutes": {
       "name": "Minuten in Stunden",
       "short": "Minuten ↔ Stunden umrechnen, mit Dezimal und Tabelle"
+    },
+    "timesheet": {
+      "name": "Stundenzettel",
+      "short": "Monatlicher Stundenzettel – ausfüllen, als PDF drucken oder Excel"
     }
   },
   "common": {
@@ -307,6 +311,32 @@
       "colHM": "Stunden:Minuten",
       "colDecimal": "Dezimal",
       "colHours": "Stunden"
+    },
+    "timesheet": {
+      "name": "Name",
+      "employer": "Arbeitgeber / Projekt",
+      "month": "Monat",
+      "weeklyHours": "Wochenstunden (für Soll, optional)",
+      "region": "Feiertage",
+      "noRegion": "Keine Feiertage",
+      "day": "Tag",
+      "note": "Bemerkung",
+      "total": "Summe Arbeitszeit",
+      "target": "Soll",
+      "diff": "Differenz",
+      "daysWorked": "Arbeitstage erfasst",
+      "printPdf": "Als PDF / drucken",
+      "printBlank": "Leere Vorlage drucken",
+      "clear": "Monat leeren",
+      "fillDefault": "Mo–Fr mit 8:00–16:30 füllen",
+      "confirmClear": "Alle Einträge dieses Monats löschen?",
+      "signEmployee": "Unterschrift Arbeitnehmer/in",
+      "signEmployer": "Unterschrift Arbeitgeber/in",
+      "sheetTitle": "Stundenzettel",
+      "decimal": "Industriestunden",
+      "warnings": "{n} Hinweis(e) zu Pausen oder Höchstarbeitszeit – siehe Arbeitszeitrechner.",
+      "weekend": "Wochenende",
+      "printedOn": "Erstellt am"
     }
   }
 }

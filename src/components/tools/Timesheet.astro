@@ -1,0 +1,197 @@
+---
+/** Stundenzettel — monthly timesheet: fill in, autosave, print/PDF with signature lines, blank template, Excel (CSV). */
+import type { LocaleCode } from '../../config/locales';
+import { REGIONS } from '../../config/tool-map';
+import { t, dict } from '../../i18n';
+import { monthDays } from '../../tools/timesheet';
+import { todayIn } from '../../lib/dates';
+import Icon from '../Icon.astro';
+interface Props { locale: LocaleCode }
+const { locale } = Astro.props;
+const u = (k: string) => t(locale, `ui.timesheet.${k}`);
+const c = (k: string) => t(locale, `common.${k}`);
+const M = { ui: (dict(locale) as { ui: { timesheet: Record<string, string> } }).ui.timesheet, common: (dict(locale) as { common: Record<string, string> }).common };
+const today = todayIn('Europe/Berlin');
+const ym = `${today.y}-${String(today.m).padStart(2, '0')}`;
+const WD = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
+const days = monthDays(today.y, today.m, 'nw');
+const regions = REGIONS.filter((r) => r.country === 'DE');
+---
+<section class="card tool" data-timesheet data-msgs={JSON.stringify(M)} aria-label={t(locale, 'tools.timesheet.name')}>
+  <div class="tool-inputs" style="margin-top:0">
+    <div class="field"><label for="ts-name">{u('name')}</label><input id="ts-name" class="input" type="text" maxlength="80" autocomplete="name" data-in="name" /></div>
+    <div class="field"><label for="ts-emp">{u('employer')}</label><input id="ts-emp" class="input" type="text" maxlength="80" data-in="employer" /></div>
+    <div class="field"><label for="ts-month">{u('month')}</label><input id="ts-month" class="input" type="month" value={ym} data-in="month" /></div>
+    <div class="field"><label for="ts-region">{u('region')}</label>
+      <select id="ts-region" class="input" data-in="region"><option value="">{u('noRegion')}</option>{regions.map((r) => <option value={r.code} selected={r.code === 'nw'}>{r.name.de}</option>)}</select></div>
+    <div class="field"><label for="ts-wh">{u('weeklyHours')}</label><input id="ts-wh" class="input input--num" type="text" inputmode="decimal" value="40" data-in="wh" /></div>
+  </div>
+  <div class="actions no-print" style="margin-top:12px">
+    <button class="btn btn--outline" type="button" data-action="fill">{u('fillDefault')}</button>
+    <button class="btn btn--outline" type="button" data-action="clear">{u('clear')}</button>
+  </div>
+
+  <div class="table-wrap sheet-wrap">
+    <table class="sheet ts-sheet">
+      <thead><tr><th scope="col">{u('day')}</th><th scope="col">{c('start')}</th><th scope="col">{c('end')}</th><th scope="col">{c('break')}</th><th scope="col">{c('net')}</th><th scope="col">{u('note')}</th></tr></thead>
+      <tbody data-rows>
+        {days.map((d) => (
+          <tr class:list={{ 'is-off': d.weekend || !!d.holiday }} data-iso={d.iso}>
+            <td><b>{d.iso.slice(8)}.</b> <span class="sheet-wd">{WD[d.weekday]}</span>{d.holiday && <span class="ts-hol">{d.holiday}</span>}</td>
+            <td><input class="input input--sm" type="time" aria-label={`${c('start')} ${d.iso}`} /></td>
+            <td><input class="input input--sm" type="time" aria-label={`${c('end')} ${d.iso}`} /></td>
+            <td><input class="input input--sm input--break" type="number" min="0" max="600" step="5" inputmode="numeric" aria-label={`${c('break')} ${d.iso}`} /></td>
+            <td class="sheet-net">–</td>
+            <td><input class="input input--sm ts-note" type="text" maxlength="60" aria-label={`${u('note')} ${d.iso}`} /></td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="result-box" aria-live="polite">
+    <div class="answer-label">{u('total')}</div>
+    <div class="answer" data-out="total">0:00 {c('hoursShort')}</div>
+    <div class="answer-sub" data-out="sub"></div>
+    <div class="stats">
+      <div><b data-out="days">0</b><span>{u('daysWorked')}</span></div>
+      <div><b data-out="target">–</b><span>{u('target')}</span></div>
+      <div><b data-out="diff">–</b><span>{u('diff')}</span></div>
+      <div><b data-out="breaks">0:00</b><span>{c('break').replace(' (Min.)', '')}</span></div>
+    </div>
+    <p class="small" data-out="warn"></p>
+  </div>
+  <div class="actions no-print">
+    <button class="btn btn--primary" type="button" data-action="pdf"><Icon name="print" size={18} />{u('printPdf')}</button>
+    <button class="btn" type="button" data-action="csv"><Icon name="download" size={18} />{c('csv')}</button>
+    <button class="btn btn--outline" type="button" data-action="blank"><Icon name="print" size={18} />{u('printBlank')}</button>
+  </div>
+  <p class="small muted" style="margin:12px 0 0">{c('privacyLocal')}</p>
+</section>
+<script>
+  import { monthDays, monthTotals, type SheetRow } from '../../tools/timesheet';
+  import { formatHM, toDecimalHours } from '../../tools/time';
+  import { downloadCsv, loadState, storeState, track, trackCalculate, fmt } from '../../scripts/client';
+  const root = document.querySelector<HTMLElement>('[data-timesheet]');
+  if (root) {
+    const M = JSON.parse(root.dataset.msgs!) as { ui: Record<string, string>; common: Record<string, string> };
+    const $ = (k: string) => root.querySelector<HTMLInputElement & HTMLSelectElement>(`[data-in="${k}"]`)!;
+    const out = (k: string) => root.querySelector<HTMLElement>(`[data-out="${k}"]`)!;
+    const tbody = root.querySelector<HTMLElement>('[data-rows]')!;
+    const WD = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
+    const esc = (s: string) => s.replace(/[&<>"]/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[ch]!);
+    const num = (s: string) => Number(s.replace(',', '.'));
+    const now = new Date();
+    const META = 'timesheet-meta';
+    const meta = loadState<{ name: string; employer: string; region: string; wh: string }>(META);
+    if (meta) { $('name').value = meta.name || ''; $('employer').value = meta.employer || ''; $('region').value = meta.region ?? 'nw'; $('wh').value = meta.wh || '40'; }
+    $('month').value = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+    const ym = () => { const [y, m] = $('month').value.split('-').map(Number); return { y, m }; };
+    const key = () => `timesheet-${$('month').value}`;
+    let last: ReturnType<typeof monthTotals> | null = null;
+
+    function buildRows() {
+      const { y, m } = ym(); if (!y || !m) return;
+      const saved = loadState<SheetRow[]>(key()) || [];
+      const byIso = new Map(saved.map((r) => [r.iso, r]));
+      tbody.innerHTML = monthDays(y, m, $('region').value || undefined).map((d) => {
+        const r = byIso.get(d.iso);
+        return `<tr class="${d.weekend || d.holiday ? 'is-off' : ''}" data-iso="${d.iso}">
+          <td><b>${d.iso.slice(8)}.</b> <span class="sheet-wd">${WD[d.weekday]}</span>${d.holiday ? `<span class="ts-hol">${esc(d.holiday)}</span>` : ''}</td>
+          <td><input class="input input--sm" type="time" value="${r?.start || ''}" aria-label="${M.common.start} ${d.iso}"></td>
+          <td><input class="input input--sm" type="time" value="${r?.end || ''}" aria-label="${M.common.end} ${d.iso}"></td>
+          <td><input class="input input--sm input--break" type="number" min="0" max="600" step="5" inputmode="numeric" value="${r && r.start ? r.breakMin : ''}" aria-label="${M.common.break} ${d.iso}"></td>
+          <td class="sheet-net">–</td>
+          <td><input class="input input--sm ts-note" type="text" maxlength="60" value="${esc(r?.note || '')}" aria-label="${M.ui.note} ${d.iso}"></td></tr>`;
+      }).join('');
+    }
+    function read(): SheetRow[] {
+      return [...tbody.querySelectorAll<HTMLTableRowElement>('tr')].map((tr) => {
+        const [s, e, b, n] = tr.querySelectorAll('input');
+        return { iso: tr.dataset.iso!, start: s.value, end: e.value, breakMin: Number(b.value) || 0, note: n.value };
+      });
+    }
+    function render() {
+      const { y, m } = ym(); if (!y || !m) return;
+      const rows = read();
+      const t = monthTotals(rows, { year: y, month: m, country: 'DE', region: $('region').value || undefined, weeklyHours: num($('wh').value) || undefined });
+      last = t;
+      const byDate = new Map(t.sheet.days.map((d) => [d.date, d]));
+      tbody.querySelectorAll<HTMLTableRowElement>('tr').forEach((tr) => {
+        const d = byDate.get(tr.dataset.iso!);
+        tr.querySelector('.sheet-net')!.textContent = d && d.valid ? formatHM(d.netMin) : '–';
+        tr.classList.toggle('has-warn', !!d && d.warnings.some((w) => w.code === 'break_short' || w.code === 'over_max' || w.code === 'rest_short'));
+      });
+      out('total').textContent = `${formatHM(t.workedMin)} ${M.common.hoursShort}`;
+      out('sub').textContent = `= ${fmt('de-DE', toDecimalHours(t.workedMin), 2, 2)} ${M.ui.decimal}`;
+      out('days').textContent = String(t.daysWorked);
+      out('target').textContent = t.targetMin === null ? '–' : formatHM(t.targetMin);
+      out('diff').textContent = t.diffMin === null ? '–' : `${t.diffMin > 0 ? '+' : ''}${formatHM(t.diffMin)}`;
+      out('breaks').textContent = formatHM(t.breakMin);
+      out('warn').textContent = t.warnings ? M.ui.warnings.replace('{n}', String(t.warnings)) : '';
+      storeState(key(), rows.filter((r) => r.start || r.end || r.note));
+      storeState(META, { name: $('name').value, employer: $('employer').value, region: $('region').value, wh: $('wh').value });
+      trackCalculate('timesheet');
+    }
+    function monthLabel() { const { y, m } = ym(); return new Date(Date.UTC(y, m - 1, 15)).toLocaleDateString('de-DE', { month: 'long', year: 'numeric', timeZone: 'UTC' }); }
+
+    /** Prints a clean A4 sheet via a hidden iframe (no popup, page layout untouched). */
+    function printSheet(blank: boolean) {
+      const rows = read();
+      const byDate = new Map((last?.sheet.days || []).map((d) => [d.date, d]));
+      const body = rows.map((r) => {
+        const d = new Date(r.iso + 'T12:00:00Z'); const wd = WD[d.getUTCDay()];
+        const off = d.getUTCDay() === 0 || d.getUTCDay() === 6;
+        const net = !blank && byDate.get(r.iso)?.valid ? formatHM(byDate.get(r.iso)!.netMin) : '';
+        return `<tr class="${off ? 'off' : ''}"><td>${r.iso.slice(8)}.${r.iso.slice(5, 7)}.</td><td>${wd}</td><td>${blank ? '' : r.start}</td><td>${blank ? '' : r.end}</td><td>${blank || !r.start ? '' : r.breakMin}</td><td>${net}</td><td>${blank ? '' : esc(r.note || '')}</td></tr>`;
+      }).join('');
+      const tot = !blank && last ? `<p class="tot"><b>${M.ui.total}:</b> ${formatHM(last.workedMin)} h (${fmt('de-DE', toDecimalHours(last.workedMin), 2, 2)})${last.targetMin !== null ? ` · <b>${M.ui.target}:</b> ${formatHM(last.targetMin)} h · <b>${M.ui.diff}:</b> ${last.diffMin! > 0 ? '+' : ''}${formatHM(last.diffMin!)} h` : ''}</p>` : `<p class="tot"><b>${M.ui.total}:</b> ____________ h</p>`;
+      const html = `<!doctype html><html lang="de"><head><meta charset="utf-8"><title>${M.ui.sheetTitle} ${monthLabel()}</title><style>
+        @page{size:A4;margin:14mm}body{font:11px/1.35 Arial,Helvetica,sans-serif;color:#000}h1{font-size:18px;margin:0 0 6px}
+        .meta{display:flex;gap:24px;margin-bottom:8px}table{width:100%;border-collapse:collapse}th,td{border:1px solid #999;padding:3px 5px;height:15px;text-align:left}
+        th{background:#eee}tr.off td{background:#f3f3f3}.tot{margin:10px 0 28px;font-size:12px}.sign{display:flex;gap:40px}.sign div{flex:1;border-top:1px solid #000;padding-top:4px}
+        .foot{margin-top:14px;color:#666;font-size:9px}</style></head><body>
+        <h1>${M.ui.sheetTitle} – ${monthLabel()}</h1>
+        <div class="meta"><div><b>${M.ui.name}:</b> ${esc($('name').value) || '________________________'}</div><div><b>${M.ui.employer}:</b> ${esc($('employer').value) || '________________________'}</div></div>
+        <table><thead><tr><th>${M.common.date}</th><th>${M.ui.day}</th><th>${M.common.start}</th><th>${M.common.end}</th><th>${M.common.break}</th><th>${M.common.net}</th><th>${M.ui.note}</th></tr></thead><tbody>${body}</tbody></table>
+        ${tot}<div class="sign"><div>${M.ui.signEmployee}</div><div>${M.ui.signEmployer}</div></div>
+        <div class="foot">${M.ui.printedOn} ${new Date().toLocaleDateString('de-DE')} · ${location.hostname}</div></body></html>`;
+      const f = document.createElement('iframe');
+      f.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:0';
+      document.body.appendChild(f);
+      f.contentDocument!.open(); f.contentDocument!.write(html); f.contentDocument!.close();
+      setTimeout(() => { f.contentWindow!.focus(); f.contentWindow!.print(); setTimeout(() => f.remove(), 1000); }, 250);
+      track('export', { tool: 'timesheet', format: blank ? 'blank' : 'pdf' });
+    }
+
+    root.addEventListener('input', (e) => {
+      const el = e.target as HTMLElement;
+      if (el === $('month') || el === $('region')) { buildRows(); }
+      render();
+    });
+    root.addEventListener('change', (e) => { if (e.target === $('region') || e.target === $('month')) { buildRows(); render(); } });
+    root.addEventListener('click', (e) => {
+      const b = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-action]'); if (!b) return;
+      const a = b.dataset.action;
+      if (a === 'fill') {
+        tbody.querySelectorAll<HTMLTableRowElement>('tr:not(.is-off)').forEach((tr) => {
+          const [s, en, br] = tr.querySelectorAll('input');
+          if (!s.value && !en.value) { s.value = '08:00'; en.value = '16:30'; br.value = '30'; }
+        });
+        render();
+      }
+      if (a === 'clear' && confirm(M.ui.confirmClear)) { storeState(key(), []); buildRows(); render(); }
+      if (a === 'pdf') printSheet(false);
+      if (a === 'blank') printSheet(true);
+      if (a === 'csv' && last) {
+        const head = [M.common.date, M.ui.day, M.common.start, M.common.end, M.common.break, `${M.common.net} (h:mm)`, `${M.common.net} (${M.ui.decimal})`, M.ui.note];
+        const byDate = new Map(last.sheet.days.map((d) => [d.date, d]));
+        const rows = read().map((r) => { const d = byDate.get(r.iso); const wd = WD[new Date(r.iso + 'T12:00:00Z').getUTCDay()];
+          return [r.iso.split('-').reverse().join('.'), wd, r.start, r.end, r.start ? r.breakMin : '', d?.valid ? formatHM(d.netMin) : '', d?.valid ? fmt('de-DE', toDecimalHours(d.netMin), 2, 2) : '', r.note || '']; });
+        downloadCsv([[`${M.ui.sheetTitle} ${monthLabel()}`], [M.ui.name, $('name').value], [M.ui.employer, $('employer').value], [], head, ...rows, [], [M.ui.total, formatHM(last.workedMin), fmt('de-DE', toDecimalHours(last.workedMin), 2, 2)]], `stundenzettel-${$('month').value}.csv`);
+        track('export', { tool: 'timesheet', format: 'csv' });
+      }
+    });
+    buildRows(); render();
+  }
+</script>

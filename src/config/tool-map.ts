@@ -4,7 +4,7 @@
  */
 import type { LocaleCode } from './locales';
 
-export type ToolId = 'worktime' | 'hours' | 'workdays' | 'wage' | 'overtime' | 'days' | 'age' | 'week' | 'minutes';
+export type ToolId = 'worktime' | 'hours' | 'workdays' | 'wage' | 'overtime' | 'days' | 'age' | 'week' | 'minutes' | 'timesheet';
 export type CategoryId = 'work' | 'pay' | 'dates';
 
 export const CATEGORIES: Record<CategoryId, Record<LocaleCode, string>> = {
@@ -19,12 +19,13 @@ export interface ToolDef {
   slug: Record<LocaleCode, string>;
   /** Money tool (multi-input / legal data) vs supporting tool, per the AI-era filter */
   priority: 'money' | 'supporting';
-  icon: 'clock' | 'cal' | 'pct' | 'hour' | 'cake' | 'calAdd';
+  icon: 'clock' | 'cal' | 'pct' | 'hour' | 'cake' | 'calAdd' | 'print';
 }
 
 export const TOOLS: ToolDef[] = [
   { id: 'worktime', category: 'work', priority: 'money', icon: 'clock', slug: { de: 'arbeitszeitrechner', es: 'calculadora-horas-trabajadas', 'pt-br': 'calculadora-horas-trabalhadas', en: 'work-hours-calculator' } },
   { id: 'hours', category: 'work', priority: 'money', icon: 'hour', slug: { de: 'stundenrechner', es: 'calculadora-de-horas', 'pt-br': 'calculadora-de-horas', en: 'hours-calculator' } },
+  { id: 'timesheet', category: 'work', priority: 'money', icon: 'print', slug: { de: 'stundenzettel', es: 'hoja-de-horas', 'pt-br': 'folha-de-ponto', en: 'timesheet' } },
   { id: 'workdays', category: 'work', priority: 'money', icon: 'cal', slug: { de: 'arbeitstage-rechner', es: 'calculadora-dias-laborables', 'pt-br': 'calculadora-dias-uteis', en: 'working-days-calculator' } },
   { id: 'wage', category: 'pay', priority: 'money', icon: 'pct', slug: { de: 'stundenlohnrechner', es: 'calculadora-salario-por-hora', 'pt-br': 'calculadora-salario-por-hora', en: 'hourly-wage-calculator' } },
   { id: 'overtime', category: 'work', priority: 'money', icon: 'calAdd', slug: { de: 'ueberstundenrechner', es: 'calculadora-horas-extras', 'pt-br': 'calculadora-horas-extras', en: 'overtime-calculator' } },
