@@ -2,7 +2,7 @@
 title: "Industrieminuten-Tabelle: Minuten in Dezimalstunden"
 description: "Industrieminuten-Tabelle von 1 bis 60 Minuten: So rechnen Sie Minuten in Dezimalstunden um – mit Formel, Beispielen und Lohnberechnung."
 keyword: "industrieminuten tabelle"
-secondary: ["minuten in dezimalstunden", "industriezeit umrechnen", "minuten in industrieminuten"]
+secondary: ["industriezeit", "minuten in industrieminuten", "dezimalzeit"]
 category: work
 tool: hours
 translationKey: industrial-minutes

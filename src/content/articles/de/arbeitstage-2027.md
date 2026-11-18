@@ -1,8 +1,8 @@
 ---
-title: "Arbeitstage 2027 nach Bundesland – Tabelle & Feiertage"
-description: "Arbeitstage 2027 in allen 16 Bundesländern (253 bis 256 bei Mo–Fr), dazu Österreich und Zürich. Mit Feiertagsliste, Brückentagen und Rechner."
-keyword: "arbeitstage 2027"
-secondary: ["arbeitstage 2027 bundesland", "arbeitstage 2027 nrw"]
+title: "Wie viele Arbeitstage hat ein Jahr? 2026 & 2027"
+description: "Ein Jahr hat 252 bis 256 Arbeitstage – je nach Bundesland. Tabelle für 2026 und 2027, alle 16 Länder plus Österreich und Zürich, mit 30 Tagen Urlaub."
+keyword: "wie viele arbeitstage hat ein jahr"
+secondary: ["arbeitstage 2027", "arbeitstage 2026", "wie viele arbeitstage im jahr bei 30 tagen urlaub"]
 category: work
 tool: workdays
 translationKey: workdays-2027
@@ -12,6 +12,8 @@ author: author
 reviewer: reviewer
 reviewed: false
 faq:
+  - q: "Wie viele Arbeitstage hat ein Jahr mit 30 Tagen Urlaub?"
+    a: "2027 je nach Bundesland 223 bis 226 Arbeitstage (Fünf-Tage-Woche), zum Beispiel 224 in Nordrhein-Westfalen."
   - q: "Welches Bundesland hat 2027 die meisten Arbeitstage?"
     a: "Brandenburg, Bremen, Hamburg, Niedersachsen und Schleswig-Holstein mit je 256 Arbeitstagen (Montag bis Freitag)."
   - q: "Welches Bundesland hat 2027 die wenigsten Arbeitstage?"
@@ -20,30 +22,30 @@ faq:
     a: "Weil der 1. Mai, der Tag der Deutschen Einheit und beide Weihnachtsfeiertage auf ein Wochenende fallen und deshalb keinen Arbeitstag kosten."
 ---
 
-2027 hat je nach Bundesland **253 bis 256 Arbeitstage** bei einer Fünf-Tage-Woche. Das Jahr hat 261 Wochentage von Montag bis Freitag; davon gehen je nach Land 5 bis 8 Feiertage ab. Für eigene Zeiträume – etwa mit Urlaub oder halben Tagen an Heiligabend und Silvester – nutzen Sie den [Arbeitstage-Rechner](/de/arbeitstage-rechner/).
+Ein Jahr hat bei einer Fünf-Tage-Woche je nach Bundesland **252 bis 256 Arbeitstage**: 2026 sind es 252 bis 254, 2027 sind es 253 bis 256. Von den 261 Wochentagen (Montag bis Freitag) gehen die Feiertage ab, die auf einen Werktag fallen. Für eigene Zeiträume – etwa mit Urlaub oder halben Tagen an Heiligabend und Silvester – nutzen Sie den [Arbeitstage-Rechner](/de/arbeitstage-rechner/).
 
-## Arbeitstage 2027 nach Bundesland
+## Arbeitstage 2026 und 2027 nach Bundesland
 
-| Bundesland | Arbeitstage 2027 (Mo–Fr) | Feiertage an Werktagen |
-| --- | --- | --- |
-| Baden-Württemberg | 253 | 8 |
-| Bayern | 253 | 8 |
-| Berlin | 255 | 6 |
-| Brandenburg | 256 | 5 |
-| Bremen | 256 | 5 |
-| Hamburg | 256 | 5 |
-| Hessen | 255 | 6 |
-| Mecklenburg-Vorpommern | 255 | 6 |
-| Niedersachsen | 256 | 5 |
-| Nordrhein-Westfalen | 254 | 7 |
-| Rheinland-Pfalz | 254 | 7 |
-| Saarland | 254 | 7 |
-| Sachsen | 255 | 6 |
-| Sachsen-Anhalt | 255 | 6 |
-| Schleswig-Holstein | 256 | 5 |
-| Thüringen | 255 | 6 |
-| *Österreich* | *252* | *9* |
-| *Schweiz, Kanton Zürich* | *256* | *5* |
+| Bundesland | 2026 (Mo–Fr) | 2027 (Mo–Fr) | 2027 mit 30 Tagen Urlaub |
+| --- | --- | --- | --- |
+| Baden-Württemberg | 252 | 253 | 223 |
+| Bayern | 252 | 253 | 223 |
+| Berlin | 254 | 255 | 225 |
+| Brandenburg | 254 | 256 | 226 |
+| Bremen | 254 | 256 | 226 |
+| Hamburg | 254 | 256 | 226 |
+| Hessen | 253 | 255 | 225 |
+| Mecklenburg-Vorpommern | 254 | 255 | 225 |
+| Niedersachsen | 254 | 256 | 226 |
+| Nordrhein-Westfalen | 253 | 254 | 224 |
+| Rheinland-Pfalz | 253 | 254 | 224 |
+| Saarland | 253 | 254 | 224 |
+| Sachsen | 253 | 255 | 225 |
+| Sachsen-Anhalt | 253 | 255 | 225 |
+| Schleswig-Holstein | 254 | 256 | 226 |
+| Thüringen | 254 | 255 | 225 |
+| *Österreich* | *251* | *252* | *222* |
+| *Schweiz, Kanton Zürich* | *253* | *256* | *226* |
 
 Gemeindliche Feiertage (Mariä Himmelfahrt in Teilen Bayerns, Fronleichnam in Teilen Sachsens und Thüringens) sind hier nach der Regel im Rechner berücksichtigt; 2027 fällt Mariä Himmelfahrt ohnehin auf einen Sonntag.
 

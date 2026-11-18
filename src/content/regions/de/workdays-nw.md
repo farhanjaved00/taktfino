@@ -1,11 +1,11 @@
 ---
 tool: workdays
 region: nw
-keyword: "arbeitstage nrw"
-secondary: ["arbeitstage nordrhein-westfalen", "feiertage nrw", "arbeitstage nrw 2027"]
-title: "Arbeitstage NRW 2026/2027 – Feiertage & Monatsübersicht"
+keyword: "feiertage nrw"
+secondary: ["arbeitstage nrw", "feiertage 2027 nrw", "arbeitstage 2026 nrw"]
+title: "Feiertage & Arbeitstage NRW 2026/2027"
 description: "Arbeitstage in Nordrhein-Westfalen: 253 (2026) und 254 (2027) bei Mo–Fr. Mit allen 11 Feiertagen, Monatstabelle und Rechner für eigene Zeiträume."
-h1: "Arbeitstage in Nordrhein-Westfalen"
+h1: "Feiertage und Arbeitstage in Nordrhein-Westfalen"
 answer: "Nordrhein-Westfalen hat 11 gesetzliche Feiertage – die 9 bundesweiten plus Fronleichnam und Allerheiligen. Bei einer Fünf-Tage-Woche ergeben sich 2026 genau 253 und 2027 genau 254 Arbeitstage. Die Tabellen unten zeigen jeden Monat und jeden Feiertag; mit dem Rechner zählen Sie beliebige Zeiträume."
 updated: 2026-11-18
 author: author

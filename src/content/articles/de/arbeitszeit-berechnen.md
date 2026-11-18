@@ -1,8 +1,8 @@
 ---
-title: "Arbeitszeit richtig berechnen – Formel, Beispiele, Fehler"
+title: "Arbeitsstunden berechnen: Formel, Beispiele, Fehler"
 description: "So berechnen Sie Ihre Arbeitszeit richtig: Ende minus Beginn minus Pause, Nachtschichten über Mitternacht, Industriestunden und Wochensumme."
-keyword: "arbeitszeit richtig berechnen"
-secondary: ["arbeitszeit ausrechnen", "arbeitsstunden ausrechnen formel", "arbeitszeit über mitternacht"]
+keyword: "arbeitsstunden berechnen"
+secondary: ["arbeitszeit richtig berechnen", "arbeitszeit ausrechnen", "was zählt zur arbeitszeit", "arbeitszeit über mitternacht"]
 category: work
 tool: worktime
 translationKey: calculate-working-time

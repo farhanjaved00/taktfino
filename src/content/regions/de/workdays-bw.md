@@ -1,11 +1,11 @@
 ---
 tool: workdays
 region: bw
-keyword: "arbeitstage baden-württemberg"
-secondary: ["feiertage baden-württemberg", "arbeitstage bw 2027"]
-title: "Arbeitstage Baden-Württemberg 2026/2027 – Feiertage"
+keyword: "feiertage baden-württemberg"
+secondary: ["arbeitstage baden-württemberg", "feiertage 2027 bw", "arbeitstage 2026 bw"]
+title: "Feiertage & Arbeitstage BW 2026/2027"
 description: "Arbeitstage in Baden-Württemberg: 252 (2026) und 253 (2027) bei Mo–Fr. Alle 12 Feiertage, Monatstabelle und Rechner für eigene Zeiträume."
-h1: "Arbeitstage in Baden-Württemberg"
+h1: "Feiertage und Arbeitstage in Baden-Württemberg"
 answer: "Baden-Württemberg hat 12 gesetzliche Feiertage: die 9 bundesweiten plus Heilige Drei Könige, Fronleichnam und Allerheiligen. Bei einer Fünf-Tage-Woche ergeben sich 2026 genau 252 und 2027 genau 253 Arbeitstage – zusammen mit Bayern die wenigsten in Deutschland. Die Tabellen zeigen jeden Monat und jeden Feiertag."
 updated: 2026-11-18
 author: author

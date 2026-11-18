@@ -1,50 +1,57 @@
 status,url,primary,secondary,type
 needs review,/de/alter-berechnen/,alter berechnen,"alter ausrechnen, wie alt bin ich, geburtstag rechner",tools
 needs review,/de/tage-rechner/,tage rechner,"tage zwischen zwei daten, tage berechnen, wie viele tage, datumsrechner",tools
-needs review,/de/stundenrechner/,stundenrechner,"stunden addieren, stunden zusammenrechnen, dezimalstunden umrechnen, industrieminuten",tools
+needs review,/de/stundenrechner/,stundenrechner,"stunden in dezimal, stunden addieren, stunden zusammenrechnen, dezimalstunden",tools
 needs review,/de/ueberstundenrechner/,überstundenrechner,"überstunden berechnen, minusstunden berechnen, zeitausgleich berechnen, überstundenzuschlag",tools
 needs review,/de/stundenlohnrechner/,stundenlohnrechner,"stundenlohn berechnen, monatsgehalt in stundenlohn, stundenlohn in monatsgehalt, mindestlohn rechner",tools
 needs review,/de/arbeitstage-rechner/,arbeitstage rechner,"arbeitstage berechnen, arbeitstage zwischen zwei daten, werktage berechnen",tools
-needs review,/de/arbeitszeitrechner/,arbeitszeitrechner,"arbeitszeit berechnen, arbeitszeitrechner mit pause, arbeitsstunden berechnen, zeiterfassung rechner",tools
-needs review,/de/arbeitstage-rechner/baden-wuerttemberg/,arbeitstage baden-württemberg,"feiertage baden-württemberg, arbeitstage bw 2027",regions
-needs review,/de/arbeitstage-rechner/bayern/,arbeitstage bayern,"feiertage bayern, arbeitstage bayern 2027, mariä himmelfahrt bayern",regions
-needs review,/de/arbeitstage-rechner/hessen/,arbeitstage hessen,"feiertage hessen, arbeitstage hessen 2027",regions
-needs review,/de/arbeitstage-rechner/niedersachsen/,arbeitstage niedersachsen,"feiertage niedersachsen, arbeitstage niedersachsen 2027, reformationstag niedersachsen",regions
-needs review,/de/arbeitstage-rechner/nordrhein-westfalen/,arbeitstage nrw,"arbeitstage nordrhein-westfalen, feiertage nrw, arbeitstage nrw 2027",regions
-needs review,/de/arbeitszeit/arbeitstage-2027/,arbeitstage 2027,"arbeitstage 2027 bundesland, arbeitstage 2027 nrw",articles
-needs review,/de/arbeitszeit/arbeitszeit-berechnen/,arbeitszeit richtig berechnen,"arbeitszeit ausrechnen, arbeitsstunden ausrechnen formel, arbeitszeit über mitternacht",articles
-needs review,/de/arbeitszeit/industrieminuten-tabelle/,industrieminuten tabelle,"minuten in dezimalstunden, industriezeit umrechnen, minuten in industrieminuten",articles
-needs review,/de/lohn-gehalt/mindestlohn-2027/,mindestlohn 2027,"mindestlohn 2026, mindestlohn monatlich, minijob grenze 2027",articles
-needs review,/de/arbeitszeit/pausenregelung/,pausenregelung,"pausenregelung arbzg, pause nach 6 stunden, wie viel pause bei 8 stunden",articles
+needs review,/de/arbeitszeitrechner/,arbeitszeitrechner,"arbeitszeit berechnen, arbeitszeitrechner mit pause, zeiterfassung rechner",tools
+needs review,/de/arbeitstage-rechner/baden-wuerttemberg/,feiertage baden-württemberg,"arbeitstage baden-württemberg, feiertage 2027 bw, arbeitstage 2026 bw",regions
+needs review,/de/arbeitstage-rechner/bayern/,feiertage bayern,"arbeitstage bayern, feiertage 2027 bayern, arbeitstage 2026 bayern",regions
+needs review,/de/arbeitstage-rechner/hessen/,feiertage hessen,"arbeitstage hessen, feiertage 2027 hessen, arbeitstage 2026 hessen",regions
+needs review,/de/arbeitstage-rechner/niedersachsen/,feiertage niedersachsen,"arbeitstage niedersachsen, feiertage 2027 niedersachsen, arbeitstage 2026 niedersachsen",regions
+needs review,/de/arbeitstage-rechner/nordrhein-westfalen/,feiertage nrw,"arbeitstage nrw, feiertage 2027 nrw, arbeitstage 2026 nrw",regions
+needs review,/de/arbeitszeit/arbeitstage-2027/,wie viele arbeitstage hat ein jahr,"arbeitstage 2027, arbeitstage 2026, wie viele arbeitstage im jahr bei 30 tagen urlaub",articles
+needs review,/de/arbeitszeit/arbeitszeit-berechnen/,arbeitsstunden berechnen,"arbeitszeit richtig berechnen, arbeitszeit ausrechnen, was zählt zur arbeitszeit, arbeitszeit über mitternacht",articles
+needs review,/de/arbeitszeit/industrieminuten-tabelle/,industrieminuten tabelle,"industriezeit, minuten in industrieminuten, dezimalzeit",articles
+needs review,/de/lohn-gehalt/mindestlohn-2027/,mindestlohn 2027,"mindestlohn 2026, mindestlohn monatlich, mindestlohn 2027 minijob",articles
+needs review,/de/arbeitszeit/pausenregelung/,pausenregelung,"pausenzeiten, ruhepause, pausenregelung arbzg, pause nach 6 stunden",articles
 needs review,/de/arbeitszeit/ruhezeit/,ruhezeit arbeitszeitgesetz,"11 stunden ruhezeit, ruhezeit zwischen zwei schichten, ruhezeit unterschritten",articles
-needs review,/de/arbeitszeit/ueberstunden-regeln/,überstunden regelung,"überstunden gesetz, wie viele überstunden sind erlaubt, überstunden bezahlung",articles
-needs review,/de/arbeitszeit/urlaubsanspruch-berechnen/,urlaubsanspruch berechnen,"urlaubstage berechnen, urlaub teilzeit berechnen, teilurlaub berechnen",articles
-planned (queue),,arbeitszeitkonto,,article
-planned (queue),,minusstunden,,article
-planned (queue),,nachtzuschlag berechnen,,article
-planned (queue),,sonntagsarbeit regelung,,article
-planned (queue),,gleitzeit regelung,,article
-planned (queue),,40 stunden woche,,article
-planned (queue),,stunden in minuten umrechnen,,article
-planned (queue),,minuten in stunden umrechnen,,article
-planned (queue),,arbeitstage pro monat,,article
-planned (queue),,brückentage 2027,,article
+needs review,/de/arbeitszeit/ueberstunden-regeln/,überstunden auszahlen,"wie viele überstunden sind erlaubt, wann verfallen überstunden, wie werden überstunden versteuert, überstunden regelung",articles
+needs review,/de/arbeitszeit/urlaubsanspruch-berechnen/,urlaubsanspruch berechnen,"urlaubstage berechnen, wie viel urlaub steht mir zu, teilurlaub berechnen",articles
 planned (queue),,feiertage 2027,,article
-planned (queue),,zeiterfassung pflicht,,article
-planned (queue),,rufbereitschaft arbeitszeit,,article
+planned (queue),,brückentage 2027,,article
+planned (queue),,minijob 2027,,article
+planned (queue),,wie viele wochen hat ein jahr,,article
+planned (queue),,gleitzeit,,article
+planned (queue),,urlaubsanspruch bei kündigung,,article
+planned (queue),,arbeitszeitkonto,,article
+planned (queue),,feiertagszuschlag,,article
+planned (queue),,probezeit,,article
+planned (queue),,sonntagszuschlag,,article
+planned (queue),,nachtzuschlag,,article
+planned (queue),,resturlaub,,article
+planned (queue),,rufbereitschaft,,article
+planned (queue),,krank im urlaub,,article
+planned (queue),,minusstunden,,article
+planned (queue),,urlaubsanspruch teilzeit,,article
 planned (queue),,dienstreise arbeitszeit,,article
-planned (queue),,homeoffice arbeitszeit,,article
-planned (queue),,pausenregelung jugendliche,,article
-planned (queue),,arbeitszeit österreich,,article
-planned (queue),,arbeitszeit schweiz,,article
-planned (queue),,bruttostundenlohn berechnen,,article
-planned (queue),,stundenlohn teilzeit,,article
-planned (queue),,monatsstunden berechnen,,article
-planned (queue),,überstunden teilzeit,,article
-planned (queue),,kalenderwoche,,article
-planned (queue),,alter in tagen,,article
-planned (queue),,fristen berechnen,,article
-planned (queue),,schichtplan berechnen,,article
-planned (queue),,urlaubstage teilzeit,,article
+planned (queue),,urlaub minijob,,article
+planned (queue),,zeiterfassung pflicht,,article
 planned (queue),,4 tage woche,,article
+planned (queue),,arbeitstage pro monat,,article
+planned (queue),,40 stunden woche,,article
+planned (queue),,wochenarbeitszeit,,article
+planned (queue),,30 stunden woche,,article
+planned (queue),,schaltjahr,,article
+planned (queue),,schichtplan,,article
 planned (queue),,arbeitsstunden pro jahr,,article
+planned (queue),,urlaubsgeld,,article
+planned (queue),,netto stundenlohn,,article
+planned (queue),,arbeitszeitnachweis,,article
+planned (queue),,nachtschicht,,article
+planned (queue),,mindestlohn österreich,,article
+planned (queue),,urlaubsanspruch österreich,,article
+planned (queue),,zeitumstellung 2027,,article
+planned (queue),,überstunden teilzeit,,article
+planned (queue),,höchstarbeitszeit,,article

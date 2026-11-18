@@ -1,11 +1,11 @@
 ---
 tool: workdays
 region: he
-keyword: "arbeitstage hessen"
-secondary: ["feiertage hessen", "arbeitstage hessen 2027"]
-title: "Arbeitstage Hessen 2026/2027 – Feiertage & Monate"
+keyword: "feiertage hessen"
+secondary: ["arbeitstage hessen", "feiertage 2027 hessen", "arbeitstage 2026 hessen"]
+title: "Feiertage & Arbeitstage Hessen 2026/2027"
 description: "Arbeitstage in Hessen: 253 (2026) und 255 (2027) bei Mo–Fr. Alle 10 Feiertage inkl. Fronleichnam, Monatstabelle und Rechner."
-h1: "Arbeitstage in Hessen"
+h1: "Feiertage und Arbeitstage in Hessen"
 answer: "Hessen hat 10 gesetzliche Feiertage: die 9 bundesweiten plus Fronleichnam. Bei einer Fünf-Tage-Woche ergeben sich 2026 genau 253 und 2027 genau 255 Arbeitstage. Die Tabellen zeigen alle Monate und Feiertage; mit dem Rechner zählen Sie eigene Zeiträume inklusive Urlaub und halber Tage an Heiligabend und Silvester."
 updated: 2026-11-18
 author: author

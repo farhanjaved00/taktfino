@@ -2,7 +2,7 @@
 title: "Mindestlohn 2027: 14,60 € – Monatslohn & Minijob-Grenze"
 description: "Mindestlohn ab 1. Januar 2027: 14,60 € pro Stunde. Was das im Monat bedeutet, wie Sie Ihren Stundenlohn prüfen und wie hoch die Minijob-Grenze ist."
 keyword: "mindestlohn 2027"
-secondary: ["mindestlohn 2026", "mindestlohn monatlich", "minijob grenze 2027"]
+secondary: ["mindestlohn 2026", "mindestlohn monatlich", "mindestlohn 2027 minijob"]
 category: pay
 tool: wage
 translationKey: minimum-wage

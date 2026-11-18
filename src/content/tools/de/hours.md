@@ -1,7 +1,7 @@
 ---
 tool: hours
 keyword: "stundenrechner"
-secondary: ["stunden addieren", "stunden zusammenrechnen", "dezimalstunden umrechnen", "industrieminuten"]
+secondary: ["stunden in dezimal", "stunden addieren", "stunden zusammenrechnen", "dezimalstunden"]
 title: "Stundenrechner – Stunden addieren & Dezimal umrechnen"
 description: "Stunden zwischen zwei Uhrzeiten berechnen, Zeiten addieren und subtrahieren und Stunden:Minuten in Dezimalstunden (Industrieminuten) umrechnen."
 h1: "Stundenrechner"

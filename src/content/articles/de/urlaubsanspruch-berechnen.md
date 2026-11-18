@@ -2,7 +2,7 @@
 title: "Urlaubsanspruch berechnen – bei Teilzeit & Jobwechsel"
 description: "Gesetzlicher Urlaub: 24 Werktage bzw. 20 Arbeitstage bei 5 Tagen pro Woche. So berechnen Sie Urlaub bei Teilzeit, Jobwechsel und Eintritt im Jahr."
 keyword: "urlaubsanspruch berechnen"
-secondary: ["urlaubstage berechnen", "urlaub teilzeit berechnen", "teilurlaub berechnen"]
+secondary: ["urlaubstage berechnen", "wie viel urlaub steht mir zu", "teilurlaub berechnen"]
 category: work
 tool: workdays
 translationKey: vacation-entitlement

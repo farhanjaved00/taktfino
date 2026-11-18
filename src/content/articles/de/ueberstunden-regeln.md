@@ -1,8 +1,8 @@
 ---
-title: "Überstunden: Regeln, Grenzen und Bezahlung in Deutschland"
+title: "Überstunden auszahlen: Regeln, Grenzen & Zuschläge"
 description: "Wann Überstunden erlaubt sind, wie viele es sein dürfen, ob es Zuschläge gibt und wie Sie Überstunden richtig berechnen und dokumentieren."
-keyword: "überstunden regelung"
-secondary: ["überstunden gesetz", "wie viele überstunden sind erlaubt", "überstunden bezahlung"]
+keyword: "überstunden auszahlen"
+secondary: ["wie viele überstunden sind erlaubt", "wann verfallen überstunden", "wie werden überstunden versteuert", "überstunden regelung"]
 category: work
 tool: overtime
 translationKey: overtime-rules

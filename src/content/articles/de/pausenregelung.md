@@ -2,7 +2,7 @@
 title: "Pausenregelung nach ArbZG: Wie viel Pause ist Pflicht?"
 description: "Pausenregelung nach § 4 ArbZG: ab 6 Stunden 30 Minuten, ab 9 Stunden 45 Minuten. Mit Beispielen, Tabelle und Regeln für Österreich und die Schweiz."
 keyword: "pausenregelung"
-secondary: ["pausenregelung arbzg", "pause nach 6 stunden", "wie viel pause bei 8 stunden"]
+secondary: ["pausenzeiten", "ruhepause", "pausenregelung arbzg", "pause nach 6 stunden"]
 category: work
 tool: worktime
 translationKey: break-rules

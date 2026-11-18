@@ -1,7 +1,7 @@
 ---
 tool: worktime
 keyword: "arbeitszeitrechner"
-secondary: ["arbeitszeit berechnen", "arbeitszeitrechner mit pause", "arbeitsstunden berechnen", "zeiterfassung rechner"]
+secondary: ["arbeitszeit berechnen", "arbeitszeitrechner mit pause", "zeiterfassung rechner"]
 title: "Arbeitszeitrechner – mit Pause, Nachtstunden & Export"
 description: "Arbeitszeit für mehrere Tage berechnen: gesetzliche Pause nach ArbZG automatisch prüfen, Nacht- und Sonntagsstunden, Summe in Industriestunden, CSV/PDF."
 h1: "Arbeitszeitrechner mit Pausenregel"

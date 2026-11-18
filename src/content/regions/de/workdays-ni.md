@@ -1,11 +1,11 @@
 ---
 tool: workdays
 region: ni
-keyword: "arbeitstage niedersachsen"
-secondary: ["feiertage niedersachsen", "arbeitstage niedersachsen 2027", "reformationstag niedersachsen"]
-title: "Arbeitstage Niedersachsen 2026/2027 – Feiertage"
+keyword: "feiertage niedersachsen"
+secondary: ["arbeitstage niedersachsen", "feiertage 2027 niedersachsen", "arbeitstage 2026 niedersachsen"]
+title: "Feiertage & Arbeitstage Niedersachsen 2026/2027"
 description: "Arbeitstage in Niedersachsen: 254 (2026) und 256 (2027) bei Mo–Fr. Mit Reformationstag, allen 10 Feiertagen, Monatstabelle und Rechner."
-h1: "Arbeitstage in Niedersachsen"
+h1: "Feiertage und Arbeitstage in Niedersachsen"
 answer: "Niedersachsen hat 10 gesetzliche Feiertage: die 9 bundesweiten plus den Reformationstag am 31. Oktober, der seit 2018 arbeitsfrei ist. Bei einer Fünf-Tage-Woche ergeben sich 2026 genau 254 und 2027 genau 256 Arbeitstage – zusammen mit Brandenburg, Bremen, Hamburg und Schleswig-Holstein die meisten in Deutschland."
 updated: 2026-11-18
 author: author
