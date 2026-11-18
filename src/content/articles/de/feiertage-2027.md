@@ -1,6 +1,6 @@
 ---
 title: "Feiertage 2027: Alle Termine nach Bundesland"
-description: "Alle Feiertage 2027 in Deutschland nach Bundesland, inklusive Daten, Wochenend-Regelungen sowie Hinweise für Österreich und die Schweiz."
+description: "Alle Feiertage 2027 mit Datum und Wochentag: 9 bundesweite, die regionalen je Bundesland, Feiertage am Wochenende, Brückentage, Österreich und Schweiz."
 keyword: "feiertage 2027"
 secondary: ["kalender 2027 mit feiertagen"]
 category: dates
@@ -13,88 +13,111 @@ reviewer: reviewer
 reviewed: false
 faq:
   - q: "Wie viele Feiertage gibt es 2027?"
-    a: "In Deutschland gibt es 2027 neun bundesweite und je nach Bundesland bis zu 14 Feiertage. Die genaue Zahl variiert regional."
+    a: "9 Feiertage gelten 2027 in ganz Deutschland. Je nach Bundesland kommen 1 bis 3 regionale hinzu: Berlin, Bremen, Hamburg, Hessen, Niedersachsen und Schleswig-Holstein haben 10, Baden-Württemberg, Bayern, Brandenburg und das Saarland 12."
   - q: "Welche Feiertage fallen 2027 auf ein Wochenende?"
-    a: "Der 1. Mai (Samstag), Tag der Deutschen Einheit (3. Oktober, Sonntag), Weihnachten (25. und 26. Dezember, Samstag und Sonntag), Mariä Himmelfahrt sowie der Reformationstag."
+    a: "Bundesweit der Tag der Arbeit (Samstag, 1. Mai), der Tag der Deutschen Einheit (Sonntag, 3. Oktober) und beide Weihnachtstage (Samstag und Sonntag). Regional außerdem Mariä Himmelfahrt und der Reformationstag, die 2027 auf einen Sonntag fallen."
   - q: "Ist der Reformationstag 2027 ein Feiertag?"
-    a: "Ja, aber nur in bestimmten Bundesländern wie Brandenburg, Mecklenburg-Vorpommern, Sachsen, Sachsen-Anhalt, Schleswig-Holstein und Thüringen. 2027 ist er am Sonntag."
+    a: "Ja, aber nur in neun Bundesländern: Brandenburg, Bremen, Hamburg, Mecklenburg-Vorpommern, Niedersachsen, Sachsen, Sachsen-Anhalt, Schleswig-Holstein und Thüringen. 2027 fällt er auf einen Sonntag."
+  - q: "Werden Feiertage am Wochenende nachgeholt?"
+    a: "Nein. In Deutschland gibt es keine gesetzliche Regel, nach der ein Feiertag am Samstag oder Sonntag an einem Werktag nachgeholt wird. Abweichende Regeln können nur im Arbeits- oder Tarifvertrag stehen."
 ---
-Feiertage 2027 in Deutschland hängen vom Bundesland ab. Eine Übersicht aller bundesweiten und regionalen Feiertage sowie Infos zu Wochenenden und zur Nutzung des [Kalender 2027 mit Feiertagen](/de/arbeitstage-rechner/) erhalten Sie hier.
+
+2027 gibt es in Deutschland **9 bundesweite Feiertage**; dazu kommen je nach Bundesland 1 bis 3 regionale. Weil vier bundesweite Feiertage auf ein Wochenende fallen, bleiben nur 5 davon als freie Werktage – mit dem [Arbeitstage-Rechner](/de/arbeitstage-rechner/) sehen Sie für Ihr Bundesland, wie viele Arbeitstage 2027 übrig bleiben.
 
 ## Bundesweite Feiertage 2027
-Deutschland zählt neun gesetzliche Feiertage, die in allen Bundesländern gelten. Diese sind für Arbeitnehmer unabhängig von Wohnort oder Arbeitgeber gleich:
 
-| Feiertag           | Datum         | Wochentag   |
-|--------------------|--------------|-------------|
-| Neujahr            | 1.1.2027     | Freitag     |
-| Karfreitag         | 26.3.2027    | Freitag     |
-| Ostermontag        | 29.3.2027    | Montag      |
-| Tag der Arbeit     | 1.5.2027     | Samstag     |
-| Christi Himmelfahrt| 6.5.2027     | Donnerstag  |
-| Pfingstmontag      | 17.5.2027    | Montag      |
-| Fronleichnam*      | 27.5.2027    | Donnerstag  |
-| Tag der Deutschen Einheit| 3.10.2027| Sonntag     |
-| 1. Weihnachtstag   | 25.12.2027   | Samstag     |
-| 2. Weihnachtstag   | 26.12.2027   | Sonntag     |
+Diese neun Feiertage gelten in allen 16 Bundesländern:
 
-(*) Fronleichnam gilt nicht bundesweit; siehe nächste Tabelle.
+| Feiertag | Datum | Wochentag |
+| --- | --- | --- |
+| Neujahr | 1.1.2027 | Freitag |
+| Karfreitag | 26.3.2027 | Freitag |
+| Ostermontag | 29.3.2027 | Montag |
+| Tag der Arbeit | 1.5.2027 | Samstag |
+| Christi Himmelfahrt | 6.5.2027 | Donnerstag |
+| Pfingstmontag | 17.5.2027 | Montag |
+| Tag der Deutschen Einheit | 3.10.2027 | Sonntag |
+| 1. Weihnachtstag | 25.12.2027 | Samstag |
+| 2. Weihnachtstag | 26.12.2027 | Sonntag |
 
-**Rechenbeispiel:** Möchten Sie wissen, wie viele Arbeitstage Sie im Juni 2027 in Bayern haben? Mit dem [Kalender 2027 mit Feiertagen](/de/arbeitstage-rechner/) sehen Sie: Im Juni 2027 ist Fronleichnam am 27. Mai (Donnerstag), sodass der Feiertag in einigen Bundesländern (wie Bayern) den Mai betrifft, der Juni aber keine bundesweiten Feiertage mehr hat.
+Ostern fällt 2027 früh: Ostersonntag ist der 28. März. Daraus ergeben sich Karfreitag, Ostermontag, Christi Himmelfahrt (39 Tage nach Ostern), Pfingstmontag und Fronleichnam.
 
-## Regionale Feiertage je Bundesland
-Einige Feiertage gelten nur in bestimmten Bundesländern. Ein Überblick 2027:
+## Regionale Feiertage 2027 je Bundesland
 
-| Feiertag               | Datum       | Wochentag | Bundesländer                       |
-|------------------------|-------------|-----------|------------------------------------|
-| Heilige Drei Könige    | 6.1.2027    | Mittwoch  | BW, BY, ST                         |
-| Fronleichnam           | 27.5.2027   | Donnerstag| BW, BY, HE, NW, RP, SL, teilweise SN, TH |
-| Augsburger Friedensfest| 8.8.2027    | Sonntag   | Stadt Augsburg                     |
-| Mariä Himmelfahrt      | 15.8.2027   | Sonntag   | BY (teilw.), SL                    |
-| Reformationstag        | 31.10.2027  | Sonntag   | BB, MV, SN, ST, SH, TH             |
-| Allerheiligen          | 1.11.2027   | Montag    | BW, BY, NW, RP, SL                 |
-| Buß- und Bettag        | 17.11.2027  | Mittwoch  | SN                                 |
+Diese Feiertage gelten nur in einzelnen Ländern oder Teilen davon:
 
-BW = Baden-Württemberg, BY = Bayern, BB = Brandenburg, HE = Hessen, MV = Mecklenburg-Vorpommern, NW = Nordrhein-Westfalen, RP = Rheinland-Pfalz, SL = Saarland, SN = Sachsen, ST = Sachsen-Anhalt, SH = Schleswig-Holstein, TH = Thüringen
+| Feiertag | Datum | Wochentag | Bundesländer |
+| --- | --- | --- | --- |
+| Heilige Drei Könige | 6.1.2027 | Mittwoch | BW, BY, ST |
+| Internationaler Frauentag | 8.3.2027 | Montag | BE, MV |
+| Ostersonntag | 28.3.2027 | Sonntag | BB |
+| Pfingstsonntag | 16.5.2027 | Sonntag | BB |
+| Fronleichnam | 27.5.2027 | Donnerstag | BW, BY, HE, NW, RP, SL; teilweise SN, TH |
+| Augsburger Friedensfest | 8.8.2027 | Sonntag | nur Stadt Augsburg |
+| Mariä Himmelfahrt | 15.8.2027 | Sonntag | SL; teilweise BY |
+| Weltkindertag | 20.9.2027 | Montag | TH |
+| Reformationstag | 31.10.2027 | Sonntag | BB, HB, HH, MV, NI, SN, ST, SH, TH |
+| Allerheiligen | 1.11.2027 | Montag | BW, BY, NW, RP, SL |
+| Buß- und Bettag | 17.11.2027 | Mittwoch | SN |
 
-**Wichtige Hinweise:**
-- Einige Tage wie der 1. Mai und der Tag der Deutschen Einheit liegen 2027 am Wochenende.
-- Regionale Feiertage werden nicht in allen Städten oder Landesteilen eines Bundeslandes anerkannt.
+Abkürzungen: BW Baden-Württemberg, BY Bayern, BE Berlin, BB Brandenburg, HB Bremen, HH Hamburg, HE Hessen, MV Mecklenburg-Vorpommern, NI Niedersachsen, NW Nordrhein-Westfalen, RP Rheinland-Pfalz, SL Saarland, SN Sachsen, ST Sachsen-Anhalt, SH Schleswig-Holstein, TH Thüringen.
+
+„Teilweise“ heißt: Der Tag ist nur in bestimmten Gemeinden ein Feiertag. Mariä Himmelfahrt gilt in Bayern in Gemeinden mit überwiegend katholischer Bevölkerung, Fronleichnam in Sachsen nur in einigen Gemeinden im Landkreis Bautzen und in Thüringen in Teilen des Eichsfelds und angrenzender Kreise.
+
+## Anzahl der Feiertage je Bundesland 2027
+
+| Bundesland | Anzahl Feiertage |
+| --- | --- |
+| Baden-Württemberg | 12 |
+| Bayern | 12 |
+| Berlin | 10 |
+| Brandenburg | 12 |
+| Bremen | 10 |
+| Hamburg | 10 |
+| Hessen | 10 |
+| Mecklenburg-Vorpommern | 11 |
+| Niedersachsen | 10 |
+| Nordrhein-Westfalen | 11 |
+| Rheinland-Pfalz | 11 |
+| Saarland | 12 |
+| Sachsen | 11 |
+| Sachsen-Anhalt | 11 |
+| Schleswig-Holstein | 10 |
+| Thüringen | 11 |
+
+Gezählt sind die Feiertage, die im ganzen Land gelten. In Bayern kommt in katholisch geprägten Gemeinden Mariä Himmelfahrt hinzu (13), in Augsburg zusätzlich das Friedensfest. Brandenburg erreicht 12, weil dort auch Ostersonntag und Pfingstsonntag gesetzliche Feiertage sind – beide fallen naturgemäß auf einen Sonntag.
 
 ## Feiertage am Wochenende 2027
-2027 fallen einige wichtige Feiertage auf das Wochenende. Das bedeutet, sie führen zu keinem zusätzlichen arbeitsfreien Tag, sofern keine Ausgleichsregeln greifen.
 
-Ein Auszug (berechnet anhand des Kalenders 2027):
+2027 ist für Arbeitnehmer kein gutes Feiertagsjahr: Vier der neun bundesweiten Feiertage liegen auf einem Samstag oder Sonntag.
 
-| Feiertag            | Datum     | Wochentag   | Bundesweit frei? |
-|---------------------|-----------|-------------|------------------|
-| Tag der Arbeit      | 1.5.2027  | Samstag     | Ja               |
-| Mariä Himmelfahrt   | 15.8.2027 | Sonntag     | BY (teilw.), SL  |
-| Tag der Deutschen Einheit | 3.10.2027 | Sonntag | Ja         |
-| 1. Weihnachtsfeiertag| 25.12.2027| Samstag     | Ja               |
-| 2. Weihnachtsfeiertag| 26.12.2027| Sonntag     | Ja               |
-| Reformationstag     | 31.10.2027| Sonntag     | Regionale Regel |
+| Feiertag | Datum | Wochentag |
+| --- | --- | --- |
+| Tag der Arbeit | 1.5.2027 | Samstag |
+| Tag der Deutschen Einheit | 3.10.2027 | Sonntag |
+| 1. Weihnachtstag | 25.12.2027 | Samstag |
+| 2. Weihnachtstag | 26.12.2027 | Sonntag |
 
-Sie sehen: 2027 sind mehrere bedeutende Feiertage betroffen. Die Wochenendregelung wird tariflich oder arbeitsvertraglich unterschiedlich gehandhabt.
+Regional fallen außerdem Mariä Himmelfahrt (15. August) und der Reformationstag (31. Oktober) auf einen Sonntag. Ein Feiertag am Wochenende wird in Deutschland nicht automatisch an einem Werktag nachgeholt; das kann nur ein Arbeits- oder Tarifvertrag anders regeln.
 
-## Österreich und Schweiz 2027
-In Österreich und der Schweiz gelten abweichende Feiertagsregelungen:
+## Brückentage und lange Wochenenden 2027
 
-- **Österreich:** Einige zentrale Feiertage (z.B. Nationalfeiertag am 26. Oktober, Fronleichnam, Mariä Himmelfahrt) sind landesweit geregelt. Regionale Unterschiede je Bundesland sind möglich. (Stichwort: Landesfeiertage.)
-- **Schweiz:** Neben bundesweiten Feiertagen wie Karfreitag oder Bundesfeier (1. August, 2027 am Sonntag) gibt es zahlreiche kantonale Feiertage. Die Regelung ist föderal und unterscheidet sich deutlich vom deutschen Modell.
+Wer Urlaub plant, sollte vor allem auf diese Tage achten:
 
-Da Kalender und Ferienzeiten je nach Land abweichen können, empfiehlt sich ein spezieller [Arbeitstage-Rechner](/de/arbeitstage-rechner/), um Arbeitstage und Feiertage in Österreich oder der Schweiz exakt zu bestimmen.
+- **Christi Himmelfahrt (Donnerstag, 6. Mai):** Mit einem Urlaubstag am Freitag, 7. Mai, haben Sie vier Tage frei.
+- **Fronleichnam (Donnerstag, 27. Mai):** In BW, BY, HE, NW, RP und SL bringt der Freitag, 28. Mai, ebenfalls vier freie Tage.
+- **Ostern:** Karfreitag (Freitag) und Ostermontag ergeben ohne Urlaub vier freie Tage am Stück.
+- **Allerheiligen (Montag, 1. November):** In BW, BY, NW, RP und SL ein langes Wochenende ohne Urlaubstag.
+- **Neujahr (Freitag, 1. Januar):** Auch das Jahr beginnt mit einem langen Wochenende.
 
-## Tabelle: Übersicht Feiertage pro Bundesland (Auszug)
+Rechenbeispiel: Sie arbeiten in Bayern montags bis freitags und nehmen am 7. Mai und am 28. Mai je einen Tag Urlaub. Für zwei Urlaubstage erhalten Sie zweimal vier freie Tage am Stück – vom 6. bis 9. Mai und vom 27. bis 30. Mai.
 
-| Bundesland         | Anzahl öffentl. Feiertage* |
-|--------------------|---------------------------|
-| Baden-Württemberg  | 12                        |
-| Bayern (gesamt)    | 13                        |
-| Sachsen-Anhalt     | 12                        |
-| Sachsen            | 11                        |
-| Schleswig-Holstein | 9                         |
+## Feiertage 2027 in Österreich und der Schweiz
 
-(*) Ohne Berücksichtigung von Wochenendregelung oder Stadtfeiertagen; reine Summe der regelmäßigen Feiertage.
+**Österreich** hat 13 bundesweite Feiertage. 2027 sind das: Neujahr (1.1.), Heilige Drei Könige (6.1.), Ostermontag (29.3.), Staatsfeiertag (1.5.), Christi Himmelfahrt (6.5.), Pfingstmontag (17.5.), Fronleichnam (27.5.), Mariä Himmelfahrt (15.8.), Nationalfeiertag (26.10., Dienstag), Allerheiligen (1.11.), Mariä Empfängnis (8.12.), Christtag (25.12.) und Stefanitag (26.12.). Der Karfreitag ist in Österreich seit 2019 kein allgemeiner Feiertag mehr.
 
-## Fazit
-Der [Kalender 2027 mit Feiertagen](/de/arbeitstage-rechner/) erleichtert die Planung von Urlaub und Arbeitstagen. Beachten Sie regionale und nationale Besonderheiten sowie Feiertage, die auf Wochenenden fallen. Österreich und Schweiz haben abweichende Ferienordnungen – zur genauen Berechnung am besten die länderspezifische Auswahl im Rechner nutzen.
+**Schweiz:** Der einzige bundesweite Feiertag ist die Bundesfeier am 1. August, 2027 ein Sonntag. Alle anderen Feiertage legen die Kantone fest. Im Kanton Zürich sind es zum Beispiel Neujahr, Berchtoldstag (2.1.), Karfreitag, Ostermontag, Tag der Arbeit, Auffahrt, Pfingstmontag, Bundesfeier, Weihnachtstag und Stephanstag.
+
+## Arbeitstage 2027 für Ihr Bundesland berechnen
+
+Wie viele Arbeitstage 2027 tatsächlich übrig bleiben, hängt von Bundesland, Arbeitswoche und Urlaub ab. Der [Arbeitstage-Rechner](/de/arbeitstage-rechner/) zieht die Feiertage Ihres Landes automatisch ab – direkt für [Bayern](/de/arbeitstage-rechner/bayern/), [Nordrhein-Westfalen](/de/arbeitstage-rechner/nordrhein-westfalen/), [Baden-Württemberg](/de/arbeitstage-rechner/baden-wuerttemberg/), [Niedersachsen](/de/arbeitstage-rechner/niedersachsen/) und [Hessen](/de/arbeitstage-rechner/hessen/).
