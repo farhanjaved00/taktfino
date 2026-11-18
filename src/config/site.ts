@@ -4,12 +4,12 @@
  * (the build prints a warning while any remain).
  */
 export const SITE = {
-  /** Brandable name (placeholder until the brand + trademark checks are done) */
-  name: '[Brand]',
-  url: (import.meta.env.SITE_URL || 'https://www.example.com').replace(/\/$/, ''),
+  /** Brand (domain taktfino.com) – run the trademark checks before launch */
+  name: 'Taktfino',
+  url: (import.meta.env.SITE_URL || 'https://www.taktfino.com').replace(/\/$/, ''),
   /** Brand profiles for Organization.sameAs (X, YouTube, Pinterest, LinkedIn…) */
   sameAs: [] as string[],
-  contactEmail: '[kontakt@example.com]',
+  contactEmail: 'kontakt@taktfino.com', // create via Cloudflare Email Routing → forwards to your inbox
 } as const;
 
 /** Legal notice (Impressum, § 5 DDG). Real name and a summonable postal address are required in Germany. */
@@ -18,7 +18,7 @@ export const IMPRINT = {
   street: '[Straße und Hausnummer]',
   city: '[PLZ Ort]',
   country: '[Land]',
-  email: '[kontakt@example.com]',
+  email: 'kontakt@taktfino.com',
   phone: '', // optional; a second fast contact channel (form or phone) is recommended
   vatId: '', // USt-IdNr., if any
   responsibleForContent: '[Name, Anschrift wie oben]', // § 18 Abs. 2 MStV

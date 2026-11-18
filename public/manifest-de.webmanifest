@@ -1,6 +1,6 @@
 {
-  "name": "[Brand] – Arbeitszeit- & Stundenrechner",
-  "short_name": "[Brand]",
+  "name": "Taktfino – Arbeitszeit- & Stundenrechner",
+  "short_name": "Taktfino",
   "lang": "de",
   "start_url": "/de/?source=pwa",
   "scope": "/",

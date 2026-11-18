@@ -16,6 +16,6 @@ jobs:
       - run: npm test
       - run: npm run build
         env:
-          SITE_URL: ${{ vars.SITE_URL || 'https://www.example.com' }}
+          SITE_URL: ${{ vars.SITE_URL || 'https://www.taktfino.com' }}
       - run: node scripts/check-links.mjs
       - run: node scripts/count-pages.mjs

@@ -1,4 +1,4 @@
-# [Brand] — multilingual date, time & work-hours tools
+# Taktfino — multilingual date, time & work-hours tools
 
 German-first tool site built to the **Multilingual Tool Website Final Master Plan v2**: Astro (static) + vanilla TypeScript tools + Markdown content + JSON translations + Pagefind search, hosted on Cloudflare Pages, code on GitHub.
 
