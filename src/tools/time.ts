@@ -48,3 +48,20 @@ export function spanMinutes(start: number, end: number): number {
 
 /** Overlap in minutes between [a1,a2) and [b1,b2) */
 export const overlap = (a1: number, a2: number, b1: number, b2: number) => Math.max(0, Math.min(a2, b2) - Math.max(a1, b1));
+
+/** Minuten → { hours, minutes, decimal hours, days }; e.g. 135 → 2 h 15 min = 2,25 h */
+export function splitMinutes(total: number) {
+  const neg = total < 0;
+  const a = Math.abs(total);
+  const h = Math.floor(a / 60);
+  const m = Math.round((a - h * 60) * 1000) / 1000; // allow fractional minutes (e.g. 90,5)
+  return { neg, hours: h, minutes: m, decimalHours: total / 60, days: total / 1440, seconds: total * 60 };
+}
+
+/** Parses a minute count: "135", "135,5", "1.234" (thousands) → number, or null */
+export function parseMinutes(s: string): number | null {
+  const t = s.trim().replace(/\s/g, '');
+  if (!/^-?\d{1,3}(\.\d{3})*(,\d+)?$|^-?\d+([.,]\d+)?$/.test(t)) return null;
+  const v = /\.\d{3}(,|$)/.test(t) ? Number(t.replace(/\./g, '').replace(',', '.')) : Number(t.replace(',', '.'));
+  return Number.isFinite(v) ? v : null;
+}

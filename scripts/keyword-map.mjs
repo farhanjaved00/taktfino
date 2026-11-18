@@ -2,7 +2,7 @@
 // One primary keyword per URL; tests/content.test.ts fails the build if a keyword is used twice.
 import fs from 'node:fs';
 import path from 'node:path';
-const TOOL = { worktime: 'arbeitszeitrechner', hours: 'stundenrechner', workdays: 'arbeitstage-rechner', wage: 'stundenlohnrechner', overtime: 'ueberstundenrechner', days: 'tage-rechner', age: 'alter-berechnen', week: 'kalenderwoche' };
+const TOOL = { worktime: 'arbeitszeitrechner', hours: 'stundenrechner', workdays: 'arbeitstage-rechner', wage: 'stundenlohnrechner', overtime: 'ueberstundenrechner', days: 'tage-rechner', age: 'alter-berechnen', week: 'kalenderwoche', minutes: 'minuten-in-stunden' };
 const CAT = { work: 'arbeitszeit', pay: 'lohn-gehalt', dates: 'datum' };
 const REG = { nw: 'nordrhein-westfalen', by: 'bayern', bw: 'baden-wuerttemberg', ni: 'niedersachsen', he: 'hessen' };
 const rows = [['status', 'url', 'primary', 'secondary', 'type']];

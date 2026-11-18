@@ -2,6 +2,7 @@ status,url,primary,secondary,type
 needs review,/de/alter-berechnen/,alter berechnen,"alter ausrechnen, wie alt bin ich, geburtstag rechner",tools
 needs review,/de/tage-rechner/,tage rechner,"tage zwischen zwei daten, tage berechnen, wie viele tage, datumsrechner",tools
 needs review,/de/stundenrechner/,stundenrechner,"stunden in dezimal, stunden addieren, stunden zusammenrechnen, dezimalstunden",tools
+needs review,/de/minuten-in-stunden/,minuten in stunden,"stunden in minuten, minuten in stunden umrechnen, stunden in minuten umrechnen",tools
 needs review,/de/ueberstundenrechner/,überstundenrechner,"überstunden berechnen, minusstunden berechnen, zeitausgleich berechnen, überstundenzuschlag",tools
 needs review,/de/stundenlohnrechner/,stundenlohnrechner,"stundenlohn berechnen, monatsgehalt in stundenlohn, stundenlohn in monatsgehalt, mindestlohn rechner",tools
 needs review,/de/kalenderwoche/,kalenderwoche,"welche kalenderwoche haben wir, kalenderwoche aktuell, kalenderwochen 2027, kw 2027",tools

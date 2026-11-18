@@ -20,7 +20,7 @@ const MODEL = process.env.OPENAI_MODEL || 'gpt-4.1';
 const COUNT = Number(process.env.ARTICLES_PER_RUN || 1);
 const PR_BODY = process.env.PR_BODY || path.join(ROOT, 'article-review.md');
 const DRY = process.argv.includes('--dry-run');
-const TOOL_SLUG = { worktime: 'arbeitszeitrechner', hours: 'stundenrechner', workdays: 'arbeitstage-rechner', wage: 'stundenlohnrechner', overtime: 'ueberstundenrechner', days: 'tage-rechner', age: 'alter-berechnen', week: 'kalenderwoche' };
+const TOOL_SLUG = { worktime: 'arbeitszeitrechner', hours: 'stundenrechner', workdays: 'arbeitstage-rechner', wage: 'stundenlohnrechner', overtime: 'ueberstundenrechner', days: 'tage-rechner', age: 'alter-berechnen', week: 'kalenderwoche', minutes: 'minuten-in-stunden' };
 const CAT_SLUG = { work: 'arbeitszeit', pay: 'lohn-gehalt', dates: 'datum' };
 
 function parseCSV(text) {

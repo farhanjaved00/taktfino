@@ -6,7 +6,7 @@ title: "Stundenrechner – Stunden addieren & Dezimal umrechnen"
 description: "Stunden zwischen zwei Uhrzeiten berechnen, Zeiten addieren und subtrahieren und Stunden:Minuten in Dezimalstunden (Industrieminuten) umrechnen."
 h1: "Stundenrechner"
 answer: "Mit dem Stundenrechner berechnen Sie die Dauer zwischen zwei Uhrzeiten abzüglich Pause, addieren oder subtrahieren beliebig viele Zeiten und rechnen Stunden:Minuten in Dezimalstunden um. Faustregel: Minuten geteilt durch 60 ergibt den Dezimalanteil – 45 Minuten sind 0,75 Stunden, 7:45 also 7,75 Stunden."
-related: ["worktime", "overtime", "wage", "days"]
+related: ["worktime", "minutes", "overtime", "wage"]
 updated: 2026-11-18
 author: author
 reviewer: reviewer

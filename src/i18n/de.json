@@ -63,6 +63,10 @@
     "week": {
       "name": "Kalenderwoche",
       "short": "Aktuelle KW, Datum ↔ KW, alle Wochen des Jahres"
+    },
+    "minutes": {
+      "name": "Minuten in Stunden",
+      "short": "Minuten ↔ Stunden umrechnen, mit Dezimal und Tabelle"
     }
   },
   "common": {
@@ -284,6 +288,25 @@
       "inDays": "in {n} Tagen",
       "daysAgo": "vor {n} Tagen",
       "thisWeek": "diese Woche"
+    },
+    "minutes": {
+      "m2h": "Minuten in Stunden",
+      "h2m": "Stunden in Minuten",
+      "minutesInput": "Minuten",
+      "hoursInput": "Stunden (z. B. 2,5 oder 2:30)",
+      "is": "sind",
+      "hm": "{h} Std. {m} Min.",
+      "decimal": "{v} Stunden (dezimal)",
+      "days": "{v} Tag(e)",
+      "seconds": "{v} Sekunden",
+      "minutesResult": "{v} Minuten",
+      "invalid": "Bitte eine Zahl eingeben.",
+      "tableMin": "Tabelle: Minuten in Stunden",
+      "tableHours": "Tabelle: Stunden in Minuten",
+      "colMinutes": "Minuten",
+      "colHM": "Stunden:Minuten",
+      "colDecimal": "Dezimal",
+      "colHours": "Stunden"
     }
   }
 }

@@ -1,0 +1,97 @@
+---
+/** Minuten ↔ Stunden — both directions, h:mm + decimal + seconds/days, static reference tables. */
+import type { LocaleCode } from '../../config/locales';
+import { t, dict } from '../../i18n';
+import { fmtNum } from '../../i18n/format';
+import Icon from '../Icon.astro';
+interface Props { locale: LocaleCode }
+const { locale } = Astro.props;
+const u = (k: string, v: Record<string, string | number> = {}) => t(locale, `ui.minutes.${k}`, v);
+const c = (k: string) => t(locale, `common.${k}`);
+const M = { ui: (dict(locale) as { ui: { minutes: Record<string, string> } }).ui.minutes, common: (dict(locale) as { common: Record<string, string> }).common };
+const minRows = [1, 5, 10, 15, 20, 25, 30, 40, 45, 50, 60, 75, 80, 90, 100, 105, 120, 135, 150, 180, 200, 240, 300, 360, 420, 480, 500, 600];
+const hourRows = [0.1, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 2.5, 3, 4, 5, 6, 7, 7.5, 8, 8.5, 9, 10, 12, 24];
+const hm = (m: number) => `${Math.floor(m / 60)}:${String(Math.round(m % 60)).padStart(2, '0')}`;
+---
+<section class="tool" data-minutes data-msgs={JSON.stringify(M)} aria-label={t(locale, 'tools.minutes.name')}>
+  <div class="grid-2">
+    <div class="card card--sm">
+      <h2 class="tool-h">{u('m2h')}</h2>
+      <div class="field" style="margin-top:10px"><label for="mi-m">{u('minutesInput')}</label><input id="mi-m" class="input input--num" type="text" inputmode="decimal" value="135" data-in="m" /></div>
+      <div class="result-box" aria-live="polite">
+        <div class="answer" data-out="m2h">{u('hm', { h: 2, m: 15 })}</div>
+        <div class="answer-sub" data-out="m2hSub">{u('decimal', { v: fmtNum(locale, 2.25, 4) })}</div>
+      </div>
+      <div class="actions no-print"><button class="btn btn--primary" type="button" data-action="copy-m"><Icon name="check" size={18} />{c('copy')}</button></div>
+    </div>
+    <div class="card card--sm">
+      <h2 class="tool-h">{u('h2m')}</h2>
+      <div class="field" style="margin-top:10px"><label for="mi-h">{u('hoursInput')}</label><input id="mi-h" class="input" type="text" inputmode="decimal" value="2,5" data-in="h" style="width:180px" /></div>
+      <div class="result-box" aria-live="polite">
+        <div class="answer" data-out="h2m">{u('minutesResult', { v: 150 })}</div>
+        <div class="answer-sub" data-out="h2mSub">{u('seconds', { v: fmtNum(locale, 9000) })}</div>
+      </div>
+      <div class="actions no-print">
+        <button class="btn btn--primary" type="button" data-action="copy-h"><Icon name="check" size={18} />{c('copy')}</button>
+        <button class="btn" type="button" data-action="share"><Icon name="link" size={18} />{c('share')}</button>
+      </div>
+    </div>
+  </div>
+  <div class="grid-2 section">
+    <details class="card card--sm kw-table" open>
+      <summary class="tool-h">{u('tableMin')}</summary>
+      <div class="table-wrap" style="margin-top:10px"><table class="data-table">
+        <thead><tr><th scope="col">{u('colMinutes')}</th><th scope="col">{u('colHM')}</th><th scope="col">{u('colDecimal')}</th></tr></thead>
+        <tbody>{minRows.map((m) => <tr><td>{m}</td><td>{hm(m)}</td><td>{fmtNum(locale, m / 60, 2, 2)}</td></tr>)}</tbody>
+      </table></div>
+    </details>
+    <details class="card card--sm kw-table" open>
+      <summary class="tool-h">{u('tableHours')}</summary>
+      <div class="table-wrap" style="margin-top:10px"><table class="data-table">
+        <thead><tr><th scope="col">{u('colHours')}</th><th scope="col">{u('colHM')}</th><th scope="col">{u('colMinutes')}</th></tr></thead>
+        <tbody>{hourRows.map((h) => <tr><td>{fmtNum(locale, h, 2)}</td><td>{hm(h * 60)}</td><td>{fmtNum(locale, h * 60)}</td></tr>)}</tbody>
+      </table></div>
+    </details>
+  </div>
+</section>
+<script>
+  import { splitMinutes, parseMinutes, parseDuration } from '../../tools/time';
+  import { copyText, setQuery, getQuery, saveHistory, track, trackCalculate, fmt } from '../../scripts/client';
+  const root = document.querySelector<HTMLElement>('[data-minutes]');
+  if (root) {
+    const M = JSON.parse(root.dataset.msgs!) as { ui: Record<string, string>; common: Record<string, string> };
+    const f = (s: string, v: Record<string, string | number>) => s.replace(/\{(\w+)\}/g, (_, k) => String(v[k] ?? ''));
+    const $ = (k: string) => root.querySelector<HTMLInputElement>(`[data-in="${k}"]`)!;
+    const out = (k: string) => root.querySelector<HTMLElement>(`[data-out="${k}"]`)!;
+    const n = (v: number, max = 4) => fmt('de-DE', v, max);
+    const q = getQuery();
+    if (q.get('min')) $('m').value = q.get('min')!; if (q.get('std')) $('h').value = q.get('std')!;
+    function m2h() {
+      const v = parseMinutes($('m').value);
+      if (v === null) { out('m2h').textContent = M.ui.invalid; out('m2hSub').textContent = ''; return; }
+      const s = splitMinutes(v);
+      out('m2h').textContent = (s.neg ? '−' : '') + f(M.ui.hm, { h: n(s.hours), m: n(s.minutes, 2) });
+      const extra = Math.abs(v) >= 1440 ? ` · ${f(M.ui.days, { v: n(s.days, 3) })}` : '';
+      out('m2hSub').textContent = f(M.ui.decimal, { v: n(s.decimalHours) }) + extra + ` · ${f(M.ui.seconds, { v: n(s.seconds, 0) })}`;
+      trackCalculate('minutes');
+    }
+    function h2m() {
+      const raw = $('h').value.trim();
+      let exact: number | null = null;
+      if (/^\d+:\d{1,2}$/.test(raw)) exact = parseDuration(raw);            // 2:30 → 150
+      else if (/^\d+(?:[.,]\d+)?$/.test(raw)) exact = Number(raw.replace(',', '.')) * 60; // 2,5 → 150
+      if (exact === null || !Number.isFinite(exact)) { out('h2m').textContent = M.ui.invalid; out('h2mSub').textContent = ''; return; }
+      out('h2m').textContent = f(M.ui.minutesResult, { v: n(exact, 2) });
+      out('h2mSub').textContent = f(M.ui.seconds, { v: n(exact * 60, 0) });
+      trackCalculate('minutes');
+    }
+    root.addEventListener('input', (e) => { if (e.target === $('m')) m2h(); else h2m(); });
+    root.addEventListener('click', (e) => {
+      const b = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-action]'); if (!b) return;
+      if (b.dataset.action === 'copy-m') { copyText(`${$('m').value} ${M.ui.colMinutes} = ${out('m2h').textContent} (${out('m2hSub').textContent})`, M.common.copied); track('copy_result', { tool: 'minutes' }); }
+      if (b.dataset.action === 'copy-h') { copyText(`${$('h').value} ${M.ui.colHours} = ${out('h2m').textContent}`, M.common.copied); track('copy_result', { tool: 'minutes' }); }
+      if (b.dataset.action === 'share') { const url = setQuery({ min: $('m').value, std: $('h').value }); copyText(url, M.common.linkCopied); saveHistory({ tool: 'minutes', label: `${$('m').value} Min. → ${out('m2h').textContent}`, url }); track('share', { tool: 'minutes' }); }
+    });
+    m2h(); h2m();
+  }
+</script>
