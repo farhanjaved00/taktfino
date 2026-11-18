@@ -8,6 +8,7 @@ import Wage from './tools/Wage.astro';
 import Overtime from './tools/Overtime.astro';
 import Days from './tools/Days.astro';
 import Age from './tools/Age.astro';
+import Week from './tools/Week.astro';
 import { formatISO, addDays, parseISO } from '../lib/dates';
 interface Props { tool: ToolId; locale: LocaleCode; region?: string }
 const { tool, locale, region } = Astro.props;
@@ -21,3 +22,4 @@ const today = parseISO(todayIso)!;
 {tool === 'overtime' && <Overtime locale={locale} />}
 {tool === 'days' && <Days locale={locale} todayIso={todayIso} plus90Iso={formatISO(addDays(today, 90))} />}
 {tool === 'age' && <Age locale={locale} todayIso={todayIso} />}
+{tool === 'week' && <Week locale={locale} />}

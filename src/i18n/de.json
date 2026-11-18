@@ -59,6 +59,10 @@
     "age": {
       "name": "Alter berechnen",
       "short": "Genaues Alter in Jahren, Monaten und Tagen"
+    },
+    "week": {
+      "name": "Kalenderwoche",
+      "short": "Aktuelle KW, Datum ↔ KW, alle Wochen des Jahres"
     }
   },
   "common": {
@@ -259,6 +263,27 @@
       "future": "Das Geburtsdatum liegt nach dem Stichtag.",
       "birthdayToday": "Heute ist Geburtstag – herzlichen Glückwunsch!",
       "nextBirthday": "Nächster Geburtstag: {date} – in {days} Tagen ({age}. Geburtstag)."
+    },
+    "week": {
+      "current": "Aktuelle Kalenderwoche",
+      "today": "Heute ist",
+      "weekShort": "KW",
+      "range": "vom {start} bis {end}",
+      "dateToWeek": "Datum → Kalenderwoche",
+      "weekToDate": "Kalenderwoche → Datum",
+      "date": "Datum",
+      "week": "Kalenderwoche",
+      "year": "Jahr",
+      "result": "liegt in",
+      "resultWeek": "KW {week} {year}: Montag, {start} bis Sonntag, {end}",
+      "invalidWeek": "{year} hat nur {max} Kalenderwochen.",
+      "weeksIn": "{year} hat {n} Kalenderwochen.",
+      "tableTitle": "Alle Kalenderwochen {year}",
+      "monday": "Montag",
+      "sunday": "Sonntag",
+      "inDays": "in {n} Tagen",
+      "daysAgo": "vor {n} Tagen",
+      "thisWeek": "diese Woche"
     }
   }
 }

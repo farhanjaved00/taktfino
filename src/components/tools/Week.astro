@@ -1,0 +1,101 @@
+---
+/** Kalenderwoche — current ISO week (live), date → KW, KW → dates, full week tables for this and next year. */
+import type { LocaleCode } from '../../config/locales';
+import { t, dict } from '../../i18n';
+import { allWeeks, weekOf, weeksInYear } from '../../tools/week';
+import { fmtDate, fmtDateLong } from '../../i18n/format';
+import { todayIn, formatISO } from '../../lib/dates';
+import Icon from '../Icon.astro';
+interface Props { locale: LocaleCode }
+const { locale } = Astro.props;
+const u = (k: string, v: Record<string, string | number> = {}) => t(locale, `ui.week.${k}`, v);
+const c = (k: string) => t(locale, `common.${k}`);
+const M = { ui: (dict(locale) as { ui: { week: Record<string, string> } }).ui.week, common: (dict(locale) as { common: Record<string, string> }).common };
+const today = todayIn('Europe/Berlin');
+const cur = weekOf(today);
+const years = [cur.year, cur.year + 1];
+---
+<section class="tool" data-week data-msgs={JSON.stringify(M)} aria-label={t(locale, 'tools.week.name')}>
+  <div class="card kw-hero">
+    <div class="answer-label">{u('current')}</div>
+    <div class="kw-big" aria-live="polite"><span>{u('weekShort')}</span> <b data-out="kw">{cur.week}</b></div>
+    <div class="answer-sub" data-out="range">{u('range', { start: fmtDate(locale, cur.start), end: fmtDate(locale, cur.end) })} · {cur.year}</div>
+    <div class="answer-sub" data-out="today">{u('today')} {fmtDateLong(locale, today)}</div>
+    <div class="actions no-print">
+      <button class="btn btn--primary" type="button" data-action="copy"><Icon name="check" size={18} />{c('copy')}</button>
+    </div>
+  </div>
+
+  <div class="grid-2 section">
+    <div class="card card--sm">
+      <h2 class="tool-h">{u('dateToWeek')}</h2>
+      <div class="tool-inputs" style="margin-top:8px">
+        <div class="field"><label for="kw-date">{u('date')}</label><input id="kw-date" class="input" type="date" value={formatISO(today)} data-in="date" /></div>
+      </div>
+      <p class="result-line" data-out="d2w" aria-live="polite">{u('result')} <b>{u('weekShort')} {cur.week}</b> ({cur.year})</p>
+    </div>
+    <div class="card card--sm">
+      <h2 class="tool-h">{u('weekToDate')}</h2>
+      <div class="tool-inputs" style="margin-top:8px">
+        <div class="field"><label for="kw-w">{u('week')}</label><input id="kw-w" class="input input--num" type="number" min="1" max="53" value={cur.week} inputmode="numeric" data-in="w" /></div>
+        <div class="field"><label for="kw-y">{u('year')}</label><input id="kw-y" class="input input--num" type="number" min="1900" max="2200" value={cur.year} inputmode="numeric" data-in="y" /></div>
+      </div>
+      <p class="result-line" data-out="w2d" aria-live="polite">{u('resultWeek', { week: cur.week, year: cur.year, start: fmtDate(locale, cur.start), end: fmtDate(locale, cur.end) })}</p>
+      <div class="actions no-print"><button class="btn" type="button" data-action="share"><Icon name="link" size={18} />{c('share')}</button></div>
+    </div>
+  </div>
+
+  {years.map((y, i) => (
+    <details class="card section kw-table" open={i === 0}>
+      <summary class="tool-h">{u('tableTitle', { year: y })} <span class="muted small">({u('weeksIn', { year: y, n: weeksInYear(y) })})</span></summary>
+      <div class="table-wrap" style="margin-top:12px">
+        <table class="data-table">
+          <thead><tr><th scope="col">{u('weekShort')}</th><th scope="col">{u('monday')}</th><th scope="col">{u('sunday')}</th></tr></thead>
+          <tbody>{allWeeks(y).map((w) => <tr data-kw={`${w.year}-${w.week}`} class:list={{ 'is-current': w.year === cur.year && w.week === cur.week }}><td><b>{w.week}</b></td><td>{fmtDate(locale, w.start)}</td><td>{fmtDate(locale, w.end)}</td></tr>)}</tbody>
+        </table>
+      </div>
+    </details>
+  ))}
+</section>
+<script>
+  import { weekOf, weekRange, weeksInYear } from '../../tools/week';
+  import { parseISO } from '../../lib/dates';
+  import { copyText, setQuery, getQuery, saveHistory, track, trackCalculate } from '../../scripts/client';
+  const root = document.querySelector<HTMLElement>('[data-week]');
+  if (root) {
+    const M = JSON.parse(root.dataset.msgs!) as { ui: Record<string, string>; common: Record<string, string> };
+    const f = (s: string, v: Record<string, string | number>) => s.replace(/\{(\w+)\}/g, (_, k) => String(v[k] ?? ''));
+    const $ = (k: string) => root.querySelector<HTMLInputElement>(`[data-in="${k}"]`)!;
+    const out = (k: string) => root.querySelector<HTMLElement>(`[data-out="${k}"]`)!;
+    const de = (c: { y: number; m: number; d: number }) => `${String(c.d).padStart(2, '0')}.${String(c.m).padStart(2, '0')}.${c.y}`;
+    const long = (c: { y: number; m: number; d: number }) => new Date(Date.UTC(c.y, c.m - 1, c.d, 12)).toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+    const now = new Date(); const today = { y: now.getFullYear(), m: now.getMonth() + 1, d: now.getDate() };
+    const cur = weekOf(today);
+    out('kw').textContent = String(cur.week);
+    out('range').textContent = `${f(M.ui.range, { start: de(cur.start), end: de(cur.end) })} · ${cur.year}`;
+    out('today').textContent = `${M.ui.today} ${long(today)}`;
+    root.querySelectorAll('tr.is-current').forEach((r) => r.classList.remove('is-current'));
+    root.querySelector(`tr[data-kw="${cur.year}-${cur.week}"]`)?.classList.add('is-current');
+    const q = getQuery();
+    if (q.get('kw')) $('w').value = q.get('kw')!; if (q.get('jahr')) $('y').value = q.get('jahr')!;
+    function d2w() {
+      const c = parseISO($('date').value); if (!c) return;
+      const w = weekOf(c);
+      out('d2w').innerHTML = `${M.ui.result} <b>${M.ui.weekShort} ${w.week}</b> (${w.year}) · ${f(M.ui.range, { start: de(w.start), end: de(w.end) })}`;
+    }
+    function w2d() {
+      const y = Number($('y').value), w = Number($('w').value);
+      if (!Number.isInteger(y) || y < 1900 || y > 2200) return;
+      const r = weekRange(y, w);
+      out('w2d').textContent = r ? f(M.ui.resultWeek, { week: w, year: y, start: de(r.start), end: de(r.end) }) : f(M.ui.invalidWeek, { year: y, max: weeksInYear(y) });
+      trackCalculate('week');
+    }
+    root.addEventListener('input', (e) => { const el = e.target as HTMLElement; if (el === $('date')) d2w(); else w2d(); });
+    root.addEventListener('click', (e) => {
+      const b = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-action]'); if (!b) return;
+      if (b.dataset.action === 'copy') { copyText(`${M.ui.weekShort} ${cur.week} (${de(cur.start)} – ${de(cur.end)})`, M.common.copied); track('copy_result', { tool: 'week' }); }
+      if (b.dataset.action === 'share') { const url = setQuery({ kw: $('w').value, jahr: $('y').value }); copyText(url, M.common.linkCopied); saveHistory({ tool: 'week', label: `${M.ui.weekShort} ${$('w').value} ${$('y').value}`, url }); track('share', { tool: 'week' }); }
+    });
+    d2w(); w2d();
+  }
+</script>

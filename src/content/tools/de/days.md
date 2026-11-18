@@ -6,7 +6,7 @@ title: "Tage-Rechner – Tage zwischen zwei Daten berechnen"
 description: "Wie viele Tage liegen zwischen zwei Daten? Mit oder ohne Enddatum, in Wochen, Monaten und Jahren – plus Arbeitstage nach Bundesland."
 h1: "Tage-Rechner: Tage zwischen zwei Daten"
 answer: "Die Zahl der Tage zwischen zwei Daten ist die Differenz der Kalendertage – das Startdatum zählt nicht mit, das Enddatum schon. Vom 1. Januar bis 31. Dezember 2027 sind es 364 Tage, mit beiden Tagen 365. Der Rechner zeigt das Ergebnis auch in Wochen, Monaten, Jahren und Arbeitstagen."
-related: ["workdays", "age", "worktime", "hours"]
+related: ["workdays", "week", "age", "worktime"]
 updated: 2026-11-18
 author: author
 reviewer: reviewer
@@ -46,3 +46,4 @@ Sie erhalten die Zahl der Tage, die Aufteilung in Jahre, Monate und Tage sowie W
 - **Nur Arbeitstage mit Urlaub und halben Tagen:** [Arbeitstage-Rechner](/de/arbeitstage-rechner/).
 - **Genaues Alter:** [Alter berechnen](/de/alter-berechnen/).
 - **Stunden statt Tage:** [Stundenrechner](/de/stundenrechner/).
+- **Kalenderwoche eines Datums:** [Kalenderwoche](/de/kalenderwoche/).
