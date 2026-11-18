@@ -68,3 +68,22 @@ describe('page template rules', () => {
     for (const t of TOOLS) expect(docs.some((d) => d.file === `tools/de/${t.id}.md`), t.id).toBe(true);
   });
 });
+
+describe('article queue (planned keywords)', () => {
+  const q = fs.readFileSync('content/queue-de.csv', 'utf8').trim().split('\n').slice(1);
+  const parse = (line: string) => { const out: string[] = []; let f = '', inQ = false; for (let i = 0; i < line.length; i++) { const ch = line[i]; if (inQ) { if (ch === '"' && line[i + 1] === '"') { f += '"'; i++; } else if (ch === '"') inQ = false; else f += ch; } else if (ch === '"') inQ = true; else if (ch === ',') { out.push(f); f = ''; } else f += ch; } out.push(f); return out; };
+  const rows = q.map(parse);
+  it('no planned keyword collides with a live page or another brief', () => {
+    const live = new Map<string, string>();
+    for (const d of docs) { live.set(d.fm.keyword.toLowerCase(), d.file); for (const s of d.secondary) live.set(s, d.file); }
+    const seen = new Map<string, string>();
+    for (const r of rows) {
+      for (const k of [r[0], ...(r[10] ? r[10].split('|') : [])].map((x) => x.toLowerCase())) {
+        expect(live.get(k), `queue "${r[0]}" uses "${k}" owned by ${live.get(k)}`).toBeUndefined();
+        expect(seen.get(k), `"${k}" planned twice (${seen.get(k)} and ${r[0]})`).toBeUndefined();
+        seen.set(k, r[0]);
+      }
+      expect(r[1].length, r[1]).toBeLessThanOrEqual(60);
+    }
+  });
+});

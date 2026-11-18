@@ -43,7 +43,7 @@ const y = todayIn('Europe/Berlin').y;
 <script>
   import { calcVacation } from '../../tools/vacation';
   import { parseISO } from '../../lib/dates';
-  import { copyText, setQuery, getQuery, saveHistory, track, trackCalculate, fmt } from '../../scripts/client';
+  import { copyText, setQuery, getQuery, saveHistory, track, trackCalculate, fmt, intl, currency, dIsoShort, wdShort, dLong, dShort, money, monthYear } from '../../scripts/client';
   const root = document.querySelector<HTMLElement>('[data-vacation]');
   if (root) {
     const M = JSON.parse(root.dataset.msgs!) as { ui: Record<string, string>; common: Record<string, string> };
@@ -56,12 +56,12 @@ const y = todayIn('Europe/Berlin').y;
     function render() {
       const y = Number($('y').value) || new Date().getFullYear();
       const r = calcVacation({ contractDays: num($('cd').value) || 0, contractWeekDays: Number($('cw').value) || 5, ownWeekDays: num($('ow').value) || 0, year: y, start: parseISO($('start').value) ?? undefined, end: parseISO($('end').value) ?? undefined, disabled: $('dis').getAttribute('aria-pressed') === 'true' });
-      out('days').textContent = `${fmt('de-DE', r.entitlement, 2)} ${M.ui.days}`;
+      out('days').textContent = `${fmt(intl(), r.entitlement, 2)} ${M.ui.days}`;
       out('rule').textContent = { full: M.ui.ruleFull, 'partial-start': M.ui.rulePartialStart, 'partial-leave-first-half': M.ui.ruleLeaveFirst, 'full-leave-second-half': M.ui.ruleLeaveSecond }[r.rule];
-      out('full').textContent = fmt('de-DE', r.fullYear, 2);
-      out('legal').textContent = fmt('de-DE', r.legalMinimum, 2);
+      out('full').textContent = fmt(intl(), r.fullYear, 2);
+      out('legal').textContent = fmt(intl(), r.legalMinimum, 2);
       out('months').textContent = r.months === null ? '12' : String(r.months);
-      out('extra').textContent = fmt('de-DE', r.extraDisabled, 2);
+      out('extra').textContent = fmt(intl(), r.extraDisabled, 2);
       text = `${M.ui.result} ${y}: ${out('days').textContent} (${out('rule').textContent})`;
       trackCalculate('vacation');
     }

@@ -64,7 +64,7 @@ const r = calcNotice({ party: 'employer', receipt: today, start });
 <script>
   import { calcNotice, type Party } from '../../tools/notice';
   import { parseISO, compare, diffDays } from '../../lib/dates';
-  import { copyText, setQuery, getQuery, saveHistory, track, trackCalculate } from '../../scripts/client';
+  import { copyText, setQuery, getQuery, saveHistory, track, trackCalculate, intl, currency, dIsoShort, wdShort, dLong, dShort, money, monthYear } from '../../scripts/client';
   const root = document.querySelector<HTMLElement>('[data-notice]');
   if (root) {
     const M = JSON.parse(root.dataset.msgs!) as { ui: Record<string, string>; common: Record<string, string> };
@@ -72,7 +72,7 @@ const r = calcNotice({ party: 'employer', receipt: today, start });
     const $ = (k: string) => root.querySelector<HTMLInputElement>(`[data-in="${k}"]`)!; // selects and buttons share the props used here
     const out = (k: string) => root.querySelector<HTMLElement>(`[data-out="${k}"]`)!;
     const on = (b: HTMLElement) => b.getAttribute('aria-pressed') === 'true';
-    const long = (c: { y: number; m: number; d: number }) => new Date(Date.UTC(c.y, c.m - 1, c.d, 12)).toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+    const long = (c: { y: number; m: number; d: number }) => new Date(Date.UTC(c.y, c.m - 1, c.d, 12)).toLocaleDateString(intl(), { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
     const short = (c: { y: number; m: number; d: number }) => `${String(c.d).padStart(2, '0')}.${String(c.m).padStart(2, '0')}.${c.y}`;
     let party: Party = 'employer';
     const now = new Date(); const today = { y: now.getFullYear(), m: now.getMonth() + 1, d: now.getDate() };

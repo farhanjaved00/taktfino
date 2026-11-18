@@ -1,7 +1,7 @@
 ---
 import { SITE } from '../config/site';
 import { LIVE_LOCALES, getLocale, type LocaleCode } from '../config/locales';
-import { TOOLS, CATEGORIES, toolPath, categoryPath, pagePath, type CategoryId } from '../config/tool-map';
+import { TOOLS, toolsFor, CATEGORIES, toolPath, categoryPath, pagePath, type CategoryId } from '../config/tool-map';
 import type { PageEntry } from '../lib/registry';
 import { t } from '../i18n';
 import Icon from './Icon.astro';
@@ -49,7 +49,7 @@ const others = alternates.filter((a) => a.locale !== locale && LIVE_LOCALES.some
   {cats.map((c) => (
     <nav class="mobile-menu__group" aria-label={t(locale, `categories.${c}.name`)}>
       <h2>{t(locale, `categories.${c}.name`).toUpperCase()}</h2>
-      {TOOLS.filter((x) => x.category === c).map((x) => <a href={toolPath(x.id, locale)}><span>{t(locale, `tools.${x.id}.name`)}</span><Icon name="chevron" size={16} color="#565B78" /></a>)}
+      {toolsFor(locale).filter((x) => x.category === c).map((x) => <a href={toolPath(x.id, locale)}><span>{t(locale, `tools.${x.id}.name`)}</span><Icon name="chevron" size={16} color="#565B78" /></a>)}
     </nav>
   ))}
   <nav class="mobile-menu__group" aria-label={t(locale, 'nav.guides')}>

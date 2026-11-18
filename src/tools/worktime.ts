@@ -52,9 +52,11 @@ export interface DayResult {
   warnings: WorkWarning[];
 }
 
+export const rulesFor = (country: string): CountryRules => (RULES as Record<string, CountryRules>)[country] ?? { breaks: [], maxDaily: null, minRest: 0, night: [22 * 60, 6 * 60], source: { label: '', url: '' } };
+
 export function requiredBreak(netMin: number, country: Country): number {
   let req = 0;
-  for (const [over, b] of RULES[country].breaks) if (netMin > over) req = b;
+  for (const [over, b] of rulesFor(country).breaks) if (netMin > over) req = b;
   return req;
 }
 
@@ -64,7 +66,7 @@ export function calcDay(d: DayInput, opts: WorktimeOptions): DayResult {
   const s = parseClock(d.start), e = parseClock(d.end), date = parseISO(d.date);
   const empty: DayResult = { date: d.date, valid: false, grossMin: 0, breakMin: 0, netMin: 0, requiredBreakMin: 0, nightMin: 0, sundayMin: 0, holidayMin: 0, crossesMidnight: false, warnings: [{ code: 'invalid' }] };
   if (s === null || e === null || !date || s === e) return empty;
-  const rules = RULES[opts.country];
+  const rules = rulesFor(opts.country);
   const gross = spanMinutes(s, e);
   const brk = Math.max(0, Math.min(Math.round(d.breakMin || 0), gross));
   const net = gross - brk;
@@ -121,7 +123,8 @@ export function calcSheet(entries: DayInput[], opts: WorktimeOptions): SheetResu
     const pEnd = toDayNum(parseISO(prev.r.date)!) * 1440 + parseClock(entries[prev.i].start)! + prev.r.grossMin;
     const cStart = toDayNum(parseISO(cur.r.date)!) * 1440 + parseClock(entries[cur.i].start)!;
     const rest = cStart - pEnd;
-    if (rest >= 0 && rest < RULES[opts.country].minRest) cur.r.warnings.push({ code: 'rest_short', rest, min: RULES[opts.country].minRest });
+    const minRest = rulesFor(opts.country).minRest;
+    if (rest >= 0 && rest < minRest) cur.r.warnings.push({ code: 'rest_short', rest, min: minRest });
   }
   const weeks: Record<string, number> = {};
   for (const d of days) if (d.valid) weeks[isoWeekKey(d.date)] = (weeks[isoWeekKey(d.date)] || 0) + d.netMin;

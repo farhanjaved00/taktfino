@@ -14,8 +14,8 @@ const M = { ui: (dict(locale) as { ui: { days: Record<string, string> } }).ui.da
   <div class="tool-inputs" style="margin-top:0">
     <div class="field"><label for="d-a">{c('from')}</label><input id="d-a" class="input" type="date" value={todayIso} data-in="a" /></div>
     <div class="field"><label for="d-b">{c('to')}</label><input id="d-b" class="input" type="date" value={plus90Iso} data-in="b" /></div>
-    <div class="field"><label for="d-r">{u('regionForWorkdays')}</label>
-      <select id="d-r" class="input" data-in="r">{REGIONS.map((r) => <option value={r.code} selected={r.code === 'nw'}>{r.name.de}</option>)}</select></div>
+    <div class="field" hidden={locale !== 'de'}><label for="d-r">{u('regionForWorkdays')}</label>
+      <select id="d-r" class="input" data-in="r">{locale === 'de' ? REGIONS.map((r) => <option value={r.code} selected={r.code === 'nw'}>{r.name.de}</option>) : <option value=""></option>}</select></div>
   </div>
   <div class="tool-inputs"><button type="button" class="toggle" aria-pressed="false" data-in="incl"><span class="dot" aria-hidden="true"></span>{u('includeEnd')}</button></div>
   <div class="result-box" aria-live="polite">
@@ -37,7 +37,7 @@ const M = { ui: (dict(locale) as { ui: { days: Record<string, string> } }).ui.da
 <script>
   import { addDays, diffDays, formatISO, parseISO, ymdBetween } from '../../lib/dates';
   import { countWorkdays } from '../../tools/workdays';
-  import { copyText, setQuery, getQuery, saveHistory, track, trackCalculate, fmt } from '../../scripts/client';
+  import { copyText, setQuery, getQuery, saveHistory, track, trackCalculate, fmt, intl, currency, dIsoShort, wdShort, dLong, dShort, money, monthYear } from '../../scripts/client';
   const root = document.querySelector<HTMLElement>('[data-days-tool]');
   if (root) {
     const M = JSON.parse(root.dataset.msgs!) as { ui: Record<string, string>; common: Record<string, string> };
@@ -57,13 +57,13 @@ const M = { ui: (dict(locale) as { ui: { days: Record<string, string> } }).ui.da
       const n = Math.abs(raw) + (inc ? 1 : 0);
       const ymd = ymdBetween(a, inc ? addDays(b, sign) : b);
       const w = countWorkdays(a, b, { region: $('r').value });
-      const de = (s: string) => s.split('-').reverse().join('.');
+      const de = (s: string) => dIsoShort(s);
       out('label').textContent = `${M.ui.between} ${de($('a').value)} – ${de($('b').value)}${inc ? ` (${M.ui.inclShort})` : ''}`;
-      out('days').textContent = `${fmt('de-DE', n)} ${n === 1 ? M.common.day : M.common.days}`;
+      out('days').textContent = `${fmt(intl(), n)} ${n === 1 ? M.common.day : M.common.days}`;
       out('ymd').textContent = `${Math.abs(ymd.years)} ${M.ui.years}, ${Math.abs(ymd.months)} ${M.ui.months}, ${Math.abs(ymd.days)} ${M.common.days}`;
-      out('weeks').textContent = fmt('de-DE', n / 7, 1);
-      out('months').textContent = fmt('de-DE', n / 30.436875, 1);
-      out('work').textContent = fmt('de-DE', w.workdays, 1);
+      out('weeks').textContent = fmt(intl(), n / 7, 1);
+      out('months').textContent = fmt(intl(), n / 30.436875, 1);
+      out('work').textContent = fmt(intl(), w.workdays, 1);
       out('weekend').textContent = String(w.weekendDays);
       text = `${out('label').textContent}: ${out('days').textContent}`;
       trackCalculate('days');

@@ -1,7 +1,7 @@
 ---
 import { SITE, adsEnabled } from '../config/site';
 import type { LocaleCode } from '../config/locales';
-import { TOOLS, CATEGORIES, toolPath, pagePath, type CategoryId } from '../config/tool-map';
+import { TOOLS, toolsFor, CATEGORIES, toolPath, pagePath, type CategoryId } from '../config/tool-map';
 import { t } from '../i18n';
 interface Props { locale: LocaleCode }
 const { locale } = Astro.props;
@@ -13,20 +13,20 @@ const year = new Date().getUTCFullYear();
       <div><div class="footer-brand">{SITE.name}</div><p>{t(locale, 'meta.tagline')}</p></div>
       {(Object.keys(CATEGORIES) as CategoryId[]).map((c) => (
         <nav aria-label={t(locale, `categories.${c}.name`)}><h2>{t(locale, `categories.${c}.name`)}</h2><ul>
-          {TOOLS.filter((x) => x.category === c).map((x) => <li><a href={toolPath(x.id, locale)}>{t(locale, `tools.${x.id}.name`)}</a></li>)}
+          {toolsFor(locale).filter((x) => x.category === c).map((x) => <li><a href={toolPath(x.id, locale)}>{t(locale, `tools.${x.id}.name`)}</a></li>)}
         </ul></nav>
       ))}
       <nav aria-label="Info"><h2>{SITE.name}</h2><ul>
-        <li><a href={pagePath('about', locale)}>{locale === 'de' ? 'Über uns' : 'About'}</a></li>
-        <li><a href={pagePath('editorial', locale)}>{locale === 'de' ? 'Redaktionelle Richtlinien' : 'Editorial policy'}</a></li>
-        <li><a href={pagePath('contact', locale)}>{locale === 'de' ? 'Kontakt' : 'Contact'}</a></li>
+        <li><a href={pagePath('about', locale)}>{t(locale, 'pages.about')}</a></li>
+        <li><a href={pagePath('editorial', locale)}>{t(locale, 'pages.editorial')}</a></li>
+        <li><a href={pagePath('contact', locale)}>{t(locale, 'pages.contact')}</a></li>
         <li><a href={pagePath('guides', locale)}>{t(locale, 'nav.guides')}</a></li>
       </ul></nav>
     </div>
     <div class="footer-bottom">
       <span>© {year} {SITE.name}</span>
       <span class="footer-legal">
-        <a href={pagePath('imprint', locale)}>Impressum</a> · <a href={pagePath('privacy', locale)}>{locale === 'de' ? 'Datenschutz' : 'Privacy'}</a> · <a href={pagePath('terms', locale)}>{locale === 'de' ? 'Nutzungsbedingungen' : 'Terms'}</a>
+        <a href={pagePath('imprint', locale)}>{t(locale, 'pages.imprint')}</a> · <a href={pagePath('privacy', locale)}>{t(locale, 'pages.privacy')}</a> · <a href={pagePath('terms', locale)}>{t(locale, 'pages.terms')}</a>
         {adsEnabled() && <> · <button type="button" data-consent-open>{t(locale, 'common.privacyChoices')}</button></>}
       </span>
     </div>

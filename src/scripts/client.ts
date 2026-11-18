@@ -80,3 +80,18 @@ export function registerPwa() {
 }
 
 export const fmt = (locale: string, n: number, max = 2, min = 0) => n.toLocaleString(locale, { maximumFractionDigits: max, minimumFractionDigits: min });
+
+/* ---- locale-aware formatting for every language (reads <body data-locale>) */
+import { getLocale } from '../config/locales';
+type CD = { y: number; m: number; d: number };
+const utcNoon = (c: CD) => new Date(Date.UTC(c.y, c.m - 1, c.d, 12));
+export const uiLocale = () => (document.body?.dataset.locale || 'de') as Parameters<typeof getLocale>[0];
+/** Intl locale tag of the page, e.g. de-DE, es-MX, pt-BR */
+export const intl = () => getLocale(uiLocale()).intl;
+export const currency = () => getLocale(uiLocale()).currency;
+export const dLong = (c: CD) => utcNoon(c).toLocaleDateString(intl(), { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+export const dShort = (c: CD) => utcNoon(c).toLocaleDateString(intl(), { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'UTC' });
+export const dIsoShort = (iso: string) => dShort({ y: +iso.slice(0, 4), m: +iso.slice(5, 7), d: +iso.slice(8, 10) });
+export const wdShort = (c: CD) => utcNoon(c).toLocaleDateString(intl(), { weekday: 'short', timeZone: 'UTC' }).replace('.', '');
+export const monthYear = (y: number, m: number) => utcNoon({ y, m, d: 15 }).toLocaleDateString(intl(), { month: 'long', year: 'numeric', timeZone: 'UTC' });
+export const money = (n: number, cur?: string) => n.toLocaleString(intl(), { style: 'currency', currency: cur || currency() });

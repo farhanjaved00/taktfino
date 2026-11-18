@@ -5,7 +5,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import ArticleList from '../ArticleList.astro';
 import Icon from '../Icon.astro';
 import type { LocaleCode } from '../../config/locales';
-import { pagePath, TOOLS, toolPath, CATEGORIES, type PageId, type CategoryId } from '../../config/tool-map';
+import { pagePath, TOOLS, toolsFor, toolPath, CATEGORIES, type PageId, type CategoryId } from '../../config/tool-map';
 import { articleEntries, entryLocale } from '../../lib/registry';
 import { personRef, abs } from '../../lib/seo';
 import { SITE } from '../../config/site';
@@ -85,7 +85,7 @@ const H: Record<string, [string, string]> = {
     <div class="container" style="padding:48px 16px;text-align:center">
       <h1>{t(locale, 'notFound.title')}</h1>
       <p class="muted" style="margin:12px auto 24px;max-width:520px">{t(locale, 'notFound.text')}</p>
-      <div class="chip-row" style="justify-content:center">{TOOLS.map((x) => <a class="chip" href={toolPath(x.id, locale)}><Icon name={x.icon} size={16} />&nbsp;{t(locale, `tools.${x.id}.name`)}</a>)}</div>
+      <div class="chip-row" style="justify-content:center">{toolsFor(locale).map((x) => <a class="chip" href={toolPath(x.id, locale)}><Icon name={x.icon} size={16} />&nbsp;{t(locale, `tools.${x.id}.name`)}</a>)}</div>
     </div>
   </BaseLayout>
 )}

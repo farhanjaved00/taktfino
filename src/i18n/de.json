@@ -467,5 +467,13 @@
       "ruleLeaveSecond": "Austritt nach dem 30. Juni: mindestens der volle gesetzliche Urlaub (§ 5 BUrlG). Ob darüber hinausgehender Vertragsurlaub anteilig gekürzt wird, regelt Ihr Vertrag.",
       "rounding": "Ab einem halben Tag wird aufgerundet (§ 5 Abs. 2 BUrlG)."
     }
+  },
+  "pages": {
+    "about": "Über uns",
+    "contact": "Kontakt",
+    "imprint": "Impressum",
+    "privacy": "Datenschutz",
+    "terms": "Nutzungsbedingungen",
+    "editorial": "Redaktionelle Richtlinien"
   }
 }

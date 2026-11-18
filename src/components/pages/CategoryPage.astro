@@ -5,7 +5,7 @@ import ArticleList from '../ArticleList.astro';
 import Icon from '../Icon.astro';
 import { SITE } from '../../config/site';
 import type { LocaleCode } from '../../config/locales';
-import { TOOLS, toolPath, categoryPath, type CategoryId } from '../../config/tool-map';
+import { TOOLS, toolsFor, toolPath, categoryPath, type CategoryId } from '../../config/tool-map';
 import { alternatesFor, articleEntries, entryLocale } from '../../lib/registry';
 import { t } from '../../i18n';
 interface Props { locale: LocaleCode; category: CategoryId }
@@ -19,7 +19,7 @@ const articles = (await articleEntries()).filter((a) => entryLocale(a.id) === lo
   <div class="container">
     <div class="page-head"><h1>{name}</h1><p>{t(locale, `categories.${category}.blurb`)}</p></div>
     <div class="cat-grid">
-      {TOOLS.filter((x) => x.category === category).map((x) => (
+      {toolsFor(locale).filter((x) => x.category === category).map((x) => (
         <a class="cat-card tool-card" href={toolPath(x.id, locale)}>
           <span class="cat-card__icon"><Icon name={x.icon} size={22} color="#4338CA" /></span>
           <div><h2 class="tool-card__h">{t(locale, `tools.${x.id}.name`)}</h2><p class="small muted" style="margin:4px 0 0">{t(locale, `tools.${x.id}.short`)}</p></div>

@@ -91,12 +91,12 @@ const weekdays = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
   import { holidaysFor } from '../../tools/workdays';
   import { formatHM, toDecimalHours } from '../../tools/time';
   import { addDays, formatISO, parseISO, weekday } from '../../lib/dates';
-  import { copyText, downloadCsv, setQuery, getQuery, saveHistory, loadState, storeState, track, trackCalculate, toast, fmt } from '../../scripts/client';
+  import { copyText, downloadCsv, setQuery, getQuery, saveHistory, loadState, storeState, track, trackCalculate, toast, fmt, intl, currency, dIsoShort, wdShort, dLong, dShort, money, monthYear } from '../../scripts/client';
 
   const root = document.querySelector<HTMLElement>('[data-worktime]');
   if (root) {
     const locale = root.dataset.locale!;
-    const intl = locale === 'de' ? 'de-DE' : locale;
+    
     const M = JSON.parse(root.dataset.msgs!) as { warn: Record<string, string>; ui: Record<string, string>; common: Record<string, string> };
     const fill = (s: string, v: Record<string, string | number>) => s.replace(/\{(\w+)\}/g, (_, k) => String(v[k] ?? ''));
     const tbody = root.querySelector<HTMLTableSectionElement>('[data-rows]')!;
@@ -105,7 +105,7 @@ const weekdays = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
     const region = root.querySelector<HTMLSelectElement>('[data-in="region"]')!;
     const regionWrap = root.querySelector<HTMLElement>('[data-region-wrap]')!;
     const out = (k: string) => root.querySelector<HTMLElement>(`[data-out="${k}"]`)!;
-    const WD = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
+    const WD = [0, 1, 2, 3, 4, 5, 6].map((i) => wdShort({ y: 2023, m: 1, d: 1 + i })); // 2023-01-01 is a Sunday
     const STORE = 'worktime-sheet';
     const hm = (m: number) => `${formatHM(m)}`;
 
@@ -167,7 +167,7 @@ const weekdays = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
         tr.classList.toggle('has-warn', r.warnings.some((w) => w.code !== 'holiday' && w.code !== 'sunday'));
       });
       out('total').textContent = `${hm(res.totalNetMin)} ${M.common.hoursShort}`;
-      out('totalSub').textContent = `= ${fmt(intl, toDecimalHours(res.totalNetMin), 2, 2)} ${M.ui.decimalHours}`;
+      out('totalSub').textContent = `= ${fmt(intl(), toDecimalHours(res.totalNetMin), 2, 2)} ${M.ui.decimalHours}`;
       out('breaks').textContent = hm(res.totalBreakMin);
       out('night').textContent = hm(res.totalNightMin);
       out('sunday').textContent = hm(res.totalSundayMin);
@@ -179,7 +179,7 @@ const weekdays = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
         for (const w of r.warnings) {
           const v: Record<string, string | number> = { ...w } as Record<string, string | number>;
           if (w.code === 'over_max') v.max = w.max / 60;
-          if (w.code === 'rest_short') { v.rest = fmt(intl, w.rest / 60, 1); v.min = w.min / 60; }
+          if (w.code === 'rest_short') { v.rest = fmt(intl(), w.rest / 60, 1); v.min = w.min / 60; }
           items.push(`<li class="warn-${w.code === 'holiday' || w.code === 'sunday' ? 'info' : 'bad'}"><b>${label}:</b> ${fill(M.warn[w.code], v)}</li>`);
         }
       });
@@ -193,7 +193,7 @@ const weekdays = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
 
     function summary(): string {
       const lines = read().map((x, i) => `${x.date}  ${x.start}–${x.end}  ${M.common.break}: ${x.breakMin}  → ${last.days[i].valid ? hm(last.days[i].netMin) : '–'}`);
-      return [...lines, `${M.common.total}: ${hm(last.totalNetMin)} ${M.common.hoursShort} (${fmt(intl, toDecimalHours(last.totalNetMin), 2, 2)} ${M.ui.decimalHours})`].join('\n');
+      return [...lines, `${M.common.total}: ${hm(last.totalNetMin)} ${M.common.hoursShort} (${fmt(intl(), toDecimalHours(last.totalNetMin), 2, 2)} ${M.ui.decimalHours})`].join('\n');
     }
     function shareUrl() {
       const u = new URL(location.origin + location.pathname);
@@ -215,8 +215,8 @@ const weekdays = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
       if (a === 'share') { const url = shareUrl(); setQuery({ c: country.value, r: region.value || null, d: encode() }); copyText(url, M.common.linkCopied); saveHistory({ tool: 'worktime', label: `${M.ui.historyLabel}: ${hm(last.totalNetMin)} h`, url }); track('share', { tool: 'worktime' }); }
       if (a === 'csv') {
         const head = [M.common.date, M.common.start, M.common.end, M.common.break, `${M.common.net} (h:mm)`, `${M.common.net} (${M.common.decimal})`, M.ui.nightHours, M.ui.sundayHours, M.ui.holidayHours];
-        const body = read().map((x, i) => { const r = last.days[i]; return [x.date, x.start, x.end, x.breakMin, r.valid ? hm(r.netMin) : '', r.valid ? fmt(intl, toDecimalHours(r.netMin), 2, 2) : '', hm(r.nightMin), hm(r.sundayMin), hm(r.holidayMin)]; });
-        downloadCsv([head, ...body, [M.common.total, '', '', last.totalBreakMin, hm(last.totalNetMin), fmt(intl, toDecimalHours(last.totalNetMin), 2, 2), hm(last.totalNightMin), hm(last.totalSundayMin), hm(last.totalHolidayMin)]], 'arbeitszeit.csv');
+        const body = read().map((x, i) => { const r = last.days[i]; return [x.date, x.start, x.end, x.breakMin, r.valid ? hm(r.netMin) : '', r.valid ? fmt(intl(), toDecimalHours(r.netMin), 2, 2) : '', hm(r.nightMin), hm(r.sundayMin), hm(r.holidayMin)]; });
+        downloadCsv([head, ...body, [M.common.total, '', '', last.totalBreakMin, hm(last.totalNetMin), fmt(intl(), toDecimalHours(last.totalNetMin), 2, 2), hm(last.totalNightMin), hm(last.totalSundayMin), hm(last.totalHolidayMin)]], 'arbeitszeit.csv');
         track('export', { tool: 'worktime', format: 'csv' });
       }
       if (a === 'pdf') { track('export', { tool: 'worktime', format: 'pdf' }); toast(M.ui.pdfHint); setTimeout(() => window.print(), 300); }

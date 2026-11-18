@@ -1,10 +1,9 @@
 import de from './de.json';
-import es from './es.json';
-import ptbr from './pt-br.json';
-import en from './en.json';
 import { LOCALES, type LocaleCode } from '../config/locales';
 
-const DICTS: Record<LocaleCode, Record<string, unknown>> = { de, es, 'pt-br': ptbr, en };
+/** Every src/i18n/<code>.json is picked up automatically – a new language needs no code change here. */
+const FILES = import.meta.glob<Record<string, unknown>>('./*.json', { eager: true, import: 'default' });
+const DICTS = Object.fromEntries(Object.entries(FILES).map(([p, d]) => [p.replace('./', '').replace('.json', ''), d])) as Record<LocaleCode, Record<string, unknown>>;
 
 function lookup(obj: unknown, key: string): unknown {
   return key.split('.').reduce<unknown>((o, k) => (o && typeof o === 'object' ? (o as Record<string, unknown>)[k] : undefined), obj);

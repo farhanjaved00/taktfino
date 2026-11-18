@@ -3,6 +3,7 @@
 import type { LocaleCode } from '../../config/locales';
 import { t, dict } from '../../i18n';
 import { industrialMinutes } from '../../tools/time';
+import { fmtNum } from '../../i18n/format';
 import Icon from '../Icon.astro';
 interface Props { locale: LocaleCode }
 const { locale } = Astro.props;
@@ -62,7 +63,7 @@ const table = Array.from({ length: 60 }, (_, m) => m).filter((m) => m % 5 === 0 
       <div class="table-wrap" style="margin-top:12px">
         <table class="data-table">
           <thead><tr><th scope="col">{c('minutes')}</th><th scope="col">{u('industrial')}</th><th scope="col">{u('decimalHours')}</th></tr></thead>
-          <tbody>{table.map((m) => <tr><td>{m}</td><td>{industrialMinutes(m)}</td><td>{(m / 60).toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td></tr>)}</tbody>
+          <tbody>{table.map((m) => <tr><td>{m}</td><td>{industrialMinutes(m)}</td><td>{fmtNum(locale, m / 60, 2, 2)}</td></tr>)}</tbody>
         </table>
       </div>
     </details>
@@ -77,16 +78,16 @@ const table = Array.from({ length: 60 }, (_, m) => m).filter((m) => m % 5 === 0 
 </section>
 <script>
   import { parseClock, parseDuration, formatHM, toDecimalHours, spanMinutes } from '../../tools/time';
-  import { copyText, setQuery, getQuery, track, trackCalculate, saveHistory, fmt } from '../../scripts/client';
+  import { copyText, setQuery, getQuery, track, trackCalculate, saveHistory, fmt, intl, currency, dIsoShort, wdShort, dLong, dShort, money, monthYear } from '../../scripts/client';
   const root = document.querySelector<HTMLElement>('[data-hours]');
   if (root) {
     const M = JSON.parse(root.dataset.msgs!) as { ui: Record<string, string>; common: Record<string, string> };
-    const intl = 'de-DE';
+    
     const $ = (k: string) => root.querySelector<HTMLInputElement>(`[data-in="${k}"]`)!;
     const out = (k: string) => root.querySelector<HTMLElement>(`[data-out="${k}"]`)!;
     const rowsEl = root.querySelector<HTMLElement>('[data-sum-rows]')!;
     const tpl = root.querySelector<HTMLTemplateElement>('[data-sum-tpl]')!;
-    const dec = (m: number) => fmt(intl, toDecimalHours(m), 2, 2);
+    const dec = (m: number) => fmt(intl(), toDecimalHours(m), 2, 2);
     let span = 0, sum = 0;
     const q = getQuery();
     if (q.get('s')) $('s').value = q.get('s')!; if (q.get('e')) $('e').value = q.get('e')!; if (q.get('b')) $('b').value = q.get('b')!;

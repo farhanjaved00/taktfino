@@ -31,14 +31,14 @@ const M = { ui: (dict(locale) as { ui: { age: Record<string, string> } }).ui.age
 </section>
 <script>
   import { age, compare, formatISO, parseISO } from '../../lib/dates';
-  import { copyText, track, trackCalculate, fmt } from '../../scripts/client';
+  import { copyText, track, trackCalculate, fmt, intl, currency, dIsoShort, wdShort, dLong, dShort, money, monthYear } from '../../scripts/client';
   const root = document.querySelector<HTMLElement>('[data-age-tool]');
   if (root) {
     const M = JSON.parse(root.dataset.msgs!) as { ui: Record<string, string>; common: Record<string, string> };
     const $ = (k: string) => root.querySelector<HTMLInputElement>(`[data-in="${k}"]`)!;
     const out = (k: string) => root.querySelector<HTMLElement>(`[data-out="${k}"]`)!;
     const now = new Date(); $('on').value = formatISO({ y: now.getFullYear(), m: now.getMonth() + 1, d: now.getDate() });
-    const dl = (c: { y: number; m: number; d: number }) => new Date(Date.UTC(c.y, c.m - 1, c.d, 12)).toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+    const dl = (c: { y: number; m: number; d: number }) => new Date(Date.UTC(c.y, c.m - 1, c.d, 12)).toLocaleDateString(intl(), { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
     let text = '';
     function render() {
       const b = parseISO($('b').value), on = parseISO($('on').value); if (!b || !on) return;
@@ -46,11 +46,11 @@ const M = { ui: (dict(locale) as { ui: { age: Record<string, string> } }).ui.age
       const r = age(b, on);
       out('age').textContent = `${r.years} ${M.ui.years}, ${r.months} ${M.ui.months}, ${r.days} ${M.common.days}`;
       out('sub').textContent = `${M.ui.bornOn} ${dl(b)}`;
-      out('months').textContent = fmt('de-DE', r.totalMonths);
-      out('weeks').textContent = fmt('de-DE', r.totalWeeks);
-      out('days').textContent = fmt('de-DE', r.totalDays);
-      out('hours').textContent = fmt('de-DE', r.totalDays * 24);
-      out('next').textContent = r.daysToNextBirthday === 0 ? M.ui.birthdayToday : M.ui.nextBirthday.replace('{date}', dl(r.nextBirthday)).replace('{days}', fmt('de-DE', r.daysToNextBirthday)).replace('{age}', String(r.years + 1));
+      out('months').textContent = fmt(intl(), r.totalMonths);
+      out('weeks').textContent = fmt(intl(), r.totalWeeks);
+      out('days').textContent = fmt(intl(), r.totalDays);
+      out('hours').textContent = fmt(intl(), r.totalDays * 24);
+      out('next').textContent = r.daysToNextBirthday === 0 ? M.ui.birthdayToday : M.ui.nextBirthday.replace('{date}', dl(r.nextBirthday)).replace('{days}', fmt(intl(), r.daysToNextBirthday)).replace('{age}', String(r.years + 1));
       text = out('age').textContent!;
       trackCalculate('age');
     }

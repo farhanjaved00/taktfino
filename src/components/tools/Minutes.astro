@@ -56,14 +56,14 @@ const hm = (m: number) => `${Math.floor(m / 60)}:${String(Math.round(m % 60)).pa
 </section>
 <script>
   import { splitMinutes, parseMinutes, parseDuration } from '../../tools/time';
-  import { copyText, setQuery, getQuery, saveHistory, track, trackCalculate, fmt } from '../../scripts/client';
+  import { copyText, setQuery, getQuery, saveHistory, track, trackCalculate, fmt, intl, currency, dIsoShort, wdShort, dLong, dShort, money, monthYear } from '../../scripts/client';
   const root = document.querySelector<HTMLElement>('[data-minutes]');
   if (root) {
     const M = JSON.parse(root.dataset.msgs!) as { ui: Record<string, string>; common: Record<string, string> };
     const f = (s: string, v: Record<string, string | number>) => s.replace(/\{(\w+)\}/g, (_, k) => String(v[k] ?? ''));
     const $ = (k: string) => root.querySelector<HTMLInputElement>(`[data-in="${k}"]`)!;
     const out = (k: string) => root.querySelector<HTMLElement>(`[data-out="${k}"]`)!;
-    const n = (v: number, max = 4) => fmt('de-DE', v, max);
+    const n = (v: number, max = 4) => fmt(intl(), v, max);
     const q = getQuery();
     if (q.get('min')) $('m').value = q.get('min')!; if (q.get('std')) $('h').value = q.get('std')!;
     function m2h() {

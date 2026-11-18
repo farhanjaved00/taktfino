@@ -59,7 +59,7 @@ const cats = ['night', 'nightEarly', 'sunday', 'holiday', 'special'];
   import { holidaysFor } from '../../tools/workdays';
   import { formatHM } from '../../tools/time';
   import { addDays, formatISO, weekday } from '../../lib/dates';
-  import { copyText, setQuery, getQuery, saveHistory, track, trackCalculate } from '../../scripts/client';
+  import { copyText, setQuery, getQuery, saveHistory, track, trackCalculate, intl, currency, dIsoShort, wdShort, dLong, dShort, money, monthYear } from '../../scripts/client';
   const root = document.querySelector<HTMLElement>('[data-surcharge]');
   if (root) {
     const M = JSON.parse(root.dataset.msgs!) as { ui: Record<string, string> & { rows: Record<string, string> }; common: Record<string, string> };
@@ -68,7 +68,7 @@ const cats = ['night', 'nightEarly', 'sunday', 'holiday', 'special'];
     const tbody = root.querySelector<HTMLElement>('[data-rows]')!;
     const tpl = root.querySelector<HTMLTemplateElement>('[data-tpl]')!;
     const num = (s: string) => Number(s.replace(/\./g, '').replace(',', '.'));
-    const eur = (n: number) => n.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
+    const eur = (n: number) => n.toLocaleString(intl(), { style: 'currency', currency: currency() });
     const rate = (k: string) => num(root.querySelector<HTMLInputElement>(`[data-rate="${k}"]`)!.value) || 0;
     function addRow(s?: Partial<Shift>) {
       const tr = tpl.content.firstElementChild!.cloneNode(true) as HTMLTableRowElement;

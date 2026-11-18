@@ -1,6 +1,6 @@
 ---
 /** Überstundenrechner — Soll/Ist per week, overtime or Minusstunden, Zeitausgleich days, payout with premium. */
-import type { LocaleCode } from '../../config/locales';
+import { getLocale, type LocaleCode } from '../../config/locales';
 import { t, dict } from '../../i18n';
 import Icon from '../Icon.astro';
 interface Props { locale: LocaleCode }
@@ -8,7 +8,8 @@ const { locale } = Astro.props;
 const u = (k: string) => t(locale, `ui.overtime.${k}`);
 const c = (k: string) => t(locale, `common.${k}`);
 const M = { ui: (dict(locale) as { ui: { overtime: Record<string, string> } }).ui.overtime, common: (dict(locale) as { common: Record<string, string> }).common };
-const days = [['Mo', '9:00'], ['Di', '9:00'], ['Mi', '8:00'], ['Do', '10:00'], ['Fr', '8:00']];
+const wd = (i: number) => new Date(Date.UTC(2023, 0, 2 + i, 12)).toLocaleDateString(getLocale(locale).intl, { weekday: 'short', timeZone: 'UTC' }).replace('.', ''); // 2023-01-02 = Monday
+const days = [[wd(0), '9:00'], [wd(1), '9:00'], [wd(2), '8:00'], [wd(3), '10:00'], [wd(4), '8:00']];
 ---
 <section class="card tool" data-overtime data-msgs={JSON.stringify(M)} aria-label={t(locale, 'tools.overtime.name')}>
   <div class="tool-inputs" style="margin-top:0">
@@ -18,7 +19,7 @@ const days = [['Mo', '9:00'], ['Di', '9:00'], ['Mi', '8:00'], ['Do', '10:00'], [
   <p class="label" style="margin:18px 0 8px">{u('workedPerDay')}</p>
   <div class="day-grid" data-days>
     {days.map(([d, v]) => <label class="day-cell"><span>{d}</span><input class="input input--sm" type="text" inputmode="decimal" value={v} aria-label={`${d} – ${u('worked')}`} /></label>)}
-    {['Sa', 'So'].map((d) => <label class="day-cell"><span>{d}</span><input class="input input--sm" type="text" inputmode="decimal" value="" placeholder="0:00" aria-label={`${d} – ${u('worked')}`} /></label>)}
+    {[wd(5), wd(6)].map((d) => <label class="day-cell"><span>{d}</span><input class="input input--sm" type="text" inputmode="decimal" value="" placeholder="0:00" aria-label={`${d} – ${u('worked')}`} /></label>)}
   </div>
   <div class="tool-inputs">
     <div class="field"><label for="o-wage">{u('hourlyWage')}</label><input id="o-wage" class="input input--num" type="text" inputmode="decimal" value="" placeholder="z. B. 20" data-in="wage" /></div>
@@ -43,7 +44,7 @@ const days = [['Mo', '9:00'], ['Di', '9:00'], ['Mi', '8:00'], ['Do', '10:00'], [
 <script>
   import { calcOvertime } from '../../tools/overtime';
   import { parseDuration, formatHM } from '../../tools/time';
-  import { copyText, setQuery, getQuery, saveHistory, track, trackCalculate, fmt } from '../../scripts/client';
+  import { copyText, setQuery, getQuery, saveHistory, track, trackCalculate, fmt, intl, currency, dIsoShort, wdShort, dLong, dShort, money, monthYear } from '../../scripts/client';
   const root = document.querySelector<HTMLElement>('[data-overtime]');
   if (root) {
     const M = JSON.parse(root.dataset.msgs!) as { ui: Record<string, string>; common: Record<string, string> };
@@ -63,8 +64,8 @@ const days = [['Mo', '9:00'], ['Di', '9:00'], ['Mi', '8:00'], ['Do', '10:00'], [
       out('main').textContent = `${sign}${formatHM(r.overtimeMin)} ${M.common.hoursShort}`;
       out('target').textContent = formatHM(r.targetMin);
       out('worked').textContent = formatHM(r.workedMin);
-      out('daysOff').textContent = fmt('de-DE', Math.max(0, r.daysOff), 2);
-      out('payout').textContent = r.payout ? r.payout.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' }) : '–';
+      out('daysOff').textContent = fmt(intl(), Math.max(0, r.daysOff), 2);
+      out('payout').textContent = r.payout ? r.payout.toLocaleString(intl(), { style: 'currency', currency: currency() }) : '–';
       trackCalculate('overtime');
     }
     root.addEventListener('input', render);

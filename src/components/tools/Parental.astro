@@ -42,13 +42,13 @@ const birth = addDays(todayIn('Europe/Berlin'), 120);
   import { calcParental } from '../../tools/parental';
   import { calcMaternity } from '../../tools/maternity';
   import { compare, formatISO, parseISO } from '../../lib/dates';
-  import { copyText, setQuery, getQuery, saveHistory, track, trackCalculate } from '../../scripts/client';
+  import { copyText, setQuery, getQuery, saveHistory, track, trackCalculate, intl, currency, dIsoShort, wdShort, dLong, dShort, money, monthYear } from '../../scripts/client';
   const root = document.querySelector<HTMLElement>('[data-parental]');
   if (root) {
     const M = JSON.parse(root.dataset.msgs!) as { ui: Record<string, string>; common: Record<string, string> };
     const $ = (k: string) => root.querySelector<HTMLInputElement>(`[data-in="${k}"]`)!;
     const out = (k: string) => root.querySelector<HTMLElement>(`[data-out="${k}"]`)!;
-    const long = (c: { y: number; m: number; d: number }) => new Date(Date.UTC(c.y, c.m - 1, c.d, 12)).toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+    const long = (c: { y: number; m: number; d: number }) => new Date(Date.UTC(c.y, c.m - 1, c.d, 12)).toLocaleDateString(intl(), { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
     const short = (c: { y: number; m: number; d: number }) => `${String(c.d).padStart(2, '0')}.${String(c.m).padStart(2, '0')}.${c.y}`;
     let who: 'mother' | 'other' = 'mother';
     let startTouched = false;

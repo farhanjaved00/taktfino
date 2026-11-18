@@ -7,7 +7,7 @@ import Faq from '../Faq.astro';
 import AuthorBox from '../AuthorBox.astro';
 import RelatedTools from '../RelatedTools.astro';
 import ArticleList from '../ArticleList.astro';
-import { categoryPath, toolPath, TOOLS } from '../../config/tool-map';
+import { categoryPath, toolPath, TOOLS, toolsFor } from '../../config/tool-map';
 import { entryLocale, alternatesFor, articlePath, articleEntries } from '../../lib/registry';
 import { articleSchema, withBrand } from '../../lib/seo';
 import { t } from '../../i18n';
@@ -20,7 +20,7 @@ const { Content, headings } = await render(entry);
 const alternates = await alternatesFor(`article:${d.translationKey}`);
 const more = (await articleEntries()).filter((a) => entryLocale(a.id) === locale && a.id !== entry.id && (a.data.category === d.category || a.data.tool === d.tool)).slice(0, 4);
 const toc = headings.filter((h) => h.depth === 2);
-const related = TOOLS.filter((x) => x.category === d.category && x.id !== d.tool).map((x) => x.id).slice(0, 3);
+const related = toolsFor(locale).filter((x) => x.category === d.category && x.id !== d.tool).map((x) => x.id).slice(0, 3);
 const minutes = Math.max(2, Math.round((entry.body || '').split(/\s+/).length / 200));
 ---
 <BaseLayout locale={locale} title={withBrand(d.title)} description={d.description} path={path} alternates={alternates} noindex={!d.reviewed} ogType="article"

@@ -55,7 +55,7 @@ const days = [['1', 'Mo'], ['2', 'Di'], ['3', 'Mi'], ['4', 'Do'], ['5', 'Fr'], [
 <script>
   import { countWorkdays, holidaysFor } from '../../tools/workdays';
   import { parseISO } from '../../lib/dates';
-  import { copyText, downloadCsv, setQuery, getQuery, saveHistory, track, trackCalculate, fmt } from '../../scripts/client';
+  import { copyText, downloadCsv, setQuery, getQuery, saveHistory, track, trackCalculate, fmt, intl, currency, dIsoShort, wdShort, dLong, dShort, money, monthYear } from '../../scripts/client';
   const root = document.querySelector<HTMLElement>('[data-workdays]');
   if (root) {
     const M = JSON.parse(root.dataset.msgs!) as { ui: Record<string, string>; common: Record<string, string> };
@@ -68,7 +68,7 @@ const days = [['1', 'Mo'], ['2', 'Di'], ['3', 'Mi'], ['4', 'Do'], ['5', 'Fr'], [
     if (q.get('r')) $('region').value = q.get('r')!; if (q.get('v')) $('vac').value = q.get('v')!;
     if (q.get('h') === '1') half.setAttribute('aria-pressed', 'true');
     let res: ReturnType<typeof countWorkdays> | null = null;
-    const de = (iso: string) => iso.split('-').reverse().join('.');
+    const de = (iso: string) => dIsoShort(iso);
 
     function partialButtons() {
       const a = parseISO($('from').value), b = parseISO($('to').value);
@@ -87,8 +87,8 @@ const days = [['1', 'Mo'], ['2', 'Di'], ['3', 'Mi'], ['4', 'Do'], ['5', 'Fr'], [
       res = countWorkdays(a, b, { region: $('region').value, weekdays, partialOn, halfDays: half.getAttribute('aria-pressed') === 'true', vacation: Number($('vac').value) || 0 });
       const vac = Number($('vac').value) || 0;
       out('label').textContent = `${M.ui.resultLabel} (${de($('from').value)} – ${de($('to').value)})`;
-      out('work').textContent = `${fmt('de-DE', vac ? res.netWorkdays : res.workdays, 1)} ${M.common.days}`;
-      out('sub').textContent = `${res.calendarDays} ${M.ui.calendarDays} · ${res.weekendDays} ${M.ui.weekendDays} · ${res.holidaysOnWorkdays.length} ${M.ui.holidaysOnWeekdays}${vac ? ` · ${fmt('de-DE', res.workdays, 1)} ${M.ui.beforeVacation}` : ''}${res.halfDays ? ` · ${res.halfDays} ${M.ui.halfDaysCount}` : ''}`;
+      out('work').textContent = `${fmt(intl(), vac ? res.netWorkdays : res.workdays, 1)} ${M.common.days}`;
+      out('sub').textContent = `${res.calendarDays} ${M.ui.calendarDays} · ${res.weekendDays} ${M.ui.weekendDays} · ${res.holidaysOnWorkdays.length} ${M.ui.holidaysOnWeekdays}${vac ? ` · ${fmt(intl(), res.workdays, 1)} ${M.ui.beforeVacation}` : ''}${res.halfDays ? ` · ${res.halfDays} ${M.ui.halfDaysCount}` : ''}`;
       out('hol').innerHTML = res.holidaysOnWorkdays.map((h) => `<li><span>${h.name}</span><span>${de(h.date)}</span></li>`).join('');
       out('note').textContent = res.missingYears.length ? M.ui.missingYears.replace('{years}', res.missingYears.join(', ')) : '';
       trackCalculate('workdays');
@@ -100,11 +100,11 @@ const days = [['1', 'Mo'], ['2', 'Di'], ['3', 'Mi'], ['4', 'Do'], ['5', 'Fr'], [
       if (!b || !res) return;
       if (b.classList.contains('toggle')) { b.setAttribute('aria-pressed', String(b.getAttribute('aria-pressed') !== 'true')); render(); return; }
       const sel = $('region'); const regionName = sel.options[sel.selectedIndex].text;
-      const text = `${M.ui.resultLabel} ${de($('from').value)} – ${de($('to').value)} (${regionName}): ${fmt('de-DE', res.netWorkdays, 1)} ${M.common.days}`;
+      const text = `${M.ui.resultLabel} ${de($('from').value)} – ${de($('to').value)} (${regionName}): ${fmt(intl(), res.netWorkdays, 1)} ${M.common.days}`;
       if (b.dataset.action === 'copy') { copyText(text, M.common.copied); track('copy_result', { tool: 'workdays' }); }
       if (b.dataset.action === 'share') { const url = setQuery({ from: $('from').value, to: $('to').value, r: $('region').value, v: $('vac').value !== '0' ? $('vac').value : null, h: half.getAttribute('aria-pressed') === 'true' ? '1' : null }); copyText(url, M.common.linkCopied); saveHistory({ tool: 'workdays', label: text, url }); track('share', { tool: 'workdays' }); }
       if (b.dataset.action === 'csv') {
-        downloadCsv([[M.common.date, M.ui.holiday], ...res.holidaysOnWorkdays.map((h) => [de(h.date), h.name]), [], [M.ui.resultLabel, fmt('de-DE', res.netWorkdays, 1)], [M.ui.calendarDays, res.calendarDays], [M.ui.weekendDays, res.weekendDays]], 'arbeitstage.csv');
+        downloadCsv([[M.common.date, M.ui.holiday], ...res.holidaysOnWorkdays.map((h) => [de(h.date), h.name]), [], [M.ui.resultLabel, fmt(intl(), res.netWorkdays, 1)], [M.ui.calendarDays, res.calendarDays], [M.ui.weekendDays, res.weekendDays]], 'arbeitstage.csv');
         track('export', { tool: 'workdays', format: 'csv' });
       }
     });

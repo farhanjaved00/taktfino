@@ -1,6 +1,6 @@
 ---
 /** Stundenlohnrechner — monthly ↔ hourly with the 4,33 factor, yearly, Mindestlohn check. */
-import type { LocaleCode } from '../../config/locales';
+import { getLocale, type LocaleCode } from '../../config/locales';
 import { t, dict } from '../../i18n';
 import { minimumWage, upcomingMinimumWage, monthlyToHourly } from '../../tools/wage';
 import { fmtMoney } from '../../i18n/format';
@@ -22,7 +22,7 @@ const next = upcomingMinimumWage('DE', todayIso);
     <div class="field" data-show="m2h"><label for="w-month">{u('monthly')}</label><input id="w-month" class="input input--num" type="text" inputmode="decimal" value="3.000" data-in="month" /></div>
     <div class="field" data-show="h2m" hidden><label for="w-hour">{u('hourly')}</label><input id="w-hour" class="input input--num" type="text" inputmode="decimal" value="17,31" data-in="hour" /></div>
     <div class="field"><label for="w-wh">{u('weeklyHours')}</label><input id="w-wh" class="input input--num" type="text" inputmode="decimal" value="40" data-in="wh" /></div>
-    <div class="field"><label for="w-country">{c('country')}</label><select id="w-country" class="input" data-in="country"><option value="DE">{c('DE')}</option><option value="AT">{c('AT')}</option><option value="CH">{c('CH')}</option></select></div>
+    <div class="field"><label for="w-country">{c('country')}</label><select id="w-country" class="input" data-in="country" data-currency={getLocale(locale).currency}>{getLocale(locale).countries.map((cc) => <option value={cc}>{new Intl.DisplayNames([getLocale(locale).intl], { type: 'region' }).of(cc)}</option>)}</select></div>
   </div>
   <div class="result-box" aria-live="polite">
     <div class="answer-label" data-out="label">{u('hourlyResult')}</div>
@@ -42,7 +42,7 @@ const next = upcomingMinimumWage('DE', todayIso);
 </section>
 <script>
   import { monthlyToHourly, hourlyToMonthly, monthlyHours, minimumWage, upcomingMinimumWage, minimumWageNote } from '../../tools/wage';
-  import { copyText, setQuery, getQuery, saveHistory, track, trackCalculate, fmt } from '../../scripts/client';
+  import { copyText, setQuery, getQuery, saveHistory, track, trackCalculate, fmt, intl } from '../../scripts/client';
   const root = document.querySelector<HTMLElement>('[data-wage]');
   if (root) {
     const M = JSON.parse(root.dataset.msgs!) as { ui: Record<string, string>; common: Record<string, string> };
@@ -55,7 +55,7 @@ const next = upcomingMinimumWage('DE', todayIso);
     if (q.get('wh')) $('wh').value = q.get('wh')!; if (q.get('c')) $('country').value = q.get('c')!;
     const today = new Date().toISOString().slice(0, 10);
     let hourly = 0, monthly = 0;
-    function money(n: number) { const cur = $('country').value === 'CH' ? 'CHF' : 'EUR'; return n.toLocaleString('de-DE', { style: 'currency', currency: cur }); }
+    function money(n: number) { const cur = $('country').value === 'CH' ? 'CHF' : ($('country').dataset.currency || 'EUR'); return n.toLocaleString(intl(), { style: 'currency', currency: cur }); }
     function render() {
       root!.querySelectorAll<HTMLButtonElement>('[data-mode]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.mode === mode)));
       root!.querySelectorAll<HTMLElement>('[data-show]').forEach((el) => (el.hidden = el.dataset.show !== mode));
@@ -68,7 +68,7 @@ const next = upcomingMinimumWage('DE', todayIso);
       out('hourly').textContent = money(hourly);
       out('monthly').textContent = money(monthly);
       out('yearly').textContent = money(monthly * 12);
-      out('mhours').textContent = fmt('de-DE', monthlyHours(wh), 2);
+      out('mhours').textContent = fmt(intl(), monthlyHours(wh), 2);
       const c = $('country').value as 'DE' | 'AT' | 'CH';
       const mw = minimumWage(c, today);
       const el = out('mw');
@@ -85,7 +85,7 @@ const next = upcomingMinimumWage('DE', todayIso);
     root.addEventListener('input', render);
     root.addEventListener('click', (e) => {
       const b = (e.target as HTMLElement).closest<HTMLButtonElement>('button'); if (!b) return;
-      if (b.dataset.mode) { mode = b.dataset.mode as 'm2h' | 'h2m'; if (mode === 'h2m') $('hour').value = fmt('de-DE', hourly, 2, 2); else $('month').value = fmt('de-DE', monthly, 2); render(); return; }
+      if (b.dataset.mode) { mode = b.dataset.mode as 'm2h' | 'h2m'; if (mode === 'h2m') $('hour').value = fmt(intl(), hourly, 2, 2); else $('month').value = fmt(intl(), monthly, 2); render(); return; }
       const text = `${money(monthly)} / ${M.ui.perMonth} = ${money(hourly)} / ${M.ui.perHour} (${$('wh').value} h/${M.ui.week})`;
       if (b.dataset.action === 'copy') { copyText(text, M.common.copied); track('copy_result', { tool: 'wage' }); }
       if (b.dataset.action === 'share') { const url = setQuery({ m: mode === 'm2h' ? $('month').value : null, h: mode === 'h2m' ? $('hour').value : null, wh: $('wh').value, c: $('country').value }); copyText(url, M.common.linkCopied); saveHistory({ tool: 'wage', label: text, url }); track('share', { tool: 'wage' }); }

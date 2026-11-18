@@ -1,9 +1,10 @@
 ---
 import type { LocaleCode } from '../config/locales';
-import { toolPath, type ToolId } from '../config/tool-map';
+import { toolPath, toolsFor, type ToolId } from '../config/tool-map';
 import { t } from '../i18n';
 interface Props { locale: LocaleCode; ids: ToolId[] }
-const { locale, ids } = Astro.props;
+const { locale } = Astro.props;
+const ids = Astro.props.ids.filter((id) => toolsFor(locale).some((t) => t.id === id));
 ---
 {ids.length > 0 && (
   <section class="section" aria-labelledby="rt-h">

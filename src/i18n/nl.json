@@ -1,0 +1,3 @@
+{
+  "$comment": "Not live yet. Filled automatically by the 'Language launch' workflow (scripts/draft-locale.ts) or by hand from de.json, then reviewed. The build fails for a live language with missing keys."
+}
