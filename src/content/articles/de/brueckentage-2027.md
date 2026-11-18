@@ -44,30 +44,29 @@ Die genauen Vorteile der Brückentage 2027 hängen oft vom Bundesland ab, da ein
 |--------------|-------------------------------------------------------|-------------------------|
 | NRW          | Christi Himmelfahrt 6.5., Fronleichnam 27.5.         | 11                      |
 | Niedersachsen| Christi Himmelfahrt 6.5.                             | 10                      |
-| Berlin       | Internationaler Frauentag 8.3. (Montag),             | 10                      |
-|              | Christi Himmelfahrt 6.5.                             |                         |
+| Berlin       | Christi Himmelfahrt 6.5. (Frauentag 8.3. ist ein Montag) | 10                  |
 
-**NRW (brückentage 2027 nrw):** Sie profitieren besonders von folgenden Terminen:
+**Nordrhein-Westfalen:** Für Brückentage 2027 in NRW profitieren Sie besonders von folgenden Terminen:
 - Christi Himmelfahrt: Donnerstag, 6.5.2027 (+Freitag, 1 Urlaubstag)
 - Fronleichnam: Donnerstag, 27.5.2027 (+Freitag, 1 Urlaubstag)
 
-**Niedersachsen (brückentage 2027 niedersachsen):** Hier gibt es 2027 nur Christi Himmelfahrt als lohnenden Brückentag zwischen Feiertag (Donnerstag) und Wochenende.
+**Niedersachsen:** Bei den Brückentagen 2027 in Niedersachsen gibt es 2027 nur Christi Himmelfahrt als lohnenden Brückentag zwischen Feiertag (Donnerstag) und Wochenende.
 
-**Berlin (brückentage 2027 berlin):** Wer in Berlin arbeitet, kann 2027 den Internationalen Frauentag am Montag, den 8. März, für ein verlängertes Wochenende nutzen – allerdings ohne echten Brückentag. Auch Christi Himmelfahrt (Donnerstag, 6.5.) ermöglicht einen klassischen Brückentag.
+**Berlin:** Wer in Berlin arbeitet, kann 2027 den Internationalen Frauentag am Montag, den 8. März, für ein verlängertes Wochenende nutzen – allerdings ohne echten Brückentag. Auch Christi Himmelfahrt (Donnerstag, 6.5.) ermöglicht einen klassischen Brückentag.
 
 **Hinweis:** Was in NRW funktioniert, muss nicht für jedes Bundesland gelten. Prüfen Sie immer die Feiertagsregelung für Ihr Land. 
 
 ## Urlaubsplaner-Tabelle
-Die folgende Tabelle zeigt Ihnen die wichtigsten Brückentage 2027 in Deutschland. Tragen Sie sich Ihre Wunschurlaube durch Brückentage rechtzeitig ein! Besonders beliebt und sinnvoll sind die grün markierten Kombinationen:
+Die folgende Tabelle zeigt Ihnen die wichtigsten Brückentage 2027 in Deutschland. Tragen Sie sich Ihre Wunschurlaube durch Brückentage rechtzeitig ein! Am meisten lohnen sich die beiden Donnerstage im Mai:
 
 | Zeitraum             | Feiertag               | Wochentag       | Brückentag möglich? |
 |----------------------|-----------------------|-----------------|---------------------|
 | 6. - 9. Mai 2027     | Christi Himmelfahrt   | Do (6.5.)       | Freitag (7.5.)      |
 | 27. - 30. Mai 2027   | Fronleichnam*         | Do (27.5.)      | Freitag (28.5.)     |
-| 28. März – 1. April  | Ostern                | Fr, Mo (26./29.3.)| Nicht nötig (langes Wochenende von Karfreitag bis Ostermontag) |
-| 1. – 4. Januar 2027  | Neujahr               | Fr (1.1.)       | Nicht nötig        |
-| 8. – 10. März 2027   | Int. Frauentag**      | Mo (8.3.)       | Nicht möglich (bereits verlängertes Wochenende) |
-| 31. Oktober – 2. Nov.| Reformationstag***    | So (31.10.)     | Kein Brückentag    |
+| 26. – 29. März 2027  | Ostern                | Fr, Mo (26./29.3.)| Nicht nötig (Karfreitag bis Ostermontag) |
+| 1. – 3. Januar 2027  | Neujahr               | Fr (1.1.)       | Nicht nötig        |
+| 6. – 8. März 2027    | Int. Frauentag**      | Mo (8.3.)       | Nicht nötig (langes Wochenende) |
+| –                    | Reformationstag***    | So (31.10.)     | Kein Brückentag (Sonntag) |
 
 > *Fronleichnam nur in BW, BY, HE, NW, RP, SL; teils SN, teils TH.
 > **Internationaler Frauentag nur in Berlin & Mecklenburg-Vorpommern.
@@ -76,7 +75,7 @@ Die folgende Tabelle zeigt Ihnen die wichtigsten Brückentage 2027 in Deutschlan
 ## So rechnen Sie Urlaubstage
 Zur optimalen Planung zählt nicht nur, wann Feiertage fallen, sondern auch, wie viele Urlaubstage Sie einsetzen. Mit dem [Arbeitstage-Rechner](/de/arbeitstage-rechner/) sehen Sie im Detail, welche Werktage Sie mit Urlaub abdecken und wie viele Brückentage Sie in Ihrem Bundesland herausholen können. 
 
-### Rechenbeispiel 'Urlaub 2027 planen Brückentage NRW'
+### Rechenbeispiel: Urlaub 2027 in NRW mit Brückentagen planen
 Angenommen, Sie möchten in Nordrhein-Westfalen rund um Christi Himmelfahrt und Fronleichnam möglichst viel Freizeit am Stück haben. Sie nehmen folgende Urlaubstage:
 - Freitag, 7. Mai 2027 (nach Christi Himmelfahrt)
 - Freitag, 28. Mai 2027 (nach Fronleichnam)
@@ -89,7 +88,7 @@ Insgesamt: Mit nur 2 Urlaubstagen erhalten Sie 8 Tage frei.
 |-----------------|-----------------|------------------------------|-------------------|
 | 2               | 6.–9.5. & 27.–30.5.2027| 6.5. und 27.5.              | 8                |
 
-So können Sie in NRW Ihren 'urlaub 2027 planen brückentage nrw' und bekommen mit gezielter Planung viel Freizeit mit wenig Urlaubsaufwand. 
+So lässt sich der Urlaub 2027 in NRW mit Brückentagen planen: viel Freizeit für wenig Urlaub. 
 
 ### Österreich/Schweiz
 Ähnliche Prinzipien gelten in Österreich und der Schweiz, aber die Feiertagsregelungen sind teils unterschiedlich und weniger bundeseinheitlich. In Österreich profitieren Sie etwa von Christi Himmelfahrt und Fronleichnam (beide donnerstags) für Brückentage. In der Schweiz liegen viele Feiertage je nach Kanton; der 1. August 2027 ist ein Sonntag, bietet also keinen Brückentag.

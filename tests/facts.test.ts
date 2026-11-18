@@ -2,7 +2,7 @@
 import { describe, it, expect } from 'vitest';
 import fs from 'node:fs';
 import path from 'node:path';
-import { checkFacts, factsFor, deHolidays, countsPerLand } from '../scripts/lib/facts';
+import { checkFacts, factsFor, deHolidays, countsPerLand, keywordStuffing } from '../scripts/lib/facts';
 
 const brief = { keyword: 'feiertage 2027', title: 'Feiertage 2027' };
 
@@ -37,6 +37,23 @@ describe('fact checker', () => {
       'Welche Jahre haben 53 Kalenderwochen? 2026 hat 53 Kalenderwochen.',
     ].join('\n');
     expect(checkFacts(good, brief)).toEqual([]);
+  });
+});
+
+describe('second draft (Brückentage 2027)', () => {
+  const b = { keyword: 'brückentage 2027', title: 'Brückentage 2027' };
+  it('catches wrong free-day spans', () => {
+    const t = ['| Zeitraum | Feiertag |', '| --- | --- |', '| 28. März – 1. April | Ostern |', '| 1. – 4. Januar 2027 | Neujahr |', '| 8. – 10. März 2027 | Int. Frauentag |'].join('\n');
+    expect(checkFacts(t, b)).toHaveLength(3);
+  });
+  it('accepts correct spans and bridge-day lines', () => {
+    const t = ['| Zeitraum | Feiertag |', '| --- | --- |', '| 6.–9. Mai 2027 | Christi Himmelfahrt |', '| 26.–29. März | Ostern |', '',
+      '- Freitag, 7. Mai 2027 (nach Christi Himmelfahrt)', 'Vom 27. bis 30. Mai haben Sie nach Fronleichnam frei.'].join('\n');
+    expect(checkFacts(t, b)).toEqual([]);
+  });
+  it('flags keyword stuffing', () => {
+    expect(keywordStuffing('**NRW (brückentage 2027 nrw):** Die Brückentage …', ['brückentage 2027 nrw'])).toHaveLength(1);
+    expect(keywordStuffing('Die Brückentage 2027 in NRW sind …', ['brückentage 2027 nrw'])).toEqual([]);
   });
 });
 

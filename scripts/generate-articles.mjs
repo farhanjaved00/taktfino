@@ -16,7 +16,7 @@ import path from 'node:path';
 
 import { TOOLS, CATEGORIES, toolsFor } from '../src/config/tool-map.ts';
 import { LOCALES } from '../src/config/locales.ts';
-import { factsFor, checkFacts } from './lib/facts.ts';
+import { factsFor, checkFacts, keywordStuffing } from './lib/facts.ts';
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
 const AUTO = process.env.AUTO_PUBLISH === 'true';
@@ -90,6 +90,7 @@ Regeln – alle einhalten:
 8. Deutsch in natürlicher, sachlicher Sprache (Sie-Form). Österreich/Schweiz erwähnen, wenn relevant.
 9. VERBINDLICHE FAKTEN: Für Feiertage, Daten, Wochentage, Bundesländer, Anzahlen, Mindestlohn und Kalenderwochen verwendest du AUSSCHLIESSLICH die Angaben im Abschnitt „Verbindliche Fakten“. Übernimm Listen von Bundesländern vollständig. Was dort nicht steht, nennst du ohne konkrete Zahl oder lässt es weg. Einen Feiertag, der nicht in allen 16 Ländern gilt, nie als bundesweit bezeichnen.
 10. Mindestens 750 Wörter.
+11. Keywords NIE wörtlich in Klammern, Anführungszeichen oder kleingeschrieben einbauen. Schreibe Substantive groß („Brückentage 2027 in NRW“), formuliere natürlich. Keine Zeiträume erfinden: Freie Tage nur aus „Freie Zeiträume“ übernehmen.
 Antworte als JSON: {"description": "Meta-Beschreibung ≤ 150 Zeichen", "body": "Markdown-Artikel", "faq": [{"q": "...", "a": "..."}] (3–4 Fragen, kurz)}`;
 
 const LANGUAGE = { es: 'Spanish (Mexico first, understandable in Spain)', 'pt-br': 'Brazilian Portuguese', nl: 'Dutch', fr: 'French', pl: 'Polish', it: 'Italian', en: 'American English' };
@@ -183,6 +184,7 @@ async function runLang() {
     if (/\b\d{1,3}(,\d+)?\s?%|Studie|laut einer Umfrage|Urteil vom|\bstud(y|ies|io|ie)\b|\bestudio\b|\bpesquisa\b|\benquête\b|\bbadani/i.test(j.body)) issues.push('contains percentages/studies/court cases – verify source or remove');
     if (LANG === 'de') for (const p of weekdayProblems(j.body)) issues.push(`Wochentag falsch: ${p}`);
     if (LANG === 'de') for (const p of checkFacts(j.body + '\n' + (j.faq || []).map((x) => `${x.q} ${x.a}`).join('\n'), b)) issues.push(`Fakt falsch: ${p}`);
+    if (LANG === 'de') issues.push(...keywordStuffing(j.body, [b.keyword, ...b.secondary]));
     const publish = AUTO && !issues.length;
     const faq = (j.faq || []).slice(0, 4);
     const fm = [

@@ -54,6 +54,29 @@ export function countsPerLand(year: number) {
     return [r, { full: all.filter((h) => !h.partial).length, withPartial: all.length, withDefault: all.filter((h) => !h.partial || h.defaultOn).length }];
   })) as Record<string, { full: number; withPartial: number; withDefault: number }>;
 }
+const addDays = (iso: string, n: number) => new Date(Date.parse(iso + 'T00:00:00Z') + n * 864e5).toISOString().slice(0, 10);
+const dow = (iso: string) => new Date(iso + 'T00:00:00Z').getUTCDay();
+/** Free days around a holiday for someone working Mon–Fri: expands over weekends and nationwide holidays.
+ *  `bridge` = the same block when one vacation day is taken on the Friday after a Thursday / the Monday before a Tuesday. */
+export function freeBlocks(year: number) {
+  const hs = deHolidays(year);
+  const off = new Set(hs.filter((h) => h.full.length === 16).map((h) => h.date));
+  const block = (from: string, to: string, extra: Set<string>) => {
+    const free = (d: string) => dow(d) === 0 || dow(d) === 6 || off.has(d) || extra.has(d);
+    while (free(addDays(from, -1))) from = addDays(from, -1);
+    while (free(addDays(to, 1))) to = addDays(to, 1);
+    return { from, to, days: Math.round((Date.parse(to) - Date.parse(from)) / 864e5) + 1 };
+  };
+  return hs.map((h) => {
+    const own = new Set([h.date]);
+    const plain = block(h.date, h.date, own);
+    const b = dow(h.date) === 4 ? addDays(h.date, 1) : dow(h.date) === 2 ? addDays(h.date, -1) : null;
+    const bridge = b ? { ...block(h.date < b ? h.date : b, h.date < b ? b : h.date, new Set([h.date, b])), day: b } : null;
+    return { key: h.key, name: h.name, date: h.date, plain, bridge };
+  });
+}
+const span = (b: { from: string; to: string; days: number }) => `${de(b.from).replace(/\.\d{4}$/, '.')}–${de(b.to)} (${b.days} ${b.days === 1 ? 'Tag' : 'Tage'})`;
+
 const namesOf = (h: { key: string; name: string }) => [h.name, ...(ALIASES[h.key] || [])];
 const minWage = (y: number) => [...wage.DE.rates].reverse().find((r) => r.from <= `${y}-12-31`)?.hourly;
 
@@ -80,6 +103,11 @@ export function factsFor(brief: { keyword: string; title: string; tool: string; 
       out.push(`- ${h.name}: ${de(h.date)} (${wdOf(h.date)}) – ${where}${part ? `; ${part}` : ''}`);
     }
     out.push(`Bundesweit gelten genau ${hs.filter((h) => h.full.length === 16).length} Feiertage.`);
+    out.push(`Freie Zeiträume ${y} bei einer Fünf-Tage-Woche (Mo–Fr), nur diese Spannen verwenden:`);
+    for (const f of freeBlocks(y)) {
+      if (dow(f.date) === 0 || dow(f.date) === 6) { out.push(`- ${f.name}: fällt auf ${wdOf(f.date)} – kein zusätzlicher freier Tag, kein Brückentag`); continue; }
+      out.push(`- ${f.name}: ohne Urlaub ${span(f.plain)}${f.bridge ? `; mit Brückentag ${wdOf(f.bridge.day)} ${de(f.bridge.day)}: ${span(f.bridge)}` : ''}`);
+    }
     const c = countsPerLand(y);
     out.push(`Anzahl gesetzlicher Feiertage ${y} je Land (ohne nur teilweise geltende; Brandenburg inkl. Ostersonntag und Pfingstsonntag): ${Object.entries(c).map(([r, n]) => `${LAND[r]} ${n.full}`).join(', ')}.`);
     out.push(`Österreich ${y} (bundesweit): ${(holidaysFor('at', y) as HolidayEntry[]).map((h) => `${h.name} ${de(h.date)} (${wdOf(h.date)})`).join(', ')}. Karfreitag ist in Österreich seit 2019 kein allgemeiner Feiertag.`);
@@ -91,6 +119,20 @@ export function factsFor(brief: { keyword: string; title: string; tool: string; 
 /* ------------------------------------------------------------------ checker */
 const DATE_RE = new RegExp(`\\b(\\d{1,2})\\.\\s?(?:(\\d{1,2})\\.\\s?(\\d{4})?|(${MONTHS.join('|')})\\b(?:\\s+(\\d{4}))?)`, 'g');
 const DATE_RE_ONE = new RegExp(DATE_RE.source);
+const MON_ABBR = ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'];
+const monthNo = (t?: string) => { if (!t) return 0; if (/^\d+$/.test(t)) return +t; const i = MON_ABBR.findIndex((m) => t.startsWith(m)); return i + 1; };
+const RANGE_RE = /(\d{1,2})\.\s?(?:(\d{1,2})\.|((?:Jan|Feb|Mär|Apr|Mai|Jun|Jul|Aug|Sep|Okt|Nov|Dez)[a-zä]*\.?))?\s?(?:–|-|bis)\s?(\d{1,2})\.\s?(?:(\d{1,2})\.|((?:Jan|Feb|Mär|Apr|Mai|Jun|Jul|Aug|Sep|Okt|Nov|Dez)[a-zä]*\.?))/g;
+/** "6.–9. Mai", "27.–30.5.2027", "28. März – 1. April" → ISO from/to (single year assumed) */
+function rangesIn(line: string, year: number) {
+  const out: { from: string; to: string }[] = [];
+  for (const m of line.matchAll(RANGE_RE)) {
+    const m2 = monthNo(m[5] || m[6]); const m1 = monthNo(m[2] || m[3]) || m2;
+    if (!m1 || !m2 || m1 > 12 || m2 > 12) continue;
+    const iso = (mo: number, d: string) => `${year}-${String(mo).padStart(2, '0')}-${d.padStart(2, '0')}`;
+    out.push({ from: iso(m1, m[1]), to: iso(m2, m[4]) });
+  }
+  return out;
+}
 function datesIn(line: string, defaultYear?: number): string[] {
   const out: string[] = [];
   for (const m of line.matchAll(DATE_RE)) {
@@ -138,10 +180,19 @@ export function checkFacts(body: string, brief: { keyword: string; title: string
 
     // 1. holiday date (only when the line is about exactly one holiday, so lists of several cannot mis-pair)
     // (other dates in the same line – e.g. the bridge day after a holiday – are fine as long as the right one is there)
-    if (names.length === 1 && dates.length) {
+    if (names.length === 1 && dates.length && !(single && rangesIn(line, single).length)) {
       const hs = dates.map((d) => byName(names[0], +d.slice(0, 4))).filter(Boolean) as DeHoliday[];
-      if (hs.length && !dates.some((d) => hs.some((h) => h.date === d)) && !/(Ostersonntag|Pfingstsonntag)/.test(line))
+      if (hs.length && !dates.some((d) => hs.some((h) => h.date === d)) && !/(Ostersonntag|Pfingstsonntag)/.test(line) && !/\b(nach|vor|vom|bis|zwischen|danach|davor|Brückentag\w*|Urlaubstag\w*)\b/i.test(line))
         issues.push(`Datum falsch: „${names[0]}“ ist ${de(hs[0].date)}, nicht ${dates.map(de).join(' / ')} – „${short}“`);
+    }
+    // 1b. a "free from – to" span next to a holiday must be one of the computed blocks
+    if (single) for (const r of rangesIn(line, single)) {
+      const keys = names.flatMap((n) => hol.get(single)!.filter((h) => namesOf(h).includes(n)).map((h) => h.key));
+      if (/\bOstern\b/.test(line)) keys.push('karfreitag', 'ostermontag');
+      if (!keys.length || /\d+\s+Urlaubstage/.test(line)) continue;
+      const blocks = freeBlocks(single).filter((f) => keys.includes(f.key)).flatMap((f) => [f.plain, ...(f.bridge ? [f.bridge] : [])]);
+      if (!blocks.some((b) => b.from === r.from && b.to === r.to))
+        issues.push(`Zeitraum falsch: ${de(r.from)}–${de(r.to)} passt nicht; richtig ${[...new Set(blocks.map(span))].join(' oder ')} – „${short}“`);
     }
     // 2. weekday next to a date (tables: same row)
     const wds = WD.filter((w) => new RegExp(`\\b${w}\\b`).test(line));
@@ -197,4 +248,17 @@ export function checkFacts(body: string, brief: { keyword: string; title: string
       issues.push('Schweiz: einziger bundesweiter Feiertag ist die Bundesfeier (1. August); andere Feiertage regeln die Kantone');
   }
   return [...new Set(issues)];
+}
+
+/** Keywords pasted in verbatim instead of written naturally ("(brückentage 2027 nrw)", 'urlaub 2027 planen …'). */
+export function keywordStuffing(body: string, keywords: string[]): string[] {
+  const issues: string[] = [];
+  for (const kw of keywords.filter((k) => k.includes(' '))) {
+    const esc = kw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const quoted = new RegExp(`[(„"'‚]\\s*${esc}\\s*[)“"'‘]`).test(body);
+    // a German noun of the keyword written in lower case although the text capitalises it elsewhere
+    const lowerNoun = kw.split(' ').some((w) => /^[a-zäöü]/.test(w) && body.includes(w[0].toUpperCase() + w.slice(1))) && new RegExp(`(^|[^\\wäöü])${esc}([^\\wäöü]|$)`).test(body);
+    if (quoted || lowerNoun) issues.push(`Keyword „${kw}“ wörtlich/kleingeschrieben eingebaut – natürlich formulieren`);
+  }
+  return issues;
 }
