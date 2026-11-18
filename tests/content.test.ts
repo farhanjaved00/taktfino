@@ -2,7 +2,8 @@
 import { describe, it, expect } from 'vitest';
 import fs from 'node:fs';
 import path from 'node:path';
-import { TOOLS } from '../src/config/tool-map';
+import { TOOLS, toolsFor } from '../src/config/tool-map';
+import { LOCALES } from '../src/config/locales';
 
 interface Doc { file: string; type: string; fm: Record<string, string>; secondary: string[]; body: string }
 function load(): Doc[] {
@@ -22,21 +23,24 @@ function load(): Doc[] {
 }
 const docs = load();
 const words = (s: string) => s.split(/\s+/).filter(Boolean).length;
+/** Keywords are unique per language (the same phrase can be used in es and pt-br, they are different SERPs). */
+const lang = (d: Doc) => d.file.split('/')[1];
+const kk = (l: string, k: string) => `${l}:${k.toLowerCase()}`;
 
 describe('keyword map', () => {
   it('every page has one unique primary keyword', () => {
     const seen = new Map<string, string>();
     for (const d of docs) {
-      const k = d.fm.keyword?.toLowerCase();
-      expect(k, d.file).toBeTruthy();
+      expect(d.fm.keyword, d.file).toBeTruthy();
+      const k = kk(lang(d), d.fm.keyword);
       expect(seen.get(k), `${d.file} reuses "${k}"`).toBeUndefined();
       seen.set(k, d.file);
     }
   });
   it('no secondary keyword is another page\'s primary', () => {
-    const primaries = new Map(docs.map((d) => [d.fm.keyword.toLowerCase(), d.file]));
+    const primaries = new Map(docs.map((d) => [kk(lang(d), d.fm.keyword), d.file]));
     for (const d of docs) for (const s of d.secondary) {
-      const owner = primaries.get(s);
+      const owner = primaries.get(kk(lang(d), s));
       if (owner) expect(owner, `${d.file} targets "${s}" which belongs to ${owner}`).toBe(d.file);
     }
   });
@@ -69,21 +73,52 @@ describe('page template rules', () => {
   });
 });
 
-describe('article queue (planned keywords)', () => {
-  const q = fs.readFileSync('content/queue-de.csv', 'utf8').trim().split('\n').slice(1);
+describe('article queues (planned keywords)', () => {
   const parse = (line: string) => { const out: string[] = []; let f = '', inQ = false; for (let i = 0; i < line.length; i++) { const ch = line[i]; if (inQ) { if (ch === '"' && line[i + 1] === '"') { f += '"'; i++; } else if (ch === '"') inQ = false; else f += ch; } else if (ch === '"') inQ = true; else if (ch === ',') { out.push(f); f = ''; } else f += ch; } out.push(f); return out; };
-  const rows = q.map(parse);
-  it('no planned keyword collides with a live page or another brief', () => {
-    const live = new Map<string, string>();
-    for (const d of docs) { live.set(d.fm.keyword.toLowerCase(), d.file); for (const s of d.secondary) live.set(s, d.file); }
-    const seen = new Map<string, string>();
-    for (const r of rows) {
-      for (const k of [r[0], ...(r[10] ? r[10].split('|') : [])].map((x) => x.toLowerCase())) {
-        expect(live.get(k), `queue "${r[0]}" uses "${k}" owned by ${live.get(k)}`).toBeUndefined();
-        expect(seen.get(k), `"${k}" planned twice (${seen.get(k)} and ${r[0]})`).toBeUndefined();
-        seen.set(k, r[0]);
+  for (const file of fs.readdirSync('content').filter((f) => /^queue-.+\.csv$/.test(f))) {
+    const l = file.slice(6, -4);
+    const lines = fs.readFileSync(`content/${file}`, 'utf8').trim().split('\n');
+    const head = parse(lines[0]);
+    const rows = lines.slice(1).map(parse);
+    const col = (r: string[], n: string) => r[head.indexOf(n)] || '';
+    it(`${file}: no planned keyword collides with a live page or another brief`, () => {
+      expect(LOCALES.some((x) => x.code === l), `unknown language ${l}`).toBe(true);
+      const live = new Map<string, string>();
+      for (const d of docs.filter((x) => lang(x) === l)) { live.set(d.fm.keyword.toLowerCase(), d.file); for (const s of d.secondary) live.set(s, d.file); }
+      // keywords reserved for tool pages that scripts/draft-locale.ts will write
+      const planned = JSON.parse(fs.readFileSync('src/data/locale-keywords.json', 'utf8'))[l]?.tools || {};
+      for (const [id, x] of Object.entries<any>(planned)) for (const k of [x.primary.keyword, ...x.secondary]) if (!live.has(k.toLowerCase())) live.set(k.toLowerCase(), `planned tool page ${l}/${id}`);
+      const seen = new Map<string, string>();
+      for (const r of rows) {
+        const kw = col(r, 'keyword');
+        for (const k of [kw, ...(col(r, 'secondary') ? col(r, 'secondary').split('|') : [])].map((x) => x.toLowerCase())) {
+          expect(live.get(k), `queue "${kw}" uses "${k}" owned by ${live.get(k)}`).toBeUndefined();
+          expect(seen.get(k), `"${k}" planned twice (${seen.get(k)} and ${kw})`).toBeUndefined();
+          seen.set(k, kw);
+        }
+        expect(col(r, 'title').length, col(r, 'title')).toBeLessThanOrEqual(60);
+        expect(TOOLS.some((t) => t.id === col(r, 'tool')), `${kw}: tool "${col(r, 'tool')}"`).toBe(true);
+        expect(['work', 'pay', 'dates'], `${kw}: category`).toContain(col(r, 'category'));
+        if (l !== 'de') expect(toolsFor(l as 'es').some((t) => t.id === col(r, 'tool')), `${kw}: tool ${col(r, 'tool')} does not exist in ${l}`).toBe(true);
       }
-      expect(r[1].length, r[1]).toBeLessThanOrEqual(60);
+    });
+  }
+});
+
+describe('languages', () => {
+  it('every live language has a page for each of its tools and all static pages', () => {
+    for (const l of LOCALES.filter((x) => x.live)) {
+      for (const t of toolsFor(l.code)) expect(fs.existsSync(`src/content/tools/${l.code}/${t.id}.md`), `${l.code}/${t.id}`).toBe(true);
+      if (l.code !== 'de') for (const p of ['about', 'contact', 'imprint', 'privacy', 'terms', 'editorial']) expect(fs.existsSync(`src/content/pages/${l.code}/${p}.md`), `${l.code}/${p}`).toBe(true);
+    }
+  });
+  it('planned keywords per language (src/data/locale-keywords.json) are unique and cover every tool', () => {
+    const kw = JSON.parse(fs.readFileSync('src/data/locale-keywords.json', 'utf8'));
+    for (const l of LOCALES.filter((x) => x.code !== 'de')) {
+      const tools = kw[l.code]?.tools || {};
+      const all = Object.values(tools).flatMap((x: any) => [x.primary.keyword, ...x.secondary]).map((x: string) => x.toLowerCase());
+      expect(new Set(all).size, `${l.code}: duplicate keyword`).toBe(all.length);
+      for (const t of toolsFor(l.code)) expect(tools[t.id], `${l.code}/${t.id}`).toBeTruthy();
     }
   });
 });

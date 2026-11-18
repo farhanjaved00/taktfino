@@ -187,7 +187,7 @@ Die Rechen-Logik ist sprachfrei. Pro Land ändern sich nur **Regeln/Daten**:
 4. ☐ Slugs in `tool-map.ts` prüfen (für es/pt-br/en schon eingetragen)
 5. ☐ Länder-Daten: Feiertage (`src/data/holidays/<land>/`), Mindestlohn (`minimum-wage.json`), Regeln in `src/tools/*` + Tests
 6. ☐ Inhalte: `src/content/tools/<code>/*.md`, Rechtstexte (Impressum/Aviso legal, Datenschutz nach LFPDPPP/LGPD/RGPD), About
-7. ☐ Article-Queue `content/queue-<code>.csv` (für es + pt-br schon gefüllt)
+7. ☑ Article-Queue `content/queue-<code>.csv` (es, pt-br, nl, fr, pl, it gefüllt; en fehlt noch)
 8. ☐ Native Review → `reviewed: true`
 9. ☐ `live: true` → Deploy → Sitemap → IndexNow → GSC-Ordnerfilter
 10. ☐ Nach 4 und 8 Wochen GSC prüfen
@@ -202,7 +202,8 @@ Die Rechen-Logik ist sprachfrei. Pro Land ändern sich nur **Regeln/Daten**:
 | Artikel-Entwürfe Mo/Mi/Fr für **jede live Sprache** mit gefüllter Queue | ✅ (OpenAI-Key nötig) |
 | Veröffentlichen der Entwürfe | ⚙️ Schalter `AUTO_PUBLISH` (siehe README) – aus = Review per PR, an = saubere Entwürfe gehen direkt live |
 | Hreflang, Sitemaps, Sprachumschalter | ✅ |
-| Übersetzung UI + Tool-Texte einer neuen Sprache | ⚙️ Entwurf per Workflow „Draft language“, dann Review |
+| Übersetzung UI + Tool-Texte + Rechtsseiten einer neuen Sprache | ✅ Workflow `language-launch.yml` nach `src/data/language-schedule.json` (Keywords: `src/data/locale-keywords.json`) |
+| Artikel-Queues es, pt-br, nl, fr, pl, it | ✅ `content/queue-<code>.csv` (Semrush, Nov 2026) |
 | Länder-Regeln (Feiertage, Mindestlohn, Gesetze) | ❌ müssen geprüft werden – falsche Rechtsdaten sind das größte Risiko |
 | Native Review | ❌ Mensch (oder bewusst mit `AUTO_PUBLISH` überspringen) |
 | Backlinks, YouTube, Brand-Profile | ❌ |

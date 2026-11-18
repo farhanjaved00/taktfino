@@ -38,7 +38,9 @@ npm run dev
 | `npm run verify` | tests + type-check + build + link check + file count — run before every push |
 | `npm run holidays -- 2029` | generate holiday data files for a year (review the diff!) |
 | `npm run keyword-map` | rebuild `docs/keyword-map.csv` (every URL → primary + secondary keywords) |
-| `npm run articles:dry` | show the next article brief in the queue |
+| `npm run articles:dry` | show the next article brief per live language |
+| `npm run next-locale` | which language is due by the schedule |
+| `npm run draft-locale -- <code> --dry-run` | what a language draft would write |
 
 ## Review workflow (important)
 
@@ -64,7 +66,7 @@ To publish a page: check language, numbers and legal facts → set `reviewed: tr
 2. Cloudflare → Workers & Pages → Create → Pages → connect the repo. Build command `npm run build`, output `dist`, env `NODE_VERSION=24`.
 3. Environment variables: `SITE_URL` (e.g. `https://www.brand.com`), later `PUBLIC_GSC_VERIFICATION`, `PUBLIC_BING_VERIFICATION`, `PUBLIC_CF_ANALYTICS_TOKEN` and/or `PUBLIC_GA4_ID`, `PUBLIC_ADSENSE_CLIENT`, `INDEXNOW_KEY` (see `.env.example`).
 4. Domain (Spaceship registrar, DNS on Cloudflare): add `www` + apex as custom domains; Redirect Rule apex → `https://www.…` (301). HTTPS and HSTS come from Cloudflare + `public/_headers`.
-5. GitHub → Settings → Secrets/Variables: secrets `CF_PAGES_DEPLOY_HOOK`, `OPENAI_API_KEY`, `INDEXNOW_KEY`; variables `SITE_URL`, optional `OPENAI_MODEL`. Actions → General → allow GitHub Actions to create pull requests.
+5. GitHub → Settings → Secrets/Variables: secrets `CF_PAGES_DEPLOY_HOOK`, `OPENAI_API_KEY`, `INDEXNOW_KEY`; variables `SITE_URL`, optional `OPENAI_MODEL`, `ARTICLES_PER_RUN`, `AUTO_PUBLISH` (see below). Actions → General → Workflow permissions → "Read and write" + allow GitHub Actions to create pull requests.
 6. Search Console (domain property) and Bing Webmaster Tools: verify, submit `/sitemap-index.xml`. UptimeRobot on `/de/`.
 
 ## Automation
@@ -72,11 +74,23 @@ To publish a page: check language, numbers and legal facts → set `reviewed: tr
 | Workflow | When | What |
 | --- | --- | --- |
 | `ci.yml` | every push / PR | tests, build, link check, file count |
-| `articles.yml` | Mon/Wed/Fri 06:00 UTC | next brief from `content/queue-de.csv` → OpenAI draft in German → **pull request** with automatic checks (weekdays, length, table, tool link, risky claims). Native review → `reviewed: true` → merge |
+| `articles.yml` | Mon/Wed/Fri 06:00 UTC | next brief from `content/queue-<lang>.csv` for **every live language** → OpenAI draft in that language with the brief's secondary keywords → automatic checks (length, table, tool link in first 100 words, risky claims, weekdays in German) → PR or direct publish (see `AUTO_PUBLISH`) |
+| `language-launch.yml` | Mondays 05:00 UTC, or by hand | when a language is due by `src/data/language-schedule.json` (month reached **and** the previous language is live): translates the UI, writes all universal tool pages with the keywords from `src/data/locale-keywords.json`, drafts the static/legal pages and switches the language live → PR or direct publish |
 | `scheduled-rebuild.yml` | 1st of each month | rebuild via deploy hook (current-year tables, dates) |
-| `indexnow.yml` | content pushed to main | notifies Bing/IndexNow after deploy |
+| `indexnow.yml` | content pushed to main (also started by the bots) | notifies Bing/IndexNow after deploy |
 
-Add briefs to `content/queue-de.csv` (`keyword,title,tool,category,intent,h2s,questions`, H2s/questions separated by `|`) from your Semrush research.
+Queues exist for de, es, pt-br, nl, fr, pl, it (`content/queue-<lang>.csv`, columns `keyword,title,tool,category,intent,h2s,questions,week,volume,kd,secondary`, lists separated by `|`, all from Semrush). Tests make sure no planned keyword collides with a page or a planned tool page in the same language.
+
+### `AUTO_PUBLISH` — the one switch between "review" and "fully automatic"
+
+| | `AUTO_PUBLISH` unset/false (default, plan §12) | `AUTO_PUBLISH=true` (repo variable) |
+| --- | --- | --- |
+| Articles | pull request, every draft `reviewed: false` (noindex) until a native speaker approves | pushed to main; drafts that pass **every** check get `reviewed: true` and are indexed at once, drafts with warnings stay noindex |
+| New language | pull request `locale/<lang>`; merge = language goes live with noindex pages | pushed to main and live immediately; clean tool pages indexable |
+| Legal pages (imprint, privacy, terms) | review | **always** `reviewed: false` — a human must check them |
+| Reviewer shown on page | yes, after review | no — auto-published pages name only the author (no fake "reviewed by") |
+
+**Risk of turning it on:** the plan (§12) requires a native review before indexing because unreviewed AI text is the main reason sites like this lose Google trust (Helpful Content / scaled content abuse) and because a wrong legal figure is a liability. With `AUTO_PUBLISH=true` also change `/de/redaktionelle-richtlinien/` (and the drafted editorial pages) so they no longer promise a human review of every page. Recommended: start with it **off** for German; turn it on only after the first 20–30 reviewed pages perform well, and spot-check the GitHub run summaries weekly.
 
 ## Ads, consent, analytics
 
@@ -87,11 +101,16 @@ Add briefs to `content/queue-de.csv` (`keyword,title,tool,category,intent,h2s,qu
 
 ## Adding a language (plan §21)
 
-1. `src/config/locales.ts`: the line already exists with `live: false` (es, pt-br, en are prepared).
-2. `src/i18n/<code>.json`: translate every key from `de.json` (the build fails if a live language misses keys).
-3. Slugs in `src/config/tool-map.ts` (already filled for es/pt-br/en — check with a native speaker).
-4. Content: `src/content/tools/<code>/`, `articles/<code>/` (same `translationKey` as the German original → hreflang), static pages in `src/components/pages/<code>/` + `LocalePage.astro`, local data (holidays, minimum wage, currency).
-5. QA → `live: true` → deploy. Hreflang, sitemaps, switcher, picker update automatically. Review in GSC after 4 and 8 weeks.
+Automatic: `language-launch.yml` does it on schedule. By hand: Actions → Language launch → Run workflow → `lang`, or locally:
+
+```bash
+npx tsx scripts/draft-locale.ts es --dry-run   # what would be written
+OPENAI_API_KEY=… npx tsx scripts/draft-locale.ts es --live
+```
+
+It writes only what is missing (safe to re-run): `src/i18n/<code>.json` (all keys of `de.json`), `src/content/tools/<code>/*.md` for the universal tools (`UNIVERSAL` in `tool-map.ts`: hours, minutes, days, age, week, wage, overtime, timesheet), `src/content/pages/<code>/*.md` (about, contact, imprint, privacy, terms, editorial; operator details are inserted from `IMPRINT`), and flips `live: true`. Tests then require every tool and static page to exist for that language.
+
+**Not automatic:** tools that encode a country's law (work-time rules, notice periods, surcharges, maternity/parental leave, vacation, holidays/working days). Each needs its rules coded in `src/tools/*` with tests against the official source, then the tool id added for that language in `toolsFor()`. Keyword data for them is in `docs/LANGUAGE-ROADMAP.md` §2–3.
 
 ## Adding a Bundesland page
 

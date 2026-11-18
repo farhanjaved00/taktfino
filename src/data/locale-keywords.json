@@ -1,0 +1,553 @@
+{
+  "$comment": "Primary + secondary keyword per universal tool and language (Semrush, Nov 2026; volume null = not measured). Used by scripts/draft-locale.ts. Every primary must stay unique (tests/content.test.ts).",
+  "es": {
+    "db": "mx (es as backup)",
+    "tools": {
+      "hours": {
+        "primary": {
+          "keyword": "calculadora de horas",
+          "volume": 9900,
+          "kd": 32
+        },
+        "secondary": [
+          "calculadora de tiempo",
+          "calculadora de horas trabajadas",
+          "calcular horas trabajadas"
+        ]
+      },
+      "minutes": {
+        "primary": {
+          "keyword": "minutos a horas",
+          "volume": 14800,
+          "kd": 36
+        },
+        "secondary": [
+          "convertir minutos a horas"
+        ]
+      },
+      "days": {
+        "primary": {
+          "keyword": "calculadora de días",
+          "volume": 14800,
+          "kd": 33
+        },
+        "secondary": [
+          "calculadora de dias entre fechas"
+        ]
+      },
+      "age": {
+        "primary": {
+          "keyword": "calculadora de edad",
+          "volume": 8100,
+          "kd": 32
+        },
+        "secondary": [
+          "calcular edad"
+        ]
+      },
+      "week": {
+        "primary": {
+          "keyword": "semana del año",
+          "volume": 18100,
+          "kd": 32
+        },
+        "secondary": [
+          "número de semana",
+          "que semana es hoy"
+        ]
+      },
+      "wage": {
+        "primary": {
+          "keyword": "calcular salario por hora",
+          "volume": null,
+          "kd": null
+        },
+        "secondary": [
+          "sueldo por hora"
+        ]
+      },
+      "overtime": {
+        "primary": {
+          "keyword": "calculadora de horas extras",
+          "volume": 480,
+          "kd": 27
+        },
+        "secondary": []
+      },
+      "timesheet": {
+        "primary": {
+          "keyword": "registro horario",
+          "volume": 2900,
+          "kd": 22
+        },
+        "secondary": [
+          "registro de jornada"
+        ]
+      }
+    }
+  },
+  "pt-br": {
+    "db": "br",
+    "tools": {
+      "hours": {
+        "primary": {
+          "keyword": "calculadora de horas",
+          "volume": 165000,
+          "kd": 22
+        },
+        "secondary": [
+          "calculadora de horas trabalhadas"
+        ]
+      },
+      "minutes": {
+        "primary": {
+          "keyword": "minutos em horas",
+          "volume": 8100,
+          "kd": 42
+        },
+        "secondary": []
+      },
+      "days": {
+        "primary": {
+          "keyword": "calculadora de dias",
+          "volume": 40500,
+          "kd": 36
+        },
+        "secondary": [
+          "calculadora de dias entre datas"
+        ]
+      },
+      "age": {
+        "primary": {
+          "keyword": "calculadora de idade",
+          "volume": 12100,
+          "kd": 36
+        },
+        "secondary": [
+          "calcular idade"
+        ]
+      },
+      "week": {
+        "primary": {
+          "keyword": "semana do ano",
+          "volume": 9900,
+          "kd": 22
+        },
+        "secondary": [
+          "que semana é hoje"
+        ]
+      },
+      "wage": {
+        "primary": {
+          "keyword": "calcular salário por hora",
+          "volume": 170,
+          "kd": 15
+        },
+        "secondary": [
+          "calculadora de salário por hora"
+        ]
+      },
+      "overtime": {
+        "primary": {
+          "keyword": "calculadora de horas extras",
+          "volume": 8100,
+          "kd": 26
+        },
+        "secondary": []
+      },
+      "timesheet": {
+        "primary": {
+          "keyword": "folha de ponto",
+          "volume": 9900,
+          "kd": 29
+        },
+        "secondary": []
+      }
+    }
+  },
+  "nl": {
+    "db": "nl",
+    "tools": {
+      "hours": {
+        "primary": {
+          "keyword": "uren berekenen",
+          "volume": 3600,
+          "kd": 13
+        },
+        "secondary": [
+          "uren calculator",
+          "tijd berekenen"
+        ]
+      },
+      "minutes": {
+        "primary": {
+          "keyword": "minuten naar uren",
+          "volume": 480,
+          "kd": 11
+        },
+        "secondary": []
+      },
+      "days": {
+        "primary": {
+          "keyword": "dagen berekenen",
+          "volume": 1600,
+          "kd": 15
+        },
+        "secondary": [
+          "dagen tussen twee datums"
+        ]
+      },
+      "age": {
+        "primary": {
+          "keyword": "leeftijd berekenen",
+          "volume": 6600,
+          "kd": 20
+        },
+        "secondary": []
+      },
+      "week": {
+        "primary": {
+          "keyword": "weeknummer",
+          "volume": 49500,
+          "kd": 41
+        },
+        "secondary": [
+          "welke week is het"
+        ]
+      },
+      "wage": {
+        "primary": {
+          "keyword": "uurloon berekenen",
+          "volume": 2400,
+          "kd": 11
+        },
+        "secondary": []
+      },
+      "overtime": {
+        "primary": {
+          "keyword": "overuren berekenen",
+          "volume": 110,
+          "kd": 13
+        },
+        "secondary": []
+      },
+      "timesheet": {
+        "primary": {
+          "keyword": "urenregistratie",
+          "volume": 2900,
+          "kd": 47
+        },
+        "secondary": [
+          "urenregistratie excel"
+        ]
+      }
+    }
+  },
+  "fr": {
+    "db": "fr",
+    "tools": {
+      "hours": {
+        "primary": {
+          "keyword": "calcul heure",
+          "volume": 27100,
+          "kd": 19
+        },
+        "secondary": [
+          "calculateur d'heures",
+          "calcul heures travaillées"
+        ]
+      },
+      "minutes": {
+        "primary": {
+          "keyword": "minutes en heures",
+          "volume": 6600,
+          "kd": 31
+        },
+        "secondary": []
+      },
+      "days": {
+        "primary": {
+          "keyword": "calcul nombre de jours",
+          "volume": 2400,
+          "kd": 32
+        },
+        "secondary": [
+          "calcul jours entre deux dates"
+        ]
+      },
+      "age": {
+        "primary": {
+          "keyword": "calcul age",
+          "volume": 6600,
+          "kd": 47
+        },
+        "secondary": [
+          "calcul âge"
+        ]
+      },
+      "week": {
+        "primary": {
+          "keyword": "numéro de semaine",
+          "volume": 40500,
+          "kd": 25
+        },
+        "secondary": []
+      },
+      "wage": {
+        "primary": {
+          "keyword": "calcul salaire horaire",
+          "volume": 260,
+          "kd": 43
+        },
+        "secondary": []
+      },
+      "overtime": {
+        "primary": {
+          "keyword": "calcul heures supplémentaires",
+          "volume": 2400,
+          "kd": 21
+        },
+        "secondary": []
+      },
+      "timesheet": {
+        "primary": {
+          "keyword": "feuille de temps",
+          "volume": 720,
+          "kd": 16
+        },
+        "secondary": [
+          "feuille d'heures"
+        ]
+      }
+    }
+  },
+  "pl": {
+    "db": "pl",
+    "tools": {
+      "hours": {
+        "primary": {
+          "keyword": "kalkulator godzin",
+          "volume": 18100,
+          "kd": 20
+        },
+        "secondary": [
+          "kalkulator godzin pracy",
+          "kalkulator czasu"
+        ]
+      },
+      "minutes": {
+        "primary": {
+          "keyword": "minuty na godziny",
+          "volume": 590,
+          "kd": 6
+        },
+        "secondary": []
+      },
+      "days": {
+        "primary": {
+          "keyword": "kalkulator dni",
+          "volume": 40500,
+          "kd": 14
+        },
+        "secondary": []
+      },
+      "age": {
+        "primary": {
+          "keyword": "kalkulator wieku",
+          "volume": 5400,
+          "kd": 9
+        },
+        "secondary": []
+      },
+      "week": {
+        "primary": {
+          "keyword": "tydzień roku",
+          "volume": 9900,
+          "kd": 23
+        },
+        "secondary": []
+      },
+      "wage": {
+        "primary": {
+          "keyword": "kalkulator stawki godzinowej",
+          "volume": 880,
+          "kd": 13
+        },
+        "secondary": [
+          "stawka godzinowa kalkulator"
+        ]
+      },
+      "overtime": {
+        "primary": {
+          "keyword": "kalkulator nadgodzin",
+          "volume": 6600,
+          "kd": 14
+        },
+        "secondary": []
+      },
+      "timesheet": {
+        "primary": {
+          "keyword": "ewidencja czasu pracy",
+          "volume": 4400,
+          "kd": 13
+        },
+        "secondary": []
+      }
+    }
+  },
+  "it": {
+    "db": "it",
+    "tools": {
+      "hours": {
+        "primary": {
+          "keyword": "calcolo ore",
+          "volume": 8100,
+          "kd": 21
+        },
+        "secondary": [
+          "calcolatore ore",
+          "calcolo ore lavorate"
+        ]
+      },
+      "minutes": {
+        "primary": {
+          "keyword": "minuti in ore",
+          "volume": 2900,
+          "kd": 25
+        },
+        "secondary": [
+          "convertire minuti in ore"
+        ]
+      },
+      "days": {
+        "primary": {
+          "keyword": "calcolo giorni tra due date",
+          "volume": 18100,
+          "kd": 20
+        },
+        "secondary": []
+      },
+      "age": {
+        "primary": {
+          "keyword": "calcolo età",
+          "volume": 5400,
+          "kd": 20
+        },
+        "secondary": []
+      },
+      "week": {
+        "primary": {
+          "keyword": "numero settimana",
+          "volume": 3600,
+          "kd": 25
+        },
+        "secondary": [
+          "settimana dell'anno"
+        ]
+      },
+      "wage": {
+        "primary": {
+          "keyword": "calcolo paga oraria",
+          "volume": 140,
+          "kd": 11
+        },
+        "secondary": []
+      },
+      "overtime": {
+        "primary": {
+          "keyword": "calcolo straordinari",
+          "volume": 40,
+          "kd": 0
+        },
+        "secondary": []
+      },
+      "timesheet": {
+        "primary": {
+          "keyword": "foglio ore",
+          "volume": 140,
+          "kd": 23
+        },
+        "secondary": []
+      }
+    }
+  },
+  "en": {
+    "db": "us",
+    "tools": {
+      "hours": {
+        "primary": {
+          "keyword": "time duration calculator",
+          "volume": 90500,
+          "kd": 28
+        },
+        "secondary": [
+          "hours calculator"
+        ]
+      },
+      "minutes": {
+        "primary": {
+          "keyword": "minutes to hours",
+          "volume": 27100,
+          "kd": 44
+        },
+        "secondary": []
+      },
+      "days": {
+        "primary": {
+          "keyword": "date duration calculator",
+          "volume": 27100,
+          "kd": 0
+        },
+        "secondary": [
+          "days between dates"
+        ]
+      },
+      "age": {
+        "primary": {
+          "keyword": "age calculator",
+          "volume": 1000000,
+          "kd": 60
+        },
+        "secondary": []
+      },
+      "week": {
+        "primary": {
+          "keyword": "what week is it",
+          "volume": 8100,
+          "kd": 54
+        },
+        "secondary": [
+          "week number"
+        ]
+      },
+      "wage": {
+        "primary": {
+          "keyword": "hourly to salary calculator",
+          "volume": 40500,
+          "kd": 56
+        },
+        "secondary": [
+          "hourly wage calculator"
+        ]
+      },
+      "overtime": {
+        "primary": {
+          "keyword": "overtime calculator",
+          "volume": 14800,
+          "kd": 40
+        },
+        "secondary": []
+      },
+      "timesheet": {
+        "primary": {
+          "keyword": "timesheet calculator",
+          "volume": 40500,
+          "kd": 64
+        },
+        "secondary": [
+          "time card calculator"
+        ]
+      }
+    }
+  }
+}

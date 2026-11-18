@@ -7,7 +7,7 @@ import Faq from '../Faq.astro';
 import AuthorBox from '../AuthorBox.astro';
 import RelatedTools from '../RelatedTools.astro';
 import ArticleList from '../ArticleList.astro';
-import { categoryPath, toolPath, TOOLS, toolsFor } from '../../config/tool-map';
+import { categoryPath, toolPath, toolsFor } from '../../config/tool-map';
 import { entryLocale, alternatesFor, articlePath, articleEntries } from '../../lib/registry';
 import { articleSchema, withBrand } from '../../lib/seo';
 import { t } from '../../i18n';
@@ -43,7 +43,7 @@ const minutes = Math.max(2, Math.round((entry.body || '').split(/\s+/).length / 
     </article>
     <aside class="sticky-aside" aria-label={t(locale, 'nav.guides')}>
       {toc.length > 0 && (
-        <nav class="card card--sm" aria-label="Inhalt"><div style="font-weight:700;margin-bottom:6px">Inhalt</div>
+        <nav class="card card--sm" aria-label={t(locale, 'common.toc')}><div style="font-weight:700;margin-bottom:6px">{t(locale, 'common.toc')}</div>
           <ul style="list-style:none;padding:0;margin:0">{toc.map((h) => <li><a href={`#${h.slug}`} style="display:block;padding:8px 0;font-size:15px">{h.text}</a></li>)}</ul></nav>
       )}
       <div class="ad-desktop-only" style="justify-content:center"><AdSlot format="skyscraper" locale={locale} /></div>

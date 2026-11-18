@@ -61,4 +61,17 @@ const regions = defineCollection({
   }),
 });
 
-export const collections = { tools, articles, regions };
+/** Static/legal pages for languages after German: src/content/pages/{lang}/{about|contact|imprint|privacy|terms|editorial}.md
+ *  (German keeps its hand-written components in src/components/pages/de/). Address/contact block comes from IMPRINT in site.ts. */
+const pages = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/pages' }),
+  schema: z.object({
+    page: z.enum(['about', 'contact', 'imprint', 'privacy', 'terms', 'editorial']),
+    h1: z.string(),
+    description: z.string().max(155),
+    reviewed: z.boolean().default(false),
+    updated: z.coerce.date(),
+  }),
+});
+
+export const collections = { tools, articles, regions, pages };

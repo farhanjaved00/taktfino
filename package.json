@@ -12,11 +12,13 @@
     "check-links": "node scripts/check-links.mjs",
     "count-pages": "node scripts/count-pages.mjs",
     "verify": "npm test && astro check && npm run build && node scripts/check-links.mjs && node scripts/count-pages.mjs",
-    "articles": "node scripts/generate-articles.mjs",
+    "articles": "tsx scripts/generate-articles.mjs",
     "icons": "node scripts/make-icons.mjs",
     "holidays": "tsx scripts/gen-holidays.ts",
     "keyword-map": "node scripts/keyword-map.mjs",
-    "articles:dry": "node scripts/generate-articles.mjs --dry-run"
+    "articles:dry": "tsx scripts/generate-articles.mjs --dry-run",
+    "draft-locale": "tsx scripts/draft-locale.ts",
+    "next-locale": "tsx scripts/next-locale.ts"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.12",

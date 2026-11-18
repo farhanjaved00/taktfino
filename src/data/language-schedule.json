@@ -1,0 +1,34 @@
+{
+  "$comment": "When each language may go live (Master Plan v2 §2). The language-launch workflow drafts a language once its month is reached AND the previous language is live. Months count from launchDate.",
+  "launchDate": "2026-12-01",
+  "order": [
+    {
+      "code": "es",
+      "month": 3
+    },
+    {
+      "code": "pt-br",
+      "month": 5
+    },
+    {
+      "code": "nl",
+      "month": 7
+    },
+    {
+      "code": "fr",
+      "month": 8
+    },
+    {
+      "code": "pl",
+      "month": 9
+    },
+    {
+      "code": "it",
+      "month": 10
+    },
+    {
+      "code": "en",
+      "month": 12
+    }
+  ]
+}

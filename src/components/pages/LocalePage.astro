@@ -5,7 +5,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import ArticleList from '../ArticleList.astro';
 import Icon from '../Icon.astro';
 import type { LocaleCode } from '../../config/locales';
-import { pagePath, TOOLS, toolsFor, toolPath, CATEGORIES, type PageId, type CategoryId } from '../../config/tool-map';
+import { pagePath, toolsFor, toolPath, CATEGORIES, type PageId, type CategoryId } from '../../config/tool-map';
 import { articleEntries, entryLocale } from '../../lib/registry';
 import { personRef, abs } from '../../lib/seo';
 import { SITE } from '../../config/site';
@@ -16,9 +16,15 @@ import Imprint from './de/Imprint.astro';
 import Privacy from './de/Privacy.astro';
 import Terms from './de/Terms.astro';
 import Editorial from './de/Editorial.astro';
+import { getCollection, render } from 'astro:content';
+import { IMPRINT } from '../../config/site';
 interface Props { locale: LocaleCode; page: PageId | 'notfound' }
 const { locale, page } = Astro.props;
-if (locale !== 'de') throw new Error(`Static pages for ${locale} are not written yet (src/components/pages/LocalePage.astro)`);
+const md = locale === 'de' || !(page in { about: 1, contact: 1, imprint: 1, privacy: 1, terms: 1, editorial: 1 }) ? undefined
+  : (await getCollection('pages')).find((e) => e.id.startsWith(`${locale}/`) && e.data.page === page);
+if (locale !== 'de' && !md && page !== 'guides' && page !== 'search' && page !== 'history' && page !== 'notfound')
+  throw new Error(`Missing src/content/pages/${locale}/${page}.md – run: npm run draft-locale -- ${locale}`);
+const Body = md ? (await render(md)).Content : null;
 const path = page === 'notfound' ? `/${locale}/404/` : pagePath(page, locale);
 const articles = (await articleEntries()).filter((a) => entryLocale(a.id) === locale);
 const H: Record<string, [string, string]> = {
@@ -30,7 +36,17 @@ const H: Record<string, [string, string]> = {
   editorial: ['Redaktionelle Richtlinien', `Wie die Inhalte auf ${SITE.name} entstehen und geprüft werden.`],
 };
 ---
-{page in H && (
+{md && Body && (
+  <StaticPage locale={locale} id={page as PageId} path={path} h1={md.data.h1} description={md.data.description} noindex={page === 'imprint' || !md.data.reviewed}
+    schema={page === 'about' ? [{ '@context': 'https://schema.org', '@type': 'AboutPage', url: abs(path), mainEntity: [personRef('author', locale), personRef('reviewer', locale)] }] : []}>
+    {(page === 'imprint' || page === 'privacy') && (
+      <p>{t(locale, 'pagesMeta.controller')}: {IMPRINT.name}<br />{IMPRINT.street}<br />{IMPRINT.city}<br />{IMPRINT.country}<br />
+        {t(locale, 'pagesMeta.email')}: {IMPRINT.email}{IMPRINT.phone && <><br />{t(locale, 'pagesMeta.phone')}: {IMPRINT.phone}</>}{IMPRINT.vatId && <><br />{t(locale, 'pagesMeta.vat')}: {IMPRINT.vatId}</>}</p>
+    )}
+    <Body />
+  </StaticPage>
+)}
+{locale === 'de' && page in H && (
   <StaticPage locale={locale} id={page as PageId} path={path} h1={H[page][0]} description={H[page][1]} noindex={page === 'imprint'}
     schema={page === 'about' ? [{ '@context': 'https://schema.org', '@type': 'AboutPage', url: abs(path), mainEntity: [personRef('author', locale), personRef('reviewer', locale)] }] : []}>
     {page === 'about' && <About />}
@@ -42,19 +58,20 @@ const H: Record<string, [string, string]> = {
   </StaticPage>
 )}
 {page === 'guides' && (
-  <StaticPage locale={locale} id="guides" path={path} h1={t(locale, 'nav.guides')} description="Ratgeber zu Arbeitszeit, Pausen, Überstunden, Arbeitstagen und Lohn – mit Rechenbeispielen und Quellen." wide>
+  <StaticPage locale={locale} id="guides" path={path} h1={t(locale, 'nav.guides')} description={t(locale, 'pagesMeta.guides')} wide>
     {(Object.keys(CATEGORIES) as CategoryId[]).map((c) => <ArticleList locale={locale} entries={articles.filter((a) => a.data.category === c)} title={t(locale, `categories.${c}.name`)} />)}
   </StaticPage>
 )}
 {page === 'search' && (
   <StaticPage locale={locale} id="search" path={path} h1={t(locale, 'search.title')} description={t(locale, 'search.description')} noindex wide>
     <link href="/pagefind/pagefind-ui.css" rel="stylesheet" />
-    <div id="search" data-pagefind-ui></div>
+    <div id="search" data-pagefind-ui data-placeholder={t(locale, 'search.placeholder')} data-unavailable={t(locale, 'search.unavailable')}></div>
     <script is:inline src="/pagefind/pagefind-ui.js"></script>
     <script is:inline>
       window.addEventListener('DOMContentLoaded', function () {
-        if (!window.PagefindUI) { document.getElementById('search').textContent = 'Suche ist nach dem Build verfügbar.'; return; }
-        var ui = new PagefindUI({ element: '#search', showSubResults: true, showImages: false, translations: { placeholder: 'Rechner oder Ratgeber suchen…' } });
+        var el = document.getElementById('search');
+        if (!window.PagefindUI) { el.textContent = el.dataset.unavailable; return; }
+        var ui = new PagefindUI({ element: '#search', showSubResults: true, showImages: false, translations: { placeholder: el.dataset.placeholder } });
         var q = new URLSearchParams(location.search).get('q'); if (q) ui.triggerSearch(q);
       });
     </script>

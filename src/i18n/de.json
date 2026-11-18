@@ -148,7 +148,8 @@
     "weekday": "Wochentag",
     "privacyChoices": "Datenschutz-Einstellungen",
     "advertisement": "Anzeige",
-    "installApp": "App installieren"
+    "installApp": "App installieren",
+    "toc": "Inhalt"
   },
   "warn": {
     "invalid": "Bitte Beginn und Ende im Format hh:mm eingeben.",
@@ -184,7 +185,9 @@
   },
   "search": {
     "title": "Suche",
-    "description": "Alle Rechner und Ratgeber durchsuchen."
+    "description": "Alle Rechner und Ratgeber durchsuchen.",
+    "placeholder": "Rechner oder Ratgeber suchen…",
+    "unavailable": "Suche ist nach dem Build verfügbar."
   },
   "notFound": {
     "title": "Seite nicht gefunden",
@@ -475,5 +478,12 @@
     "privacy": "Datenschutz",
     "terms": "Nutzungsbedingungen",
     "editorial": "Redaktionelle Richtlinien"
+  },
+  "pagesMeta": {
+    "guides": "Ratgeber zu Arbeitszeit, Pausen, Überstunden, Arbeitstagen und Lohn – mit Rechenbeispielen und Quellen.",
+    "controller": "Verantwortlich",
+    "email": "E-Mail",
+    "phone": "Telefon",
+    "vat": "USt-IdNr."
   }
 }

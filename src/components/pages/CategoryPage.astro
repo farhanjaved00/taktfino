@@ -5,7 +5,7 @@ import ArticleList from '../ArticleList.astro';
 import Icon from '../Icon.astro';
 import { SITE } from '../../config/site';
 import type { LocaleCode } from '../../config/locales';
-import { TOOLS, toolsFor, toolPath, categoryPath, type CategoryId } from '../../config/tool-map';
+import { toolsFor, toolPath, categoryPath, type CategoryId } from '../../config/tool-map';
 import { alternatesFor, articleEntries, entryLocale } from '../../lib/registry';
 import { t } from '../../i18n';
 interface Props { locale: LocaleCode; category: CategoryId }

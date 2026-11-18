@@ -1,17 +1,24 @@
-name: Article drafts (DE)
-# Plan §12: brief (content/queue-de.csv) → AI draft → PULL REQUEST → native review → merge.
-# Mon/Wed/Fri = 3 drafts per week. Drafts are reviewed:false (noindex) until the reviewer sets reviewed:true.
+name: Article drafts
+# Plan §12: brief (content/queue-<lang>.csv) → AI draft → review → publish. Runs for EVERY live language that has a queue.
+# Mon/Wed/Fri = 3 drafts per language per week.
+#   AUTO_PUBLISH repo variable != 'true' (default): opens a pull request; drafts are reviewed:false (noindex) until a native speaker approves.
+#   AUTO_PUBLISH == 'true': pushes to main; drafts that pass every automatic check are indexable at once, the rest stay noindex.
 on:
   schedule:
     - cron: '0 6 * * 1,3,5'
   workflow_dispatch:
     inputs:
       count:
-        description: 'How many drafts'
+        description: 'Drafts per language'
         default: '1'
+      lang:
+        description: 'Only this language (empty = all live languages)'
+        default: ''
 permissions:
   contents: write
   pull-requests: write
+  actions: write
+concurrency: { group: articles, cancel-in-progress: false }
 jobs:
   draft:
     runs-on: ubuntu-latest
@@ -26,12 +33,29 @@ jobs:
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           OPENAI_MODEL: ${{ vars.OPENAI_MODEL || 'gpt-4.1' }}
-          ARTICLES_PER_RUN: ${{ github.event.inputs.count || '1' }}
+          ARTICLES_PER_RUN: ${{ github.event.inputs.count || vars.ARTICLES_PER_RUN || '1' }}
+          LANG_CODE: ${{ github.event.inputs.lang || 'all' }}
+          AUTO_PUBLISH: ${{ vars.AUTO_PUBLISH || 'false' }}
           PR_BODY: ${{ runner.temp }}/pr-body.md
-        run: node scripts/generate-articles.mjs
+        run: npx tsx scripts/generate-articles.mjs
       - name: Check the site still builds
         run: npm test && npm run build && node scripts/check-links.mjs
-      - name: Open pull request
+      - name: Run summary
+        run: cat "${{ runner.temp }}/pr-body.md" >> "$GITHUB_STEP_SUMMARY" || true
+      - name: Publish directly (AUTO_PUBLISH)
+        if: vars.AUTO_PUBLISH == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A src/content content
+          git diff --cached --quiet && echo "nothing new" && exit 0
+          git commit -m "Add AI-drafted guides" && git push
+      - name: Ping search engines (bot pushes don't trigger other workflows, so start IndexNow explicitly)
+        if: vars.AUTO_PUBLISH == 'true'
+        env: { GH_TOKEN: '${{ github.token }}' }
+        run: gh workflow run indexnow.yml --ref main || true
+      - name: Open pull request for review
+        if: vars.AUTO_PUBLISH != 'true'
         uses: peter-evans/create-pull-request@v7
         with:
           branch: drafts/${{ github.run_id }}
