@@ -1,0 +1,95 @@
+---
+/** Elternzeit-Rechner (BEEG): end date, written-notice deadline (7/13 weeks), dismissal protection, 3rd birthday. */
+import type { LocaleCode } from '../../config/locales';
+import { t, dict } from '../../i18n';
+import { addDays, formatISO, todayIn } from '../../lib/dates';
+import Icon from '../Icon.astro';
+interface Props { locale: LocaleCode }
+const { locale } = Astro.props;
+const u = (k: string) => t(locale, `ui.parental.${k}`);
+const c = (k: string) => t(locale, `common.${k}`);
+const M = { ui: (dict(locale) as { ui: { parental: Record<string, string> } }).ui.parental, common: (dict(locale) as { common: Record<string, string> }).common };
+const birth = addDays(todayIn('Europe/Berlin'), 120);
+---
+<section class="card tool" data-parental data-msgs={JSON.stringify(M)} aria-label={t(locale, 'tools.parental.name')}>
+  <div class="seg" role="group" aria-label={u('parent')}>
+    <button type="button" aria-pressed="true" data-who="mother">{u('mother')}</button>
+    <button type="button" aria-pressed="false" data-who="other">{u('other')}</button>
+  </div>
+  <div class="tool-inputs">
+    <div class="field"><label for="ez-b">{u('birth')}</label><input id="ez-b" class="input" type="date" value={formatISO(birth)} data-in="birth" /></div>
+    <div class="field"><label for="ez-s">{u('start')}</label><input id="ez-s" class="input" type="date" data-in="start" /></div>
+    <div class="field"><label for="ez-m">{u('months')}</label><input id="ez-m" class="input input--num" type="number" min="1" max="36" value="12" inputmode="numeric" data-in="months" /></div>
+  </div>
+  <p class="small muted" data-out="motherNote" style="margin:8px 0 0">{u('motherNote')}</p>
+  <div class="result-box" aria-live="polite">
+    <div class="answer-label">{u('end')}</div>
+    <div class="answer" data-out="end" style="font-size:clamp(22px,3vw,32px)">–</div>
+    <div class="stats">
+      <div><b data-out="notice">–</b><span>{u('notice')}</span></div>
+      <div><b data-out="prot">–</b><span>{u('protection')}</span></div>
+      <div><b data-out="third">–</b><span>{u('third')}</span></div>
+      <div><b data-out="months">–</b><span>{u('months')}</span></div>
+    </div>
+    <p class="small" data-out="warn"></p>
+  </div>
+  <div class="actions no-print">
+    <button class="btn btn--primary" type="button" data-action="copy"><Icon name="check" size={18} />{c('copy')}</button>
+    <button class="btn" type="button" data-action="share"><Icon name="link" size={18} />{c('share')}</button>
+  </div>
+</section>
+<script>
+  import { calcParental } from '../../tools/parental';
+  import { calcMaternity } from '../../tools/maternity';
+  import { compare, formatISO, parseISO } from '../../lib/dates';
+  import { copyText, setQuery, getQuery, saveHistory, track, trackCalculate } from '../../scripts/client';
+  const root = document.querySelector<HTMLElement>('[data-parental]');
+  if (root) {
+    const M = JSON.parse(root.dataset.msgs!) as { ui: Record<string, string>; common: Record<string, string> };
+    const $ = (k: string) => root.querySelector<HTMLInputElement>(`[data-in="${k}"]`)!;
+    const out = (k: string) => root.querySelector<HTMLElement>(`[data-out="${k}"]`)!;
+    const long = (c: { y: number; m: number; d: number }) => new Date(Date.UTC(c.y, c.m - 1, c.d, 12)).toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+    const short = (c: { y: number; m: number; d: number }) => `${String(c.d).padStart(2, '0')}.${String(c.m).padStart(2, '0')}.${c.y}`;
+    let who: 'mother' | 'other' = 'mother';
+    let startTouched = false;
+    const q = getQuery();
+    if (q.get('geburt') && parseISO(q.get('geburt'))) $('birth').value = q.get('geburt')!;
+    if (q.get('beginn') && parseISO(q.get('beginn'))) { $('start').value = q.get('beginn')!; startTouched = true; }
+    if (q.get('monate')) $('months').value = q.get('monate')!;
+    if (q.get('wer') === 'v') who = 'other';
+    const now = new Date(); const today = { y: now.getFullYear(), m: now.getMonth() + 1, d: now.getDate() };
+    let text = '';
+    function defaultStart() {
+      const b = parseISO($('birth').value); if (!b) return;
+      $('start').value = formatISO(who === 'mother' ? calcMaternity({ due: b, birth: b }).parentalLeaveFrom : b);
+    }
+    function render() {
+      root!.querySelectorAll<HTMLButtonElement>('[data-who]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.who === who)));
+      out('motherNote').hidden = who !== 'mother';
+      if (!startTouched) defaultStart();
+      const birth = parseISO($('birth').value), start = parseISO($('start').value);
+      const months = Math.max(1, Math.min(36, Number($('months').value) || 1));
+      if (!birth || !start) return;
+      const r = calcParental({ birth, start, months });
+      out('end').textContent = long(r.end);
+      out('notice').textContent = short(r.noticeDeadline);
+      out('prot').textContent = short(r.protectionFrom);
+      out('third').textContent = short(r.thirdBirthday);
+      out('months').textContent = String(months);
+      const warn: string[] = [];
+      if (r.beyondThird) warn.push(M.ui.beyond);
+      if (compare(r.noticeDeadline, today) < 0) warn.push(M.ui.past);
+      out('warn').textContent = warn.join(' ');
+      text = `${M.ui.resultLabel}: ${short(start)} – ${short(r.end)} · ${M.ui.notice}: ${short(r.noticeDeadline)}`;
+      trackCalculate('parental');
+    }
+    root.addEventListener('input', (e) => { if (e.target === $('start')) startTouched = true; render(); });
+    root.addEventListener('click', (e) => {
+      const b = (e.target as HTMLElement).closest<HTMLButtonElement>('button'); if (!b) return;
+      if (b.dataset.who) { who = b.dataset.who as 'mother' | 'other'; startTouched = false; render(); return; }
+      if (b.dataset.action === 'copy') { copyText(text, M.common.copied); track('copy_result', { tool: 'parental' }); }
+      if (b.dataset.action === 'share') { const url = setQuery({ geburt: $('birth').value, beginn: $('start').value, monate: $('months').value, wer: who === 'other' ? 'v' : null }); copyText(url, M.common.linkCopied); saveHistory({ tool: 'parental', label: text, url }); track('share', { tool: 'parental' }); }
+    });
+    render();
+  }
+</script>

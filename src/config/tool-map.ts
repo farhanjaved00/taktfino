@@ -4,7 +4,7 @@
  */
 import type { LocaleCode } from './locales';
 
-export type ToolId = 'worktime' | 'hours' | 'workdays' | 'wage' | 'overtime' | 'days' | 'age' | 'week' | 'minutes' | 'timesheet' | 'notice' | 'surcharge' | 'maternity';
+export type ToolId = 'worktime' | 'hours' | 'workdays' | 'wage' | 'overtime' | 'days' | 'age' | 'week' | 'minutes' | 'timesheet' | 'notice' | 'surcharge' | 'maternity' | 'parental' | 'vacation';
 export type CategoryId = 'work' | 'pay' | 'dates';
 
 export const CATEGORIES: Record<CategoryId, Record<LocaleCode, string>> = {
@@ -33,6 +33,8 @@ export const TOOLS: ToolDef[] = [
   { id: 'minutes', category: 'work', priority: 'supporting', icon: 'hour', slug: { de: 'minuten-in-stunden', es: 'minutos-a-horas', 'pt-br': 'minutos-em-horas', en: 'minutes-to-hours' } },
   { id: 'surcharge', category: 'pay', priority: 'money', icon: 'pct', slug: { de: 'zuschlagsrechner', es: 'calculadora-recargos', 'pt-br': 'calculadora-adicionais', en: 'shift-premium-calculator' } },
   { id: 'maternity', category: 'dates', priority: 'money', icon: 'cal', slug: { de: 'mutterschutz-rechner', es: 'calculadora-baja-maternidad', 'pt-br': 'calculadora-licenca-maternidade', en: 'maternity-leave-calculator' } },
+  { id: 'parental', category: 'dates', priority: 'money', icon: 'cal', slug: { de: 'elternzeit-rechner', es: 'calculadora-excedencia-cuidado-hijos', 'pt-br': 'calculadora-licenca-parental', en: 'parental-leave-calculator' } },
+  { id: 'vacation', category: 'work', priority: 'money', icon: 'calAdd', slug: { de: 'urlaubsrechner', es: 'calculadora-vacaciones', 'pt-br': 'calculadora-ferias', en: 'vacation-calculator' } },
   { id: 'days', category: 'dates', priority: 'supporting', icon: 'cal', slug: { de: 'tage-rechner', es: 'calculadora-de-dias', 'pt-br': 'calculadora-de-dias', en: 'days-calculator' } },
   { id: 'week', category: 'dates', priority: 'supporting', icon: 'cal', slug: { de: 'kalenderwoche', es: 'semana-del-ano', 'pt-br': 'semana-do-ano', en: 'week-number' } },
   { id: 'age', category: 'dates', priority: 'supporting', icon: 'cake', slug: { de: 'alter-berechnen', es: 'calculadora-de-edad', 'pt-br': 'calcular-idade', en: 'age-calculator' } },

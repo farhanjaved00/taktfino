@@ -83,6 +83,14 @@
     "maternity": {
       "name": "Mutterschutz-Rechner",
       "short": "Beginn und Ende der Mutterschutzfrist nach § 3 MuSchG"
+    },
+    "parental": {
+      "name": "Elternzeit-Rechner",
+      "short": "Ende der Elternzeit, Anmeldefrist und Kündigungsschutz"
+    },
+    "vacation": {
+      "name": "Urlaubsrechner",
+      "short": "Urlaubsanspruch bei Teilzeit, Eintritt oder Austritt"
     }
   },
   "common": {
@@ -423,6 +431,41 @@
       "resultLabel": "Ihr Mutterschutz",
       "range": "vom {start} bis {end}",
       "invalid": "Bitte einen gültigen Geburtstermin wählen."
+    },
+    "parental": {
+      "birth": "Geburtsdatum (oder errechneter Termin)",
+      "parent": "Wer nimmt Elternzeit?",
+      "mother": "Mutter",
+      "other": "Vater / anderer Elternteil",
+      "start": "Beginn der Elternzeit",
+      "months": "Dauer (Monate)",
+      "end": "Elternzeit endet am",
+      "notice": "Spätestens schriftlich anmelden bis",
+      "protection": "Kündigungsschutz frühestens ab",
+      "third": "3. Geburtstag des Kindes",
+      "beyond": "Achtung: Der Zeitraum reicht über den 3. Geburtstag hinaus. Für Zeiten danach gilt eine Anmeldefrist von 13 Wochen.",
+      "motherNote": "Die Mutterschutzfrist nach der Geburt wird auf die Elternzeit der Mutter angerechnet. Der Beginn ist deshalb auf den Tag nach dem Mutterschutz voreingestellt.",
+      "past": "Die Anmeldefrist ist bereits abgelaufen – sprechen Sie mit Ihrem Arbeitgeber.",
+      "resultLabel": "Ihre Elternzeit"
+    },
+    "vacation": {
+      "contractDays": "Urlaubstage laut Vertrag (Vollzeit)",
+      "contractWeek": "bezogen auf Arbeitstage pro Woche",
+      "ownWeek": "Meine Arbeitstage pro Woche",
+      "year": "Jahr",
+      "start": "Eintritt in diesem Jahr (optional)",
+      "end": "Austritt in diesem Jahr (optional)",
+      "disabled": "Schwerbehinderung (+5 Tage bei 5-Tage-Woche)",
+      "result": "Ihr Urlaubsanspruch",
+      "days": "Urlaubstage",
+      "fullYear": "Anspruch für ein volles Jahr",
+      "legal": "Gesetzlicher Mindesturlaub",
+      "months": "volle Monate",
+      "ruleFull": "Voller Jahresurlaub.",
+      "rulePartialStart": "Eintritt nach dem 30. Juni: Teilurlaub – 1/12 für jeden vollen Monat (§ 5 Abs. 1a BUrlG).",
+      "ruleLeaveFirst": "Austritt bis 30. Juni: Teilurlaub – 1/12 für jeden vollen Monat (§ 5 Abs. 1c BUrlG).",
+      "ruleLeaveSecond": "Austritt nach dem 30. Juni: mindestens der volle gesetzliche Urlaub (§ 5 BUrlG). Ob darüber hinausgehender Vertragsurlaub anteilig gekürzt wird, regelt Ihr Vertrag.",
+      "rounding": "Ab einem halben Tag wird aufgerundet (§ 5 Abs. 2 BUrlG)."
     }
   }
 }

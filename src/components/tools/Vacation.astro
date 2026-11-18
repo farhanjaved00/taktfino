@@ -1,0 +1,77 @@
+---
+/** Urlaubsrechner (BUrlG): part-time scaling, partial year on joining/leaving, legal minimum, § 5 rounding. */
+import type { LocaleCode } from '../../config/locales';
+import { t, dict } from '../../i18n';
+import { todayIn } from '../../lib/dates';
+import Icon from '../Icon.astro';
+interface Props { locale: LocaleCode }
+const { locale } = Astro.props;
+const u = (k: string) => t(locale, `ui.vacation.${k}`);
+const c = (k: string) => t(locale, `common.${k}`);
+const M = { ui: (dict(locale) as { ui: { vacation: Record<string, string> } }).ui.vacation, common: (dict(locale) as { common: Record<string, string> }).common };
+const y = todayIn('Europe/Berlin').y;
+---
+<section class="card tool" data-vacation data-msgs={JSON.stringify(M)} aria-label={t(locale, 'tools.vacation.name')}>
+  <div class="tool-inputs" style="margin-top:0">
+    <div class="field"><label for="ur-cd">{u('contractDays')}</label><input id="ur-cd" class="input input--num" type="text" inputmode="decimal" value="30" data-in="cd" /></div>
+    <div class="field"><label for="ur-cw">{u('contractWeek')}</label><input id="ur-cw" class="input input--num" type="number" min="1" max="6" value="5" data-in="cw" /></div>
+    <div class="field"><label for="ur-ow">{u('ownWeek')}</label><input id="ur-ow" class="input input--num" type="text" inputmode="decimal" value="5" data-in="ow" /></div>
+    <div class="field"><label for="ur-y">{u('year')}</label><input id="ur-y" class="input input--num" type="number" min="2000" max="2100" value={y} data-in="y" /></div>
+  </div>
+  <div class="tool-inputs">
+    <div class="field"><label for="ur-s">{u('start')}</label><input id="ur-s" class="input" type="date" data-in="start" /></div>
+    <div class="field"><label for="ur-e">{u('end')}</label><input id="ur-e" class="input" type="date" data-in="end" /></div>
+    <button type="button" class="toggle" aria-pressed="false" data-in="dis"><span class="dot" aria-hidden="true"></span>{u('disabled')}</button>
+  </div>
+  <div class="result-box" aria-live="polite">
+    <div class="answer-label">{u('result')}</div>
+    <div class="answer" data-out="days">30 {u('days')}</div>
+    <div class="answer-sub" data-out="rule"></div>
+    <div class="stats">
+      <div><b data-out="full">30</b><span>{u('fullYear')}</span></div>
+      <div><b data-out="legal">20</b><span>{u('legal')}</span></div>
+      <div><b data-out="months">–</b><span>{u('months')}</span></div>
+      <div><b data-out="extra">0</b><span>{u('disabled').split(' (')[0]}</span></div>
+    </div>
+    <p class="small muted">{u('rounding')}</p>
+  </div>
+  <div class="actions no-print">
+    <button class="btn btn--primary" type="button" data-action="copy"><Icon name="check" size={18} />{c('copy')}</button>
+    <button class="btn" type="button" data-action="share"><Icon name="link" size={18} />{c('share')}</button>
+  </div>
+</section>
+<script>
+  import { calcVacation } from '../../tools/vacation';
+  import { parseISO } from '../../lib/dates';
+  import { copyText, setQuery, getQuery, saveHistory, track, trackCalculate, fmt } from '../../scripts/client';
+  const root = document.querySelector<HTMLElement>('[data-vacation]');
+  if (root) {
+    const M = JSON.parse(root.dataset.msgs!) as { ui: Record<string, string>; common: Record<string, string> };
+    const $ = (k: string) => root.querySelector<HTMLInputElement>(`[data-in="${k}"]`)!;
+    const out = (k: string) => root.querySelector<HTMLElement>(`[data-out="${k}"]`)!;
+    const num = (s: string) => Number(s.replace(',', '.'));
+    const q = getQuery();
+    for (const [k, p] of [['cd', 'tage'], ['ow', 'woche'], ['y', 'jahr'], ['start', 'eintritt'], ['end', 'austritt']] as const) if (q.get(p)) $(k).value = q.get(p)!;
+    let text = '';
+    function render() {
+      const y = Number($('y').value) || new Date().getFullYear();
+      const r = calcVacation({ contractDays: num($('cd').value) || 0, contractWeekDays: Number($('cw').value) || 5, ownWeekDays: num($('ow').value) || 0, year: y, start: parseISO($('start').value) ?? undefined, end: parseISO($('end').value) ?? undefined, disabled: $('dis').getAttribute('aria-pressed') === 'true' });
+      out('days').textContent = `${fmt('de-DE', r.entitlement, 2)} ${M.ui.days}`;
+      out('rule').textContent = { full: M.ui.ruleFull, 'partial-start': M.ui.rulePartialStart, 'partial-leave-first-half': M.ui.ruleLeaveFirst, 'full-leave-second-half': M.ui.ruleLeaveSecond }[r.rule];
+      out('full').textContent = fmt('de-DE', r.fullYear, 2);
+      out('legal').textContent = fmt('de-DE', r.legalMinimum, 2);
+      out('months').textContent = r.months === null ? '12' : String(r.months);
+      out('extra').textContent = fmt('de-DE', r.extraDisabled, 2);
+      text = `${M.ui.result} ${y}: ${out('days').textContent} (${out('rule').textContent})`;
+      trackCalculate('vacation');
+    }
+    root.addEventListener('input', render);
+    root.addEventListener('click', (e) => {
+      const b = (e.target as HTMLElement).closest<HTMLButtonElement>('button'); if (!b) return;
+      if (b.dataset.in === 'dis') { b.setAttribute('aria-pressed', String(b.getAttribute('aria-pressed') !== 'true')); render(); return; }
+      if (b.dataset.action === 'copy') { copyText(text, M.common.copied); track('copy_result', { tool: 'vacation' }); }
+      if (b.dataset.action === 'share') { const url = setQuery({ tage: $('cd').value, woche: $('ow').value, jahr: $('y').value, eintritt: $('start').value || null, austritt: $('end').value || null }); copyText(url, M.common.linkCopied); saveHistory({ tool: 'vacation', label: text, url }); track('share', { tool: 'vacation' }); }
+    });
+    render();
+  }
+</script>

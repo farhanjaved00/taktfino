@@ -14,6 +14,8 @@ import Timesheet from './tools/Timesheet.astro';
 import Notice from './tools/Notice.astro';
 import Surcharge from './tools/Surcharge.astro';
 import Maternity from './tools/Maternity.astro';
+import Parental from './tools/Parental.astro';
+import Vacation from './tools/Vacation.astro';
 import { formatISO, addDays, parseISO } from '../lib/dates';
 interface Props { tool: ToolId; locale: LocaleCode; region?: string }
 const { tool, locale, region } = Astro.props;
@@ -33,3 +35,5 @@ const today = parseISO(todayIso)!;
 {tool === 'notice' && <Notice locale={locale} />}
 {tool === 'surcharge' && <Surcharge locale={locale} />}
 {tool === 'maternity' && <Maternity locale={locale} />}
+{tool === 'parental' && <Parental locale={locale} />}
+{tool === 'vacation' && <Vacation locale={locale} />}

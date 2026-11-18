@@ -75,3 +75,9 @@ homeoffice arbeitszeit (20), pausenregelung jugendliche (20), arbeitszeit öster
 - 5–10 Brand-Erwähnungen/Links, 4 YouTube-Shorts, 1 Linkable Asset.
 - AdSense beantragt.
 - **Entscheidung Woche 12:** Spanisch starten, wenn DE-Impressionen wachsen (Plan §2) – sonst DE-Tiefe weiter ausbauen.
+
+## 9. Zusätzliche Tools (nach Semrush, gebaut)
+| Tool | Keyword-Daten (DE) | Status |
+| --- | --- | --- |
+| Urlaubsrechner | urlaubsrechner 5.400 · KD **17** · urlaubstage berechnen 4.400 · 18 · urlaubsrechner teilzeit 1.600 | ✅ /de/urlaubsrechner/ |
+| Elternzeit-Rechner | elternzeit rechner 6.600 · 39 · elternzeit berechnen 1.900 · 31 · beantragen frist 880 | ✅ /de/elternzeit-rechner/ |
