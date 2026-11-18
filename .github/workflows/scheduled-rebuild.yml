@@ -1,0 +1,16 @@
+name: Scheduled rebuild
+# Rebuilds on the 1st of every month (and on Jan 1) so "current year" tables, minimum-wage defaults and
+# dates in static HTML stay fresh. The tools themselves always calculate live in the browser.
+on:
+  schedule:
+    - cron: '10 0 1 * *'
+  workflow_dispatch:
+jobs:
+  deploy-hook:
+    runs-on: ubuntu-latest
+    steps:
+      - env:
+          HOOK: ${{ secrets.CF_PAGES_DEPLOY_HOOK }}
+        run: |
+          if [ -z "$HOOK" ]; then echo "::error::Add the CF_PAGES_DEPLOY_HOOK secret (see README)"; exit 1; fi
+          curl -fsS -X POST "$HOOK"

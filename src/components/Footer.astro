@@ -1,40 +1,34 @@
 ---
 import { SITE, adsEnabled } from '../config/site';
-import { HUBS } from '../lib/links';
+import type { LocaleCode } from '../config/locales';
+import { TOOLS, CATEGORIES, toolPath, pagePath, type CategoryId } from '../config/tool-map';
+import { t } from '../i18n';
+interface Props { locale: LocaleCode }
+const { locale } = Astro.props;
 const year = new Date().getUTCFullYear();
 ---
 <footer class="site-footer">
   <div class="container">
     <div class="footer-grid">
-      <div><div class="footer-brand">{SITE.name}</div><p>{SITE.tagline}</p></div>
-      <nav aria-label="Date tools"><h2>Date tools</h2><ul>
-        <li><a href={HUBS['days-from-today'].path}>Days from today</a></li>
-        <li><a href={HUBS['weeks-from-today'].path}>Weeks from today</a></li>
-        <li><a href={HUBS['days-ago'].path}>Days ago</a></li>
-        <li><a href={HUBS['date-duration-calculator'].path}>Date duration</a></li>
-      </ul></nav>
-      <nav aria-label="Countdowns and time"><h2>Countdowns &amp; time</h2><ul>
-        <li><a href={HUBS['days-until'].path}>Days until</a></li>
-        <li><a href={HUBS.countdown.path}>Countdown timer</a></li>
-        <li><a href={HUBS['hours-from-now'].path}>Hours from now</a></li>
-        <li><a href={HUBS['age-calculator'].path}>Age calculator</a></li>
-      </ul></nav>
-      <nav aria-label="Browse"><h2>Browse</h2><ul>
-        <li><a href="/date-tools/">All date tools</a></li>
-        <li><a href="/countdowns/">All countdowns</a></li>
-        <li><a href="/guides/">Guides</a></li>
-        <li><a href="/saved/">Saved</a></li>
-      </ul></nav>
-      <nav aria-label="Company"><h2>Company</h2><ul>
-        <li><a href="/about/">About</a></li>
-        <li><a href="/contact/">Contact</a></li>
-        <li><a href="/editorial-policy/">Editorial policy</a></li>
-        <li><a href="/privacy/">Privacy</a> · <a href="/terms/">Terms</a></li>
+      <div><div class="footer-brand">{SITE.name}</div><p>{t(locale, 'meta.tagline')}</p></div>
+      {(Object.keys(CATEGORIES) as CategoryId[]).map((c) => (
+        <nav aria-label={t(locale, `categories.${c}.name`)}><h2>{t(locale, `categories.${c}.name`)}</h2><ul>
+          {TOOLS.filter((x) => x.category === c).map((x) => <li><a href={toolPath(x.id, locale)}>{t(locale, `tools.${x.id}.name`)}</a></li>)}
+        </ul></nav>
+      ))}
+      <nav aria-label="Info"><h2>{SITE.name}</h2><ul>
+        <li><a href={pagePath('about', locale)}>{locale === 'de' ? 'Über uns' : 'About'}</a></li>
+        <li><a href={pagePath('editorial', locale)}>{locale === 'de' ? 'Redaktionelle Richtlinien' : 'Editorial policy'}</a></li>
+        <li><a href={pagePath('contact', locale)}>{locale === 'de' ? 'Kontakt' : 'Contact'}</a></li>
+        <li><a href={pagePath('guides', locale)}>{t(locale, 'nav.guides')}</a></li>
       </ul></nav>
     </div>
     <div class="footer-bottom">
-      <span>© {year} {SITE.name}. Dates are calculated with the Gregorian calendar.</span>
-      {adsEnabled() && <button type="button" data-consent-open>Privacy choices</button>}
+      <span>© {year} {SITE.name}</span>
+      <span class="footer-legal">
+        <a href={pagePath('imprint', locale)}>Impressum</a> · <a href={pagePath('privacy', locale)}>{locale === 'de' ? 'Datenschutz' : 'Privacy'}</a> · <a href={pagePath('terms', locale)}>{locale === 'de' ? 'Nutzungsbedingungen' : 'Terms'}</a>
+        {adsEnabled() && <> · <button type="button" data-consent-open>{t(locale, 'common.privacyChoices')}</button></>}
+      </span>
     </div>
   </div>
 </footer>

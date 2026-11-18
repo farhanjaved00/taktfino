@@ -9,34 +9,39 @@ import '../styles/global.css';
 import sg700 from '@fontsource/space-grotesk/files/space-grotesk-latin-700-normal.woff2?url';
 import inter400 from '@fontsource/inter/files/inter-latin-400-normal.woff2?url';
 import inter600 from '@fontsource/inter/files/inter-latin-600-normal.woff2?url';
-import { SITE, GSC_VERIFICATION, BING_VERIFICATION, CF_ANALYTICS_TOKEN } from '../config/site';
-import { abs, webPageSchema } from '../lib/seo';
+import { SITE, GSC_VERIFICATION, BING_VERIFICATION, CF_ANALYTICS_TOKEN, GA4_ID } from '../config/site';
+import { getLocale, type LocaleCode } from '../config/locales';
+import { abs } from '../lib/seo';
+import type { PageEntry } from '../lib/registry';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import TabBar from '../components/TabBar.astro';
-import CookieConsent from '../components/CookieConsent.astro';
+import Consent from '../components/Consent.astro';
 import JsonLd from '../components/JsonLd.astro';
+import { t } from '../i18n';
 
 interface Props {
+  locale: LocaleCode;
   title: string;
   description: string;
-  /** Path for canonical, defaults to current path */
-  path?: string;
+  path: string;
+  /** Translations of this page (from the registry), incl. itself */
+  alternates?: PageEntry[];
+  /** Add x-default → this URL (language home pages point to the root picker) */
+  xDefault?: string;
   ogImage?: string;
   ogType?: 'website' | 'article';
   schema?: unknown[];
   noindex?: boolean;
   bodyClass?: string;
-  /** When set, adds WebPage schema with this dateModified */
-  modified?: Date;
 }
-const { title, description, ogImage = '/og/default.png', ogType = 'website', schema = [], noindex = false, bodyClass, modified } = Astro.props;
-const path = Astro.props.path ?? Astro.url.pathname;
-const canonical = abs(path.endsWith('/') ? path : `${path}/`);
-const image = abs(ogImage);
+const { locale, title, description, path, alternates = [], xDefault, ogImage = `/og/${locale}/default.png`, ogType = 'website', schema = [], noindex = false, bodyClass } = Astro.props;
+const L = getLocale(locale);
+const canonical = abs(path);
+const alts = alternates.length ? alternates : [];
 ---
 <!doctype html>
-<html lang="en">
+<html lang={L.htmlLang}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -44,6 +49,8 @@ const image = abs(ogImage);
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     {noindex && <meta name="robots" content="noindex, follow" />}
+    {!noindex && alts.map((a) => <link rel="alternate" hreflang={getLocale(a.locale).hreflang} href={abs(a.path)} />)}
+    {!noindex && xDefault && <link rel="alternate" hreflang="x-default" href={abs(xDefault)} />}
     {GSC_VERIFICATION && <meta name="google-site-verification" content={GSC_VERIFICATION} />}
     {BING_VERIFICATION && <meta name="msvalidate.01" content={BING_VERIFICATION} />}
     <meta name="theme-color" content="#4338CA" />
@@ -53,35 +60,50 @@ const image = abs(ogImage);
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <link rel="manifest" href="/site.webmanifest" />
-    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="manifest" href={`/manifest-${locale}.webmanifest`} />
     <meta property="og:site_name" content={SITE.name} />
     <meta property="og:type" content={ogType} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
-    <meta property="og:image" content={image} />
+    <meta property="og:image" content={abs(ogImage)} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale" content={L.ogLocale} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={image} />
-    {SITE.twitter && <meta name="twitter:site" content={SITE.twitter} />}
-    <slot name="head" />
-    <JsonLd data={modified ? [webPageSchema({ name: title, path, description, modified }), ...schema] : schema} />
+    <meta name="twitter:image" content={abs(ogImage)} />
+    {GA4_ID && (
+      <>
+        <script is:inline define:vars={{ GA4_ID }}>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          window.gtag = gtag;
+          // Consent Mode v2: everything denied until the visitor agrees in the Google consent message
+          gtag('consent', 'default', { ad_storage: 'denied', analytics_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied', wait_for_update: 500 });
+          gtag('js', new Date());
+          gtag('config', GA4_ID);
+        </script>
+        <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${GA4_ID}`}></script>
+      </>
+    )}
+    <JsonLd data={schema} />
   </head>
-  <body class={bodyClass}>
-    <a class="skip-link" href="#main">Skip to content</a>
-    <Header />
+  <body class={bodyClass} data-locale={locale}>
+    <a class="skip-link" href="#main">{t(locale, 'nav.skip')}</a>
+    <Header locale={locale} alternates={alts} />
     <main id="main">
       <slot />
     </main>
-    <Footer />
-    <TabBar />
+    <Footer locale={locale} />
+    <TabBar locale={locale} />
     <slot name="after" />
-    <CookieConsent />
+    <Consent locale={locale} />
     {CF_ANALYTICS_TOKEN && <script is:inline defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon={JSON.stringify({ token: CF_ANALYTICS_TOKEN })}></script>}
+    <script>
+      import { registerPwa } from '../scripts/client';
+      registerPwa();
+    </script>
   </body>
 </html>

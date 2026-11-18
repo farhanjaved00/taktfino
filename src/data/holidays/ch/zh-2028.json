@@ -1,0 +1,58 @@
+{
+  "region": "ch-zh",
+  "year": 2028,
+  "generated": "2026-11-18",
+  "reviewed": false,
+  "holidays": [
+    {
+      "date": "2028-01-01",
+      "name": "Neujahr",
+      "key": "neujahr"
+    },
+    {
+      "date": "2028-01-02",
+      "name": "Berchtoldstag",
+      "key": "berchtoldstag"
+    },
+    {
+      "date": "2028-04-14",
+      "name": "Karfreitag",
+      "key": "karfreitag"
+    },
+    {
+      "date": "2028-04-17",
+      "name": "Ostermontag",
+      "key": "ostermontag"
+    },
+    {
+      "date": "2028-05-01",
+      "name": "Tag der Arbeit",
+      "key": "tag-der-arbeit"
+    },
+    {
+      "date": "2028-05-25",
+      "name": "Auffahrt",
+      "key": "christi-himmelfahrt"
+    },
+    {
+      "date": "2028-06-05",
+      "name": "Pfingstmontag",
+      "key": "pfingstmontag"
+    },
+    {
+      "date": "2028-08-01",
+      "name": "Bundesfeier (Nationalfeiertag)",
+      "key": "bundesfeier"
+    },
+    {
+      "date": "2028-12-25",
+      "name": "Weihnachtstag",
+      "key": "weihnachten-1"
+    },
+    {
+      "date": "2028-12-26",
+      "name": "Stephanstag",
+      "key": "weihnachten-2"
+    }
+  ]
+}

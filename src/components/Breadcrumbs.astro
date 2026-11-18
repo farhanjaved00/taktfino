@@ -1,13 +1,13 @@
 ---
 import { breadcrumbSchema, type Crumb } from '../lib/seo';
+import type { LocaleCode } from '../config/locales';
+import { t } from '../i18n';
 import JsonLd from './JsonLd.astro';
-interface Props { crumbs: Crumb[] }
-const { crumbs } = Astro.props;
-const all = [{ name: 'Home', path: '/' }, ...crumbs];
+interface Props { crumbs: Crumb[]; locale: LocaleCode }
+const { crumbs, locale } = Astro.props;
+const all = [{ name: t(locale, 'nav.home'), path: `/${locale}/` }, ...crumbs];
 ---
-<nav class="breadcrumbs container" aria-label="Breadcrumb">
-  <ol>
-    {all.map((c, i) => <li>{i < all.length - 1 ? <a href={c.path}>{c.name}</a> : <span aria-current="page">{c.name}</span>}</li>)}
-  </ol>
+<nav class="breadcrumbs container" aria-label={t(locale, 'nav.breadcrumb')}>
+  <ol>{all.map((c, i) => <li>{i < all.length - 1 ? <a href={c.path}>{c.name}</a> : <span aria-current="page">{c.name}</span>}</li>)}</ol>
 </nav>
 <JsonLd data={breadcrumbSchema(all)} />

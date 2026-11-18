@@ -1,0 +1,22 @@
+name: IndexNow
+# After content changes reach main (and Cloudflare has deployed), notify Bing/IndexNow (ChatGPT search uses Bing).
+on:
+  push:
+    branches: [main]
+    paths: ['src/content/**', 'src/config/**']
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci && npm run build
+        env:
+          SITE_URL: ${{ vars.SITE_URL }}
+      - run: sleep 240 && node scripts/indexnow.mjs --all
+        env:
+          INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY }}
+          SITE_URL: ${{ vars.SITE_URL }}

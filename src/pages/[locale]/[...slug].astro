@@ -1,0 +1,52 @@
+---
+/** One route for every page below a language: tools, region variants, categories, articles, static pages, 404. */
+import type { CollectionEntry } from 'astro:content';
+import { LIVE_LOCALES, type LocaleCode } from '../../config/locales';
+import { TOOLS, REGIONS, CATEGORIES, PAGES, type CategoryId, type PageId } from '../../config/tool-map';
+import { toolEntries, regionEntries, articleEntries, entryLocale } from '../../lib/registry';
+import ToolPage from '../../components/pages/ToolPage.astro';
+import RegionPage from '../../components/pages/RegionPage.astro';
+import ArticlePage from '../../components/pages/ArticlePage.astro';
+import CategoryPage from '../../components/pages/CategoryPage.astro';
+import LocalePage from '../../components/pages/LocalePage.astro';
+
+type P =
+  | { kind: 'tool'; entry: CollectionEntry<'tools'> }
+  | { kind: 'region'; entry: CollectionEntry<'regions'> }
+  | { kind: 'article'; entry: CollectionEntry<'articles'> }
+  | { kind: 'category'; category: CategoryId }
+  | { kind: 'page'; page: PageId | 'notfound' };
+
+export async function getStaticPaths() {
+  const live = new Set(LIVE_LOCALES.map((l) => l.code));
+  const paths: { params: { locale: string; slug: string }; props: P }[] = [];
+  for (const e of await toolEntries()) {
+    const loc = entryLocale(e.id); if (!live.has(loc)) continue;
+    paths.push({ params: { locale: loc, slug: TOOLS.find((x) => x.id === e.data.tool)!.slug[loc] }, props: { kind: 'tool', entry: e } });
+  }
+  for (const e of await regionEntries()) {
+    const loc = entryLocale(e.id); const r = REGIONS.find((x) => x.code === e.data.region);
+    if (!live.has(loc) || !r?.live || !r.slug[loc]) continue;
+    paths.push({ params: { locale: loc, slug: `${TOOLS.find((x) => x.id === e.data.tool)!.slug[loc]}/${r.slug[loc]}` }, props: { kind: 'region', entry: e } });
+  }
+  for (const e of await articleEntries()) {
+    const loc = entryLocale(e.id); if (!live.has(loc)) continue;
+    paths.push({ params: { locale: loc, slug: `${CATEGORIES[e.data.category][loc]}/${e.id.slice(e.id.indexOf('/') + 1)}` }, props: { kind: 'article', entry: e } });
+  }
+  for (const l of LIVE_LOCALES) {
+    for (const c of Object.keys(CATEGORIES) as CategoryId[]) paths.push({ params: { locale: l.code, slug: CATEGORIES[c][l.code] }, props: { kind: 'category', category: c } });
+    for (const p of Object.keys(PAGES) as PageId[]) paths.push({ params: { locale: l.code, slug: PAGES[p][l.code] }, props: { kind: 'page', page: p } });
+    paths.push({ params: { locale: l.code, slug: '404' }, props: { kind: 'page', page: 'notfound' } });
+  }
+  const seen = new Set<string>();
+  for (const p of paths) { const k = `${p.params.locale}/${p.params.slug}`; if (seen.has(k)) throw new Error(`Duplicate URL /${k}/`); seen.add(k); }
+  return paths;
+}
+const locale = Astro.params.locale as LocaleCode;
+const p = Astro.props as P;
+---
+{p.kind === 'tool' && <ToolPage entry={p.entry} />}
+{p.kind === 'region' && <RegionPage entry={p.entry} />}
+{p.kind === 'article' && <ArticlePage entry={p.entry} />}
+{p.kind === 'category' && <CategoryPage locale={locale} category={p.category} />}
+{p.kind === 'page' && <LocalePage locale={locale} page={p.page} />}

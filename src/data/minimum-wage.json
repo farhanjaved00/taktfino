@@ -1,0 +1,15 @@
+{
+  "$comment": "Statutory minimum wages. VERIFY every year (source links) before the effective date. Austria and Switzerland have no general national minimum wage (collective agreements / some cantons).",
+  "DE": {
+    "currency": "EUR",
+    "source": { "label": "Bundesministerium für Arbeit und Soziales – Mindestlohn", "url": "https://www.bmas.de/DE/Arbeit/Arbeitsrecht/Mindestlohn/mindestlohn.html" },
+    "rates": [
+      { "from": "2024-01-01", "hourly": 12.41 },
+      { "from": "2025-01-01", "hourly": 12.82 },
+      { "from": "2026-01-01", "hourly": 13.90 },
+      { "from": "2027-01-01", "hourly": 14.60 }
+    ]
+  },
+  "AT": { "currency": "EUR", "none": true, "note": "Kein gesetzlicher Mindestlohn – Mindestlöhne regeln die Kollektivverträge." },
+  "CH": { "currency": "CHF", "none": true, "note": "Kein nationaler Mindestlohn – einige Kantone (z. B. Genf, Neuenburg, Basel-Stadt) haben eigene Mindestlöhne." }
+}

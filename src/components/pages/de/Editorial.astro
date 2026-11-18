@@ -1,0 +1,16 @@
+---
+import { SITE, PEOPLE } from '../../../config/site';
+import { pagePath } from '../../../config/tool-map';
+---
+<p>So entstehen die Inhalte auf {SITE.name}:</p>
+<ol>
+  <li><b>Recherche:</b> Welche Fragen stellen Menschen wirklich? Wir werten Suchanfragen aus und prüfen, was in den bestehenden Antworten fehlt.</li>
+  <li><b>Entwurf:</b> Ein erster Entwurf kann mit Unterstützung einer KI entstehen – direkt auf Deutsch, nach einem genauen Briefing.</li>
+  <li><b>Fachliche Prüfung durch Muttersprachler:</b> {PEOPLE.reviewer.name} prüft Sprache, Rechenbeispiele und Rechtsgrundlagen. Erst danach wird eine Seite veröffentlicht und für Suchmaschinen freigegeben.</li>
+  <li><b>Quellen:</b> Gesetze und Zahlen verlinken wir auf offizielle Quellen wie gesetze-im-internet.de, das Bundesministerium für Arbeit und Soziales oder Destatis.</li>
+  <li><b>Aktualisierung:</b> Feiertage und Mindestlohn prüfen wir jedes Jahr im November, die wichtigsten Seiten mindestens alle sechs Monate. Das Datum „Zuletzt aktualisiert“ ändert sich nur, wenn sich der Inhalt tatsächlich geändert hat.</li>
+</ol>
+<h2>Unabhängigkeit</h2>
+<p>Werbung beeinflusst unsere Inhalte nicht. Partnerlinks kennzeichnen wir.</p>
+<h2>Fehler melden</h2>
+<p>Fehler korrigieren wir schnell. <a href={pagePath('contact', 'de')}>Schreiben Sie uns</a>.</p>

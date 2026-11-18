@@ -1,0 +1,137 @@
+---
+/** Stundenrechner — time span with break, add/subtract durations, decimal ↔ h:mm (Industrieminuten). */
+import type { LocaleCode } from '../../config/locales';
+import { t, dict } from '../../i18n';
+import { industrialMinutes } from '../../tools/time';
+import Icon from '../Icon.astro';
+interface Props { locale: LocaleCode }
+const { locale } = Astro.props;
+const u = (k: string) => t(locale, `ui.hours.${k}`);
+const c = (k: string) => t(locale, `common.${k}`);
+const M = { ui: (dict(locale) as { ui: { hours: Record<string, string> } }).ui.hours, common: (dict(locale) as { common: Record<string, string> }).common };
+const table = Array.from({ length: 60 }, (_, m) => m).filter((m) => m % 5 === 0 || m === 1);
+---
+<section class="tool" data-hours data-locale={locale} data-msgs={JSON.stringify(M)} aria-label={t(locale, 'tools.hours.name')}>
+  <div class="card">
+    <h2 class="tool-h">{u('spanTitle')}</h2>
+    <div class="tool-inputs" style="margin-top:8px">
+      <div class="field"><label for="h-s">{c('start')}</label><input id="h-s" class="input" type="time" value="08:00" data-in="s" /></div>
+      <div class="field"><label for="h-e">{c('end')}</label><input id="h-e" class="input" type="time" value="17:00" data-in="e" /></div>
+      <div class="field"><label for="h-b">{c('break')}</label><input id="h-b" class="input input--num" type="number" min="0" step="5" value="45" inputmode="numeric" data-in="b" /></div>
+    </div>
+    <div class="result-box" aria-live="polite">
+      <div class="answer-label">{u('spanResult')}</div>
+      <div class="answer" data-out="span">8:15 {c('hoursShort')}</div>
+      <div class="answer-sub" data-out="spanSub">= 8,25 {u('decimalHours')} · 495 {c('minShort')}</div>
+    </div>
+    <div class="actions no-print">
+      <button class="btn btn--primary" type="button" data-action="copy-span"><Icon name="check" size={18} />{c('copy')}</button>
+      <button class="btn" type="button" data-action="share"><Icon name="link" size={18} />{c('share')}</button>
+    </div>
+  </div>
+
+  <div class="card section">
+    <h2 class="tool-h">{u('sumTitle')}</h2>
+    <p class="small muted" style="margin:4px 0 0">{u('sumHelp')}</p>
+    <div data-sum-rows class="sum-rows">
+      {['7:30', '8:15', '6:45'].map((v) => (
+        <div class="sum-row">
+          <select class="input input--sm" aria-label={u('operation')}><option value="1">+</option><option value="-1">−</option></select>
+          <input class="input input--sm" type="text" inputmode="decimal" value={v} aria-label={u('duration')} />
+          <button type="button" class="icon-btn" data-remove aria-label={c('removeRow')}><Icon name="close" size={16} /></button>
+        </div>
+      ))}
+    </div>
+    <button type="button" class="btn btn--outline" data-add style="margin-top:10px"><Icon name="calAdd" size={18} />{u('addTime')}</button>
+    <div class="result-box" aria-live="polite">
+      <div class="answer-label">{c('total')}</div>
+      <div class="answer" data-out="sum">22:30 {c('hoursShort')}</div>
+      <div class="answer-sub" data-out="sumSub">= 22,50 {u('decimalHours')}</div>
+    </div>
+    <div class="actions no-print"><button class="btn btn--primary" type="button" data-action="copy-sum"><Icon name="check" size={18} />{c('copy')}</button></div>
+  </div>
+
+  <div class="card section">
+    <h2 class="tool-h">{u('convTitle')}</h2>
+    <div class="tool-inputs" style="margin-top:8px">
+      <div class="field"><label for="h-dec">{u('decimalInput')}</label><input id="h-dec" class="input input--num" type="text" inputmode="decimal" value="7,75" data-in="dec" /></div>
+      <div class="field"><label for="h-hm">{u('hmInput')}</label><input id="h-hm" class="input input--num" type="text" inputmode="numeric" value="7:45" data-in="hm" /></div>
+    </div>
+    <details class="section" style="margin-top:16px">
+      <summary class="btn btn--outline">{u('tableTitle')}</summary>
+      <div class="table-wrap" style="margin-top:12px">
+        <table class="data-table">
+          <thead><tr><th scope="col">{c('minutes')}</th><th scope="col">{u('industrial')}</th><th scope="col">{u('decimalHours')}</th></tr></thead>
+          <tbody>{table.map((m) => <tr><td>{m}</td><td>{industrialMinutes(m)}</td><td>{(m / 60).toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td></tr>)}</tbody>
+        </table>
+      </div>
+    </details>
+  </div>
+  <template data-sum-tpl>
+    <div class="sum-row">
+      <select class="input input--sm" aria-label={u('operation')}><option value="1">+</option><option value="-1">−</option></select>
+      <input class="input input--sm" type="text" inputmode="decimal" value="" placeholder="8:00" aria-label={u('duration')} />
+      <button type="button" class="icon-btn" data-remove aria-label={c('removeRow')}><Icon name="close" size={16} /></button>
+    </div>
+  </template>
+</section>
+<script>
+  import { parseClock, parseDuration, formatHM, toDecimalHours, spanMinutes } from '../../tools/time';
+  import { copyText, setQuery, getQuery, track, trackCalculate, saveHistory, fmt } from '../../scripts/client';
+  const root = document.querySelector<HTMLElement>('[data-hours]');
+  if (root) {
+    const M = JSON.parse(root.dataset.msgs!) as { ui: Record<string, string>; common: Record<string, string> };
+    const intl = 'de-DE';
+    const $ = (k: string) => root.querySelector<HTMLInputElement>(`[data-in="${k}"]`)!;
+    const out = (k: string) => root.querySelector<HTMLElement>(`[data-out="${k}"]`)!;
+    const rowsEl = root.querySelector<HTMLElement>('[data-sum-rows]')!;
+    const tpl = root.querySelector<HTMLTemplateElement>('[data-sum-tpl]')!;
+    const dec = (m: number) => fmt(intl, toDecimalHours(m), 2, 2);
+    let span = 0, sum = 0;
+    const q = getQuery();
+    if (q.get('s')) $('s').value = q.get('s')!; if (q.get('e')) $('e').value = q.get('e')!; if (q.get('b')) $('b').value = q.get('b')!;
+
+    function renderSpan() {
+      const s = parseClock($('s').value), e = parseClock($('e').value), b = Math.max(0, Number($('b').value) || 0);
+      if (s === null || e === null) { out('span').textContent = '–'; return; }
+      span = Math.max(0, spanMinutes(s, e) - b);
+      out('span').textContent = `${formatHM(span)} ${M.common.hoursShort}`;
+      out('spanSub').textContent = `= ${dec(span)} ${M.ui.decimalHours} · ${span} ${M.common.minShort}${e <= s ? ` · ${M.ui.overMidnight}` : ''}`;
+      trackCalculate('hours');
+    }
+    function renderSum() {
+      sum = 0; let bad = false;
+      rowsEl.querySelectorAll('.sum-row').forEach((r) => {
+        const sign = Number((r.querySelector('select') as HTMLSelectElement).value);
+        const inp = r.querySelector('input')!;
+        const v = inp.value.trim() ? parseDuration(inp.value) : 0;
+        inp.setAttribute('aria-invalid', String(v === null));
+        if (v === null) bad = true; else sum += sign * v;
+      });
+      out('sum').textContent = `${formatHM(sum)} ${M.common.hoursShort}`;
+      out('sumSub').textContent = `= ${dec(sum)} ${M.ui.decimalHours}${bad ? ` · ${M.ui.badInput}` : ''}`;
+    }
+    function convDec() { const v = parseDuration($('dec').value.replace(':', 'x')); if (v !== null) $('hm').value = formatHM(v); }
+    function convHm() { const v = parseDuration($('hm').value); if (v !== null) $('dec').value = dec(v); }
+
+    root.addEventListener('input', (e) => {
+      const el = e.target as HTMLElement;
+      if (el === $('dec')) return convDec();
+      if (el === $('hm')) return convHm();
+      if (el.closest('[data-sum-rows]')) return renderSum();
+      renderSpan();
+    });
+    root.addEventListener('change', (e) => { if ((e.target as HTMLElement).closest('[data-sum-rows]')) renderSum(); });
+    root.addEventListener('click', (e) => {
+      const b = (e.target as HTMLElement).closest<HTMLElement>('button');
+      if (!b) return;
+      if (b.hasAttribute('data-remove')) { b.closest('.sum-row')!.remove(); renderSum(); }
+      if (b.hasAttribute('data-add')) { rowsEl.appendChild(tpl.content.firstElementChild!.cloneNode(true)); (rowsEl.lastElementChild!.querySelector('input') as HTMLInputElement).focus(); }
+      const a = b.dataset.action;
+      if (a === 'copy-span') { copyText(`${$('s').value}–${$('e').value}, ${M.common.break}: ${$('b').value} → ${formatHM(span)} h (${dec(span)})`, M.common.copied); track('copy_result', { tool: 'hours' }); }
+      if (a === 'copy-sum') { copyText(`${formatHM(sum)} h (${dec(sum)})`, M.common.copied); track('copy_result', { tool: 'hours' }); }
+      if (a === 'share') { const url = setQuery({ s: $('s').value, e: $('e').value, b: $('b').value }); copyText(url, M.common.linkCopied); saveHistory({ tool: 'hours', label: `${$('s').value}–${$('e').value}: ${formatHM(span)} h`, url }); track('share', { tool: 'hours' }); }
+    });
+    renderSpan(); renderSum();
+  }
+</script>

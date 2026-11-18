@@ -1,0 +1,65 @@
+---
+import { render, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../Breadcrumbs.astro';
+import ToolRenderer from '../ToolRenderer.astro';
+import AdSlot from '../AdSlot.astro';
+import Faq from '../Faq.astro';
+import AuthorBox from '../AuthorBox.astro';
+import RelatedTools from '../RelatedTools.astro';
+import { REGIONS, categoryPath, toolPath } from '../../config/tool-map';
+import { entryLocale, alternatesFor, regionPath, regionEntries } from '../../lib/registry';
+import { webAppSchema, withBrand } from '../../lib/seo';
+import { holidaysFor, monthlyWorkdays, availableYears, countWorkdays } from '../../tools/workdays';
+import { fmtDate, fmtMonth, fmtNum, fmtWeekday } from '../../i18n/format';
+import { parseISO } from '../../lib/dates';
+import { t } from '../../i18n';
+interface Props { entry: CollectionEntry<'regions'> }
+const { entry } = Astro.props;
+const locale = entryLocale(entry.id);
+const d = entry.data;
+const region = REGIONS.find((r) => r.code === d.region)!;
+const path = regionPath(entry);
+const { Content } = await render(entry);
+const alternates = await alternatesFor(`region:${d.tool}:${d.region}`);
+const nowY = new Date().getUTCFullYear();
+const years = availableYears(d.region).filter((y) => y >= nowY).slice(0, 2);
+const tables = years.map((y) => ({ y, months: monthlyWorkdays(d.region, y), total: countWorkdays({ y, m: 1, d: 1 }, { y, m: 12, d: 31 }, { region: d.region }), holidays: holidaysFor(d.region, [y]) }));
+const siblings = (await regionEntries()).filter((e) => entryLocale(e.id) === locale && e.id !== entry.id && REGIONS.find((r) => r.code === e.data.region)?.live);
+---
+<BaseLayout locale={locale} title={withBrand(d.title)} description={d.description} path={path} alternates={alternates} noindex={!d.reviewed}
+  ogImage={`/og${path.replace(/\/$/, '')}.png`}
+  schema={[webAppSchema({ name: d.h1, path, description: d.description, locale, modified: d.updated })]}>
+  <Breadcrumbs locale={locale} crumbs={[{ name: t(locale, 'categories.work.name'), path: categoryPath('work', locale) }, { name: t(locale, 'tools.workdays.name'), path: toolPath('workdays', locale) }, { name: region.name[locale]!, path }]} />
+  <div class="container">
+    <div class="page-head"><h1>{d.h1}</h1><p class="answer-first">{d.answer}</p></div>
+    <ToolRenderer tool="workdays" locale={locale} region={d.region} />
+    <div class="ad-wrap"><AdSlot format="leaderboard" locale={locale} /><AdSlot format="mobile" locale={locale} class="ad-mobile-only" /></div>
+    {tables.map((tb) => (
+      <section class="section card" aria-labelledby={`y${tb.y}`}>
+        <h2 id={`y${tb.y}`} style="margin-bottom:12px">Arbeitstage {tb.y} in {region.name[locale]}: {fmtNum(locale, tb.total.workdays)}</h2>
+        <div class="grid-2">
+          <div class="table-wrap"><table class="data-table">
+            <thead><tr><th scope="col">Monat</th><th scope="col">Arbeitstage (Mo–Fr)</th></tr></thead>
+            <tbody>{tb.months.map((n, i) => <tr><td>{fmtMonth(locale, i + 1)}</td><td>{fmtNum(locale, n)}</td></tr>)}<tr><td><b>{t(locale, 'common.total')}</b></td><td><b>{fmtNum(locale, tb.total.workdays)}</b></td></tr></tbody>
+          </table></div>
+          <div class="table-wrap"><table class="data-table">
+            <thead><tr><th scope="col">Feiertag {tb.y}</th><th scope="col">{t(locale, 'common.date')}</th></tr></thead>
+            <tbody>{tb.holidays.map((h) => { const c = parseISO(h.date)!; return <tr><td>{h.name}{h.partial && <sup title={h.note}>*</sup>}</td><td>{fmtWeekday(locale, c).slice(0, 2)}, {fmtDate(locale, c)}</td></tr>; })}</tbody>
+          </table></div>
+        </div>
+        {tb.holidays.some((h) => h.partial) && <p class="small muted">* {tb.holidays.filter((h) => h.partial).map((h) => `${h.name}: ${h.note}`).join(' ')}</p>}
+      </section>
+    ))}
+    <article class="section card prose-card" data-pagefind-body><div class="prose"><Content /></div>
+      {d.sources.length > 0 && <div class="sources"><h2>{t(locale, 'common.sources')}</h2><ul>{d.sources.map((s) => <li><a href={s.url} rel="noopener" target="_blank">{s.label}</a></li>)}</ul></div>}
+    </article>
+    <Faq items={d.faq} locale={locale} />
+    {siblings.length > 0 && (
+      <section class="section"><h2 style="margin-bottom:14px">Arbeitstage in anderen Bundesländern</h2>
+        <div class="chip-row">{siblings.map((s) => <a class="chip" href={regionPath(s)}>{REGIONS.find((r) => r.code === s.data.region)!.name[locale]}</a>)}</div></section>
+    )}
+    <RelatedTools locale={locale} ids={['days', 'worktime', 'overtime']} />
+    <AuthorBox locale={locale} author={d.author} reviewer={d.reviewer} updated={d.updated} />
+  </div>
+</BaseLayout>

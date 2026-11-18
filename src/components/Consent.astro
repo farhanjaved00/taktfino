@@ -1,0 +1,28 @@
+---
+/**
+ * Ads + consent. AdSense loads only when PUBLIC_ADSENSE_CLIENT is set.
+ * Consent is handled by Google's certified CMP (AdSense › Privacy & messaging → GDPR message), which also
+ * updates Consent Mode v2 for GA4. The footer button reopens Google's message.
+ */
+import { ADS, adsEnabled } from '../config/site';
+import type { LocaleCode } from '../config/locales';
+interface Props { locale: LocaleCode }
+const on = adsEnabled();
+---
+{on && (
+  <>
+    <script is:inline async src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADS.client}`} crossorigin="anonymous"></script>
+    <script is:inline>
+      (function () {
+        window.adsbygoogle = window.adsbygoogle || [];
+        function fill() { document.querySelectorAll('ins.adsbygoogle:not([data-adsbygoogle-status])').forEach(function () { window.adsbygoogle.push({}); }); }
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fill); else fill();
+        document.addEventListener('click', function (e) {
+          if (!(e.target && e.target.closest && e.target.closest('[data-consent-open]'))) return;
+          window.googlefc = window.googlefc || {}; window.googlefc.callbackQueue = window.googlefc.callbackQueue || [];
+          window.googlefc.callbackQueue.push(function () { window.googlefc.showRevocationMessage(); });
+        });
+      })();
+    </script>
+  </>
+)}

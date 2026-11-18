@@ -1,0 +1,91 @@
+---
+/** Static pages per language. Add a language by adding its components here. */
+import StaticPage from './StaticPage.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArticleList from '../ArticleList.astro';
+import Icon from '../Icon.astro';
+import type { LocaleCode } from '../../config/locales';
+import { pagePath, TOOLS, toolPath, CATEGORIES, type PageId, type CategoryId } from '../../config/tool-map';
+import { articleEntries, entryLocale } from '../../lib/registry';
+import { personRef, abs } from '../../lib/seo';
+import { SITE } from '../../config/site';
+import { t } from '../../i18n';
+import About from './de/About.astro';
+import Contact from './de/Contact.astro';
+import Imprint from './de/Imprint.astro';
+import Privacy from './de/Privacy.astro';
+import Terms from './de/Terms.astro';
+import Editorial from './de/Editorial.astro';
+interface Props { locale: LocaleCode; page: PageId | 'notfound' }
+const { locale, page } = Astro.props;
+if (locale !== 'de') throw new Error(`Static pages for ${locale} are not written yet (src/components/pages/LocalePage.astro)`);
+const path = page === 'notfound' ? `/${locale}/404/` : pagePath(page, locale);
+const articles = (await articleEntries()).filter((a) => entryLocale(a.id) === locale);
+const H: Record<string, [string, string]> = {
+  about: ['Über uns', `Wer hinter ${SITE.name} steht und wie wir die Rechner testen.`],
+  contact: ['Kontakt', `So erreichen Sie ${SITE.name}.`],
+  imprint: ['Impressum', `Impressum von ${SITE.name}.`],
+  privacy: ['Datenschutzerklärung', `Wie ${SITE.name} mit Daten umgeht.`],
+  terms: ['Nutzungsbedingungen', `Bedingungen für die Nutzung von ${SITE.name}.`],
+  editorial: ['Redaktionelle Richtlinien', `Wie die Inhalte auf ${SITE.name} entstehen und geprüft werden.`],
+};
+---
+{page in H && (
+  <StaticPage locale={locale} id={page as PageId} path={path} h1={H[page][0]} description={H[page][1]} noindex={page === 'imprint'}
+    schema={page === 'about' ? [{ '@context': 'https://schema.org', '@type': 'AboutPage', url: abs(path), mainEntity: [personRef('author', locale), personRef('reviewer', locale)] }] : []}>
+    {page === 'about' && <About />}
+    {page === 'contact' && <Contact />}
+    {page === 'imprint' && <Imprint />}
+    {page === 'privacy' && <Privacy />}
+    {page === 'terms' && <Terms />}
+    {page === 'editorial' && <Editorial />}
+  </StaticPage>
+)}
+{page === 'guides' && (
+  <StaticPage locale={locale} id="guides" path={path} h1={t(locale, 'nav.guides')} description="Ratgeber zu Arbeitszeit, Pausen, Überstunden, Arbeitstagen und Lohn – mit Rechenbeispielen und Quellen." wide>
+    {(Object.keys(CATEGORIES) as CategoryId[]).map((c) => <ArticleList locale={locale} entries={articles.filter((a) => a.data.category === c)} title={t(locale, `categories.${c}.name`)} />)}
+  </StaticPage>
+)}
+{page === 'search' && (
+  <StaticPage locale={locale} id="search" path={path} h1={t(locale, 'search.title')} description={t(locale, 'search.description')} noindex wide>
+    <link href="/pagefind/pagefind-ui.css" rel="stylesheet" />
+    <div id="search" data-pagefind-ui></div>
+    <script is:inline src="/pagefind/pagefind-ui.js"></script>
+    <script is:inline>
+      window.addEventListener('DOMContentLoaded', function () {
+        if (!window.PagefindUI) { document.getElementById('search').textContent = 'Suche ist nach dem Build verfügbar.'; return; }
+        var ui = new PagefindUI({ element: '#search', showSubResults: true, showImages: false, translations: { placeholder: 'Rechner oder Ratgeber suchen…' } });
+        var q = new URLSearchParams(location.search).get('q'); if (q) ui.triggerSearch(q);
+      });
+    </script>
+  </StaticPage>
+)}
+{page === 'history' && (
+  <StaticPage locale={locale} id="history" path={path} h1={t(locale, 'history.title')} description={t(locale, 'history.description')} noindex>
+    <p>{t(locale, 'history.description')}</p>
+    <ul id="hist" class="hist-list" data-empty={t(locale, 'history.empty')} data-remove={t(locale, 'history.remove')}></ul>
+    <button class="btn btn--outline" type="button" id="hist-clear">{t(locale, 'history.clear')}</button>
+    <script>
+      import { getHistory, removeHistory, clearHistory } from '../../scripts/client';
+      const ul = document.getElementById('hist')!;
+      const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!);
+      const safe = (u: string) => { try { const x = new URL(u, location.origin); return x.origin === location.origin ? x.pathname + x.search : '/'; } catch { return '/'; } };
+      function render() {
+        const h = getHistory();
+        ul.innerHTML = h.length ? h.map((i) => `<li><a href="${esc(safe(i.url))}">${esc(i.label)}</a><button class="btn btn--outline" type="button" data-url="${esc(i.url)}">${esc(ul.dataset.remove!)}</button></li>`).join('') : `<li class="muted">${esc(ul.dataset.empty!)}</li>`;
+      }
+      ul.addEventListener('click', (e) => { const b = (e.target as HTMLElement).closest<HTMLElement>('[data-url]'); if (b) { removeHistory(b.dataset.url!); render(); } });
+      document.getElementById('hist-clear')!.addEventListener('click', () => { clearHistory(); render(); });
+      render();
+    </script>
+  </StaticPage>
+)}
+{page === 'notfound' && (
+  <BaseLayout locale={locale} title={`${t(locale, 'notFound.title')} | ${SITE.name}`} description={t(locale, 'notFound.title')} path={path} noindex>
+    <div class="container" style="padding:48px 16px;text-align:center">
+      <h1>{t(locale, 'notFound.title')}</h1>
+      <p class="muted" style="margin:12px auto 24px;max-width:520px">{t(locale, 'notFound.text')}</p>
+      <div class="chip-row" style="justify-content:center">{TOOLS.map((x) => <a class="chip" href={toolPath(x.id, locale)}><Icon name={x.icon} size={16} />&nbsp;{t(locale, `tools.${x.id}.name`)}</a>)}</div>
+    </div>
+  </BaseLayout>
+)}

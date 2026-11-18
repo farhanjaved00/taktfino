@@ -1,0 +1,58 @@
+{
+  "region": "be",
+  "year": 2027,
+  "generated": "2026-11-18",
+  "reviewed": false,
+  "holidays": [
+    {
+      "date": "2027-01-01",
+      "name": "Neujahr",
+      "key": "neujahr"
+    },
+    {
+      "date": "2027-03-08",
+      "name": "Internationaler Frauentag",
+      "key": "frauentag"
+    },
+    {
+      "date": "2027-03-26",
+      "name": "Karfreitag",
+      "key": "karfreitag"
+    },
+    {
+      "date": "2027-03-29",
+      "name": "Ostermontag",
+      "key": "ostermontag"
+    },
+    {
+      "date": "2027-05-01",
+      "name": "Tag der Arbeit",
+      "key": "tag-der-arbeit"
+    },
+    {
+      "date": "2027-05-06",
+      "name": "Christi Himmelfahrt",
+      "key": "christi-himmelfahrt"
+    },
+    {
+      "date": "2027-05-17",
+      "name": "Pfingstmontag",
+      "key": "pfingstmontag"
+    },
+    {
+      "date": "2027-10-03",
+      "name": "Tag der Deutschen Einheit",
+      "key": "tag-der-deutschen-einheit"
+    },
+    {
+      "date": "2027-12-25",
+      "name": "1. Weihnachtstag",
+      "key": "weihnachten-1"
+    },
+    {
+      "date": "2027-12-26",
+      "name": "2. Weihnachtstag",
+      "key": "weihnachten-2"
+    }
+  ]
+}

@@ -1,64 +1,67 @@
 ---
 import { SITE } from '../config/site';
-import { MAIN_NAV, HUBS, CATEGORIES } from '../lib/links';
+import { LIVE_LOCALES, getLocale, type LocaleCode } from '../config/locales';
+import { TOOLS, CATEGORIES, toolPath, categoryPath, pagePath, type CategoryId } from '../config/tool-map';
+import type { PageEntry } from '../lib/registry';
+import { t } from '../i18n';
 import Icon from './Icon.astro';
+interface Props { locale: LocaleCode; alternates: PageEntry[] }
+const { locale, alternates } = Astro.props;
 const path = Astro.url.pathname;
-const active = (p: string) => (path === p || path.startsWith(p) ? 'page' : undefined);
-const menu = [
-  { title: 'Date tools', items: [HUBS['days-from-today'], HUBS['weeks-from-today'], HUBS['days-ago'], HUBS['date-duration-calculator']] },
-  { title: 'Countdowns', items: [HUBS['days-until'], HUBS.countdown, CATEGORIES.countdowns] },
-  { title: 'Time', items: [HUBS['hours-from-now']] },
-  { title: 'Age', items: [HUBS['age-calculator']] },
-  { title: 'Guides', items: [{ name: 'All guides', path: '/guides/' }] },
-];
+const cats = Object.keys(CATEGORIES) as CategoryId[];
+const others = alternates.filter((a) => a.locale !== locale && LIVE_LOCALES.some((l) => l.code === a.locale));
 ---
 <header class="site-header">
   <div class="container site-header__inner">
-    <a href="/" class="logo" aria-label={`${SITE.name} home`}>
+    <a href={`/${locale}/`} class="logo" aria-label={`${SITE.name} – ${t(locale, 'nav.home')}`}>
       <span class="logo__mark"><Icon name="clock" color="#fff" /></span>{SITE.name}
     </a>
-    <nav class="main-nav" aria-label="Main">
-      {MAIN_NAV.map((n) => <a href={n.path} aria-current={active(n.path)}>{n.name}</a>)}
+    <nav class="main-nav" aria-label={t(locale, 'nav.main')}>
+      {cats.map((c) => <a href={categoryPath(c, locale)} aria-current={path.startsWith(categoryPath(c, locale)) ? 'page' : undefined}>{t(locale, `categories.${c}.name`)}</a>)}
+      <a href={pagePath('guides', locale)} aria-current={path.startsWith(pagePath('guides', locale)) ? 'page' : undefined}>{t(locale, 'nav.guides')}</a>
     </nav>
-    <form class="header-search" action="/search/" method="get" role="search">
+    <form class="header-search" action={pagePath('search', locale)} method="get" role="search">
       <Icon name="search" size={18} color="#565B78" />
-      <label for="hs" class="sr-only">Search tools</label>
-      <input id="hs" name="q" type="search" placeholder="Search tools…" autocomplete="off" />
+      <label for="hs" class="sr-only">{t(locale, 'nav.search')}</label>
+      <input id="hs" name="q" type="search" placeholder={t(locale, 'nav.searchPlaceholder')} autocomplete="off" />
     </form>
+    {others.length > 0 && (
+      <nav class="lang-switch" aria-label={t(locale, 'nav.language')}>
+        {others.map((a) => <a href={a.path} hreflang={getLocale(a.locale).hreflang} lang={getLocale(a.locale).htmlLang} data-track="lang_switch" data-track-to={a.locale}>{getLocale(a.locale).name}</a>)}
+      </nav>
+    )}
     <div class="header-mobile">
-      <a class="icon-btn" href="/search/" aria-label="Search"><Icon name="search" /></a>
-      <button class="icon-btn" type="button" aria-label="Open menu" aria-controls="mobile-menu" aria-expanded="false" data-menu-open><Icon name="menu" /></button>
+      <a class="icon-btn" href={pagePath('search', locale)} aria-label={t(locale, 'nav.search')}><Icon name="search" /></a>
+      <button class="icon-btn" type="button" aria-label={t(locale, 'nav.menu')} aria-controls="mobile-menu" aria-expanded="false" data-menu-open><Icon name="menu" /></button>
     </div>
   </div>
 </header>
-<div class="mobile-menu" id="mobile-menu" hidden role="dialog" aria-modal="true" aria-label="Menu">
+<div class="mobile-menu" id="mobile-menu" hidden role="dialog" aria-modal="true" aria-label={t(locale, 'nav.menu')}>
   <div class="mobile-menu__head">
-    <span>Menu</span>
-    <button class="icon-btn" type="button" aria-label="Close menu" data-menu-close><Icon name="close" /></button>
+    <span>{SITE.name}</span>
+    <button class="icon-btn" type="button" aria-label={t(locale, 'nav.close')} data-menu-close><Icon name="close" /></button>
   </div>
-  <form action="/search/" method="get" role="search">
-    <label for="ms" class="sr-only">Search tools</label>
-    <input id="ms" class="input" style="flex:1" name="q" type="search" placeholder="Search tools…" />
-    <button class="btn btn--primary" type="submit">Search</button>
+  <form action={pagePath('search', locale)} method="get" role="search">
+    <label for="ms" class="sr-only">{t(locale, 'nav.search')}</label>
+    <input id="ms" class="input" style="flex:1" name="q" type="search" placeholder={t(locale, 'nav.searchPlaceholder')} />
+    <button class="btn btn--primary" type="submit">{t(locale, 'nav.search')}</button>
   </form>
-  {menu.map((g) => (
-    <nav class="mobile-menu__group" aria-label={g.title}>
-      <h2>{g.title.toUpperCase()}</h2>
-      {g.items.map((i) => <a href={i.path}><span>{i.name}</span><Icon name="chevron" size={16} color="#565B78" /></a>)}
+  {cats.map((c) => (
+    <nav class="mobile-menu__group" aria-label={t(locale, `categories.${c}.name`)}>
+      <h2>{t(locale, `categories.${c}.name`).toUpperCase()}</h2>
+      {TOOLS.filter((x) => x.category === c).map((x) => <a href={toolPath(x.id, locale)}><span>{t(locale, `tools.${x.id}.name`)}</span><Icon name="chevron" size={16} color="#565B78" /></a>)}
     </nav>
   ))}
-  <nav class="mobile-menu__group" aria-label="Company">
-    <a href="/about/"><span>About</span></a><a href="/contact/"><span>Contact</span></a><a href="/privacy/"><span>Privacy</span></a><a href="/terms/"><span>Terms</span></a>
+  <nav class="mobile-menu__group" aria-label={t(locale, 'nav.guides')}>
+    <a href={pagePath('guides', locale)}><span>{t(locale, 'common.allGuides')}</span><Icon name="chevron" size={16} color="#565B78" /></a>
+    {others.map((a) => <a href={a.path} lang={getLocale(a.locale).htmlLang}><span>{getLocale(a.locale).name}</span></a>)}
   </nav>
 </div>
 <script>
   const menu = document.getElementById('mobile-menu')!;
   const opener = document.querySelector<HTMLButtonElement>('[data-menu-open]')!;
   const close = () => { menu.hidden = true; opener.setAttribute('aria-expanded', 'false'); document.body.style.overflow = ''; opener.focus(); };
-  opener.addEventListener('click', () => {
-    menu.hidden = false; opener.setAttribute('aria-expanded', 'true'); document.body.style.overflow = 'hidden';
-    menu.querySelector<HTMLElement>('[data-menu-close]')!.focus();
-  });
+  opener.addEventListener('click', () => { menu.hidden = false; opener.setAttribute('aria-expanded', 'true'); document.body.style.overflow = 'hidden'; menu.querySelector<HTMLElement>('[data-menu-close]')!.focus(); });
   menu.querySelector('[data-menu-close]')!.addEventListener('click', close);
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !menu.hidden) close(); });
 </script>

@@ -1,0 +1,19 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../Breadcrumbs.astro';
+import type { LocaleCode } from '../../config/locales';
+import { alternatesFor } from '../../lib/registry';
+import type { PageId } from '../../config/tool-map';
+import { SITE } from '../../config/site';
+interface Props { locale: LocaleCode; id: PageId; path: string; h1: string; description: string; noindex?: boolean; schema?: unknown[]; wide?: boolean }
+const p = Astro.props;
+---
+<BaseLayout locale={p.locale} title={`${p.h1} | ${SITE.name}`} description={p.description} path={p.path} alternates={p.noindex ? [] : await alternatesFor(`page:${p.id}`)} noindex={p.noindex} schema={p.schema}>
+  <Breadcrumbs locale={p.locale} crumbs={[{ name: p.h1, path: p.path }]} />
+  <div class="container">
+    <article class="article" style={p.wide ? '' : 'max-width:860px'}>
+      <h1>{p.h1}</h1>
+      <div class="prose" style="margin-top:16px"><slot /></div>
+    </article>
+  </div>
+</BaseLayout>

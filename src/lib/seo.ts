@@ -1,107 +1,51 @@
-import { SITE } from '../config/site';
+import { SITE, PEOPLE, type PersonId } from '../config/site';
+import { getLocale, type LocaleCode } from '../config/locales';
+import { pagePath, PAGES } from '../config/tool-map';
 
 export const abs = (path: string) => (path.startsWith('http') ? path : `${SITE.url}${path}`);
-
 export interface Crumb { name: string; path: string }
 
-export function breadcrumbSchema(crumbs: Crumb[]) {
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: crumbs.map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.name, item: abs(c.path) })),
-  };
-}
+export const breadcrumbSchema = (crumbs: Crumb[]) => ({
+  '@context': 'https://schema.org', '@type': 'BreadcrumbList',
+  itemListElement: crumbs.map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.name, item: abs(c.path) })),
+});
 
-export interface QA { q: string; a: string }
-export function faqSchema(faq: QA[]) {
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: faq.map((x) => ({ '@type': 'Question', name: x.q, acceptedAnswer: { '@type': 'Answer', text: x.a } })),
-  };
-}
+export const faqSchema = (faq: { q: string; a: string }[]) => ({
+  '@context': 'https://schema.org', '@type': 'FAQPage',
+  mainEntity: faq.map((x) => ({ '@type': 'Question', name: x.q, acceptedAnswer: { '@type': 'Answer', text: x.a.replace(/<[^>]+>/g, '') } })),
+});
 
-export function webAppSchema(name: string, path: string, description: string) {
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'WebApplication',
-    name,
-    url: abs(path),
-    description,
-    applicationCategory: 'UtilitiesApplication',
-    operatingSystem: 'Any',
-    browserRequirements: 'Requires JavaScript for live updates',
-    offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-    publisher: { '@type': 'Organization', name: SITE.name, url: SITE.url },
-  };
-}
+export const webAppSchema = (p: { name: string; path: string; description: string; locale: LocaleCode; modified: Date }) => ({
+  '@context': 'https://schema.org', '@type': 'WebApplication',
+  name: p.name, url: abs(p.path), description: p.description, inLanguage: getLocale(p.locale).hreflang,
+  applicationCategory: 'UtilitiesApplication', operatingSystem: 'Any', isAccessibleForFree: true,
+  dateModified: p.modified.toISOString(),
+  offers: { '@type': 'Offer', price: '0', priceCurrency: getLocale(p.locale).currency },
+  publisher: { '@type': 'Organization', name: SITE.name, url: `${SITE.url}/` },
+});
 
-export function websiteSchema() {
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'WebSite',
-    name: SITE.name,
-    url: `${SITE.url}/`,
-    potentialAction: {
-      '@type': 'SearchAction',
-      target: { '@type': 'EntryPoint', urlTemplate: `${SITE.url}/search/?q={search_term_string}` },
-      'query-input': 'required name=search_term_string',
-    },
-  };
-}
+export const websiteSchema = (locale: LocaleCode) => ({
+  '@context': 'https://schema.org', '@type': 'WebSite', name: SITE.name, url: abs(`/${locale}/`), inLanguage: getLocale(locale).hreflang,
+  potentialAction: { '@type': 'SearchAction', target: { '@type': 'EntryPoint', urlTemplate: `${abs(pagePath('search', locale))}?q={search_term_string}` }, 'query-input': 'required name=search_term_string' },
+});
 
-export function organizationSchema() {
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'Organization',
-    name: SITE.name,
-    url: `${SITE.url}/`,
-    logo: abs('/icon-512.png'),
-  };
-}
+export const organizationSchema = () => ({
+  '@context': 'https://schema.org', '@type': 'Organization', name: SITE.name, url: `${SITE.url}/`, logo: abs('/icon-512.png'),
+  ...(SITE.sameAs.length ? { sameAs: SITE.sameAs } : {}),
+});
 
-export function articleSchema(a: { title: string; description: string; path: string; date: Date; updated?: Date; author: string; image: string }) {
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'Article',
-    headline: a.title,
-    description: a.description,
-    mainEntityOfPage: abs(a.path),
-    datePublished: a.date.toISOString(),
-    dateModified: (a.updated || a.date).toISOString(),
-    image: abs(a.image),
-    author: { '@type': 'Person', name: a.author, url: abs(SITE.author.url), ...(SITE.author.sameAs.length ? { sameAs: SITE.author.sameAs } : {}) },
-    publisher: { '@type': 'Organization', name: SITE.name, logo: { '@type': 'ImageObject', url: abs('/icon-512.png') } },
-  };
-}
+export const personUrl = (id: PersonId, locale: LocaleCode) => `/${locale}/${PAGES.about[locale]}/#${PEOPLE[id].id}`;
+export const personRef = (id: PersonId, locale: LocaleCode) => ({
+  '@type': 'Person', name: PEOPLE[id].name, url: abs(personUrl(id, locale)), ...(PEOPLE[id].sameAs.length ? { sameAs: PEOPLE[id].sameAs } : {}),
+});
 
-/** WebPage with a real dateModified — tool pages change every day (the date in the answer). */
-export function webPageSchema(p: { name: string; path: string; description: string; modified: Date }) {
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'WebPage',
-    name: p.name,
-    url: abs(p.path),
-    description: p.description,
-    dateModified: p.modified.toISOString(),
-    inLanguage: 'en',
-    isPartOf: { '@type': 'WebSite', name: SITE.name, url: `${SITE.url}/` },
-    publisher: { '@type': 'Organization', name: SITE.name, url: `${SITE.url}/` },
-  };
-}
+export const articleSchema = (a: { title: string; description: string; path: string; date: Date; updated: Date; author: PersonId; reviewer?: PersonId; locale: LocaleCode; image: string }) => ({
+  '@context': 'https://schema.org', '@type': 'Article',
+  headline: a.title, description: a.description, mainEntityOfPage: abs(a.path), inLanguage: getLocale(a.locale).hreflang,
+  datePublished: a.date.toISOString(), dateModified: a.updated.toISOString(), image: abs(a.image),
+  author: personRef(a.author, a.locale), ...(a.reviewer ? { reviewedBy: personRef(a.reviewer, a.locale) } : {}),
+  publisher: { '@type': 'Organization', name: SITE.name, logo: { '@type': 'ImageObject', url: abs('/icon-512.png') } },
+});
 
-export function personSchema() {
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'AboutPage',
-    url: abs('/about/'),
-    mainEntity: {
-      '@type': 'Person',
-      name: SITE.author.name,
-      description: SITE.author.bio,
-      url: abs('/about/'),
-      ...(SITE.author.sameAs.length ? { sameAs: SITE.author.sameAs } : {}),
-      worksFor: { '@type': 'Organization', name: SITE.name, url: `${SITE.url}/` },
-    },
-  };
-}
+/** Appends " | Brand" only while the title stays within 60 characters. */
+export const withBrand = (title: string) => (`${title} | ${SITE.name}`.length <= 60 ? `${title} | ${SITE.name}` : title);

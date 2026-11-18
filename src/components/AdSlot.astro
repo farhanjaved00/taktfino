@@ -1,20 +1,17 @@
 ---
-/**
- * Fixed-size ad box. Space is reserved so the page never jumps.
- * Ads are OFF until PUBLIC_ADSENSE_CLIENT is set. In `npm run dev` a dashed placeholder is shown.
- */
+/** Fixed-size ad box (space reserved → no layout shift). Max 3 per page, never above a tool. Off until AdSense is set. */
 import { ADS, adsEnabled } from '../config/site';
-interface Props { format: 'leaderboard' | 'rectangle' | 'skyscraper' | 'mobile'; class?: string }
-const { format, class: cls = '' } = Astro.props;
+import type { LocaleCode } from '../config/locales';
+import { t } from '../i18n';
+interface Props { format: 'leaderboard' | 'rectangle' | 'skyscraper' | 'mobile'; locale: LocaleCode; class?: string }
+const { format, locale, class: cls = '' } = Astro.props;
 const sizes = { leaderboard: '728×90', rectangle: '300×250', skyscraper: '300×600', mobile: '320×50' };
-const on = adsEnabled();
-const dev = import.meta.env.DEV;
 const slot = ADS.slots[format];
 ---
-{on ? (
-  <div class={`ad ad--${format} ${cls}`}>
+{adsEnabled() ? (
+  <div class={`ad ad--${format} ${cls}`} data-label={t(locale, 'common.advertisement')}>
     <ins class="adsbygoogle" style="display:inline-block;width:100%;height:100%" data-ad-client={ADS.client} data-ad-slot={slot || undefined} data-ad-format={slot ? undefined : 'auto'} data-full-width-responsive="false"></ins>
   </div>
-) : dev ? (
-  <div class={`ad ad--${format} ad--placeholder ${cls}`} aria-hidden="true">Ad slot · {sizes[format]}</div>
+) : import.meta.env.DEV ? (
+  <div class={`ad ad--${format} ad--placeholder ${cls}`} aria-hidden="true">Ad · {sizes[format]}</div>
 ) : null}

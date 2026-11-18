@@ -1,0 +1,13 @@
+---
+import type { LocaleCode } from '../config/locales';
+import { toolPath, type ToolId } from '../config/tool-map';
+import { t } from '../i18n';
+interface Props { locale: LocaleCode; ids: ToolId[] }
+const { locale, ids } = Astro.props;
+---
+{ids.length > 0 && (
+  <section class="section" aria-labelledby="rt-h">
+    <h2 id="rt-h" style="margin-bottom:14px">{t(locale, 'common.relatedTools')}</h2>
+    <div class="related-grid">{ids.map((id) => <a href={toolPath(id, locale)}><b>{t(locale, `tools.${id}.name`)}</b><span>{t(locale, `tools.${id}.short`)}</span></a>)}</div>
+  </section>
+)}

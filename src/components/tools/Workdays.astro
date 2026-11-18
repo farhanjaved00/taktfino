@@ -1,0 +1,113 @@
+---
+/** Arbeitstage-Rechner — working days between two dates by Bundesland / AT / CH-ZH, half-days, vacation. */
+import type { LocaleCode } from '../../config/locales';
+import { REGIONS } from '../../config/tool-map';
+import { t, dict } from '../../i18n';
+import { countWorkdays, holidaysFor } from '../../tools/workdays';
+import { fmtNum } from '../../i18n/format';
+import Icon from '../Icon.astro';
+interface Props { locale: LocaleCode; region?: string; year: number }
+const { locale, region = 'nw', year } = Astro.props;
+const u = (k: string) => t(locale, `ui.workdays.${k}`);
+const c = (k: string) => t(locale, `common.${k}`);
+const M = { ui: (dict(locale) as { ui: { workdays: Record<string, string> } }).ui.workdays, common: (dict(locale) as { common: Record<string, string> }).common };
+const res = countWorkdays({ y: year, m: 1, d: 1 }, { y: year, m: 12, d: 31 }, { region });
+const partial = holidaysFor(region, [year]).filter((h) => h.partial);
+const days = [['1', 'Mo'], ['2', 'Di'], ['3', 'Mi'], ['4', 'Do'], ['5', 'Fr'], ['6', 'Sa']];
+---
+<section class="card tool" data-workdays data-locale={locale} data-msgs={JSON.stringify(M)} aria-label={t(locale, 'tools.workdays.name')}>
+  <div class="tool-inputs" style="margin-top:0">
+    <div class="field"><label for="wd-from">{c('from')}</label><input id="wd-from" class="input" type="date" value={`${year}-01-01`} data-in="from" /></div>
+    <div class="field"><label for="wd-to">{c('to')}</label><input id="wd-to" class="input" type="date" value={`${year}-12-31`} data-in="to" /></div>
+    <div class="field">
+      <label for="wd-region">{c('region')}</label>
+      <select id="wd-region" class="input" data-in="region">
+        {REGIONS.map((r) => <option value={r.code} selected={r.code === region}>{r.name.de}</option>)}
+      </select>
+    </div>
+    <div class="field"><label for="wd-vac">{u('vacation')}</label><input id="wd-vac" class="input input--num" type="number" min="0" max="365" step="0.5" value="0" inputmode="decimal" data-in="vac" /></div>
+  </div>
+  <fieldset class="weekday-set">
+    <legend class="label">{u('workingDays')}</legend>
+    {days.map(([v, l]) => <label class="check"><input type="checkbox" value={v} checked={v !== '6'} data-wd /> {l}</label>)}
+  </fieldset>
+  <div class="tool-inputs" style="margin-top:8px">
+    <button type="button" class="toggle" aria-pressed="false" data-in="half"><span class="dot" aria-hidden="true"></span>{u('halfDays')}</button>
+    <div data-partial-wrap>
+      {partial.map((h) => <button type="button" class="toggle" aria-pressed={h.defaultOn ? "true" : "false"} data-partial={h.key}><span class="dot" aria-hidden="true"></span>{h.name}</button>)}
+    </div>
+  </div>
+  <div class="result-box" aria-live="polite">
+    <div class="answer-label" data-out="label">{u('resultLabel')}</div>
+    <div class="answer" data-out="work">{fmtNum(locale, res.workdays, 1)} {c('days')}</div>
+    <div class="answer-sub" data-out="sub">{res.calendarDays} {u('calendarDays')} · {res.weekendDays} {u('weekendDays')} · {res.holidaysOnWorkdays.length} {u('holidaysOnWeekdays')}</div>
+    <ul class="holiday-list" data-out="hol">
+      {res.holidaysOnWorkdays.map((h) => <li><span>{h.name}</span><span>{h.date.split('-').reverse().join('.')}</span></li>)}
+    </ul>
+    <p class="small muted" data-out="note"></p>
+  </div>
+  <div class="actions no-print">
+    <button class="btn btn--primary" type="button" data-action="copy"><Icon name="check" size={18} />{c('copy')}</button>
+    <button class="btn" type="button" data-action="share"><Icon name="link" size={18} />{c('share')}</button>
+    <button class="btn" type="button" data-action="csv"><Icon name="download" size={18} />{c('csv')}</button>
+  </div>
+</section>
+<script>
+  import { countWorkdays, holidaysFor } from '../../tools/workdays';
+  import { parseISO } from '../../lib/dates';
+  import { copyText, downloadCsv, setQuery, getQuery, saveHistory, track, trackCalculate, fmt } from '../../scripts/client';
+  const root = document.querySelector<HTMLElement>('[data-workdays]');
+  if (root) {
+    const M = JSON.parse(root.dataset.msgs!) as { ui: Record<string, string>; common: Record<string, string> };
+    const $ = (k: string) => root.querySelector<HTMLInputElement & HTMLSelectElement>(`[data-in="${k}"]`)!;
+    const out = (k: string) => root.querySelector<HTMLElement>(`[data-out="${k}"]`)!;
+    const half = root.querySelector<HTMLButtonElement>('[data-in="half"]')!;
+    const pWrap = root.querySelector<HTMLElement>('[data-partial-wrap]')!;
+    const q = getQuery();
+    if (q.get('from')) $('from').value = q.get('from')!; if (q.get('to')) $('to').value = q.get('to')!;
+    if (q.get('r')) $('region').value = q.get('r')!; if (q.get('v')) $('vac').value = q.get('v')!;
+    if (q.get('h') === '1') half.setAttribute('aria-pressed', 'true');
+    let res: ReturnType<typeof countWorkdays> | null = null;
+    const de = (iso: string) => iso.split('-').reverse().join('.');
+
+    function partialButtons() {
+      const a = parseISO($('from').value), b = parseISO($('to').value);
+      if (!a || !b) return;
+      const years = Array.from({ length: Math.abs(b.y - a.y) + 1 }, (_, i) => Math.min(a.y, b.y) + i);
+      const seen = new Map<string, { name: string; on: boolean }>();
+      for (const h of holidaysFor($('region').value, years)) if (h.partial) seen.set(h.key, { name: h.name, on: !!h.defaultOn });
+      const prev = new Map([...pWrap.querySelectorAll<HTMLButtonElement>('[data-partial]')].map((x) => [x.dataset.partial!, x.getAttribute('aria-pressed') === 'true']));
+      pWrap.innerHTML = [...seen].map(([k, v]) => `<button type="button" class="toggle" aria-pressed="${prev.has(k) ? prev.get(k) : v.on}" data-partial="${k}"><span class="dot" aria-hidden="true"></span>${v.name}</button>`).join('');
+    }
+    function render() {
+      const a = parseISO($('from').value), b = parseISO($('to').value);
+      if (!a || !b) return;
+      const weekdays = [...root!.querySelectorAll<HTMLInputElement>('[data-wd]')].filter((x) => x.checked).map((x) => Number(x.value));
+      const partialOn = [...pWrap.querySelectorAll<HTMLButtonElement>('[data-partial]')].filter((x) => x.getAttribute('aria-pressed') === 'true').map((x) => x.dataset.partial!);
+      res = countWorkdays(a, b, { region: $('region').value, weekdays, partialOn, halfDays: half.getAttribute('aria-pressed') === 'true', vacation: Number($('vac').value) || 0 });
+      const vac = Number($('vac').value) || 0;
+      out('label').textContent = `${M.ui.resultLabel} (${de($('from').value)} – ${de($('to').value)})`;
+      out('work').textContent = `${fmt('de-DE', vac ? res.netWorkdays : res.workdays, 1)} ${M.common.days}`;
+      out('sub').textContent = `${res.calendarDays} ${M.ui.calendarDays} · ${res.weekendDays} ${M.ui.weekendDays} · ${res.holidaysOnWorkdays.length} ${M.ui.holidaysOnWeekdays}${vac ? ` · ${fmt('de-DE', res.workdays, 1)} ${M.ui.beforeVacation}` : ''}${res.halfDays ? ` · ${res.halfDays} ${M.ui.halfDaysCount}` : ''}`;
+      out('hol').innerHTML = res.holidaysOnWorkdays.map((h) => `<li><span>${h.name}</span><span>${de(h.date)}</span></li>`).join('');
+      out('note').textContent = res.missingYears.length ? M.ui.missingYears.replace('{years}', res.missingYears.join(', ')) : '';
+      trackCalculate('workdays');
+    }
+    root.addEventListener('input', (e) => { if ((e.target as HTMLElement).matches('[data-in="from"],[data-in="to"],[data-in="region"]')) partialButtons(); render(); });
+    root.addEventListener('change', (e) => { if ((e.target as HTMLElement).matches('[data-in="region"]')) partialButtons(); render(); });
+    root.addEventListener('click', (e) => {
+      const b = (e.target as HTMLElement).closest<HTMLButtonElement>('button');
+      if (!b || !res) return;
+      if (b.classList.contains('toggle')) { b.setAttribute('aria-pressed', String(b.getAttribute('aria-pressed') !== 'true')); render(); return; }
+      const sel = $('region'); const regionName = sel.options[sel.selectedIndex].text;
+      const text = `${M.ui.resultLabel} ${de($('from').value)} – ${de($('to').value)} (${regionName}): ${fmt('de-DE', res.netWorkdays, 1)} ${M.common.days}`;
+      if (b.dataset.action === 'copy') { copyText(text, M.common.copied); track('copy_result', { tool: 'workdays' }); }
+      if (b.dataset.action === 'share') { const url = setQuery({ from: $('from').value, to: $('to').value, r: $('region').value, v: $('vac').value !== '0' ? $('vac').value : null, h: half.getAttribute('aria-pressed') === 'true' ? '1' : null }); copyText(url, M.common.linkCopied); saveHistory({ tool: 'workdays', label: text, url }); track('share', { tool: 'workdays' }); }
+      if (b.dataset.action === 'csv') {
+        downloadCsv([[M.common.date, M.ui.holiday], ...res.holidaysOnWorkdays.map((h) => [de(h.date), h.name]), [], [M.ui.resultLabel, fmt('de-DE', res.netWorkdays, 1)], [M.ui.calendarDays, res.calendarDays], [M.ui.weekendDays, res.weekendDays]], 'arbeitstage.csv');
+        track('export', { tool: 'workdays', format: 'csv' });
+      }
+    });
+    partialButtons(); render();
+  }
+</script>

@@ -1,0 +1,61 @@
+---
+/** Alter berechnen — exact age, totals, weekday of birth, next birthday. */
+import type { LocaleCode } from '../../config/locales';
+import { t, dict } from '../../i18n';
+import Icon from '../Icon.astro';
+interface Props { locale: LocaleCode; todayIso: string }
+const { locale, todayIso } = Astro.props;
+const u = (k: string) => t(locale, `ui.age.${k}`);
+const c = (k: string) => t(locale, `common.${k}`);
+const M = { ui: (dict(locale) as { ui: { age: Record<string, string> } }).ui.age, common: (dict(locale) as { common: Record<string, string> }).common };
+---
+<section class="card tool" data-age-tool data-msgs={JSON.stringify(M)} aria-label={t(locale, 'tools.age.name')}>
+  <div class="tool-inputs" style="margin-top:0">
+    <div class="field"><label for="a-b">{u('birth')}</label><input id="a-b" class="input" type="date" value="1990-01-01" max={todayIso} data-in="b" /></div>
+    <div class="field"><label for="a-on">{u('on')}</label><input id="a-on" class="input" type="date" value={todayIso} data-in="on" /></div>
+  </div>
+  <div class="result-box" aria-live="polite">
+    <div class="answer-label">{u('exact')}</div>
+    <div class="answer" data-out="age">–</div>
+    <div class="answer-sub" data-out="sub"></div>
+    <div class="stats">
+      <div><b data-out="months">–</b><span>{u('months')}</span></div>
+      <div><b data-out="weeks">–</b><span>{c('weeks')}</span></div>
+      <div><b data-out="days">–</b><span>{c('days')}</span></div>
+      <div><b data-out="hours">–</b><span>{c('hours')}</span></div>
+    </div>
+    <p data-out="next"></p>
+  </div>
+  <div class="actions no-print"><button class="btn btn--primary" type="button" data-action="copy"><Icon name="check" size={18} />{c('copy')}</button></div>
+  <p class="small muted" style="margin:12px 0 0">{c('privacyLocal')}</p>
+</section>
+<script>
+  import { age, compare, formatISO, parseISO } from '../../lib/dates';
+  import { copyText, track, trackCalculate, fmt } from '../../scripts/client';
+  const root = document.querySelector<HTMLElement>('[data-age-tool]');
+  if (root) {
+    const M = JSON.parse(root.dataset.msgs!) as { ui: Record<string, string>; common: Record<string, string> };
+    const $ = (k: string) => root.querySelector<HTMLInputElement>(`[data-in="${k}"]`)!;
+    const out = (k: string) => root.querySelector<HTMLElement>(`[data-out="${k}"]`)!;
+    const now = new Date(); $('on').value = formatISO({ y: now.getFullYear(), m: now.getMonth() + 1, d: now.getDate() });
+    const dl = (c: { y: number; m: number; d: number }) => new Date(Date.UTC(c.y, c.m - 1, c.d, 12)).toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+    let text = '';
+    function render() {
+      const b = parseISO($('b').value), on = parseISO($('on').value); if (!b || !on) return;
+      if (compare(b, on) > 0) { out('age').textContent = '–'; out('sub').textContent = M.ui.future; return; }
+      const r = age(b, on);
+      out('age').textContent = `${r.years} ${M.ui.years}, ${r.months} ${M.ui.months}, ${r.days} ${M.common.days}`;
+      out('sub').textContent = `${M.ui.bornOn} ${dl(b)}`;
+      out('months').textContent = fmt('de-DE', r.totalMonths);
+      out('weeks').textContent = fmt('de-DE', r.totalWeeks);
+      out('days').textContent = fmt('de-DE', r.totalDays);
+      out('hours').textContent = fmt('de-DE', r.totalDays * 24);
+      out('next').textContent = r.daysToNextBirthday === 0 ? M.ui.birthdayToday : M.ui.nextBirthday.replace('{date}', dl(r.nextBirthday)).replace('{days}', fmt('de-DE', r.daysToNextBirthday)).replace('{age}', String(r.years + 1));
+      text = out('age').textContent!;
+      trackCalculate('age');
+    }
+    root.addEventListener('input', render);
+    root.addEventListener('click', (e) => { const b = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-action="copy"]'); if (b) { copyText(text, M.common.copied); track('copy_result', { tool: 'age' }); } });
+    render();
+  }
+</script>

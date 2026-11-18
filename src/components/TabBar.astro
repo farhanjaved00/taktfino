@@ -1,15 +1,19 @@
 ---
+import type { LocaleCode } from '../config/locales';
+import { CATEGORIES, TOOLS, pagePath } from '../config/tool-map';
+import { t } from '../i18n';
 import Icon from './Icon.astro';
-const path = Astro.url.pathname;
+interface Props { locale: LocaleCode }
+const { locale } = Astro.props;
+const p = Astro.url.pathname;
+const toolSlugs = [...TOOLS.map((x) => x.slug[locale]), ...Object.values(CATEGORIES).map((c) => c[locale])];
 const tabs = [
-  { l: 'Home', href: '/', icon: 'home' as const, match: (p: string) => p === '/' },
-  { l: 'Tools', href: '/date-tools/', icon: 'cal' as const, match: (p: string) => /^\/(date-tools|days-from-today|weeks-from-today|days-ago|hours-from-now|date-duration-calculator|age-calculator|time|age)\//.test(p) },
-  { l: 'Countdowns', href: '/countdowns/', icon: 'hour' as const, match: (p: string) => /^\/(countdowns|countdown|days-until)\//.test(p) },
-  { l: 'Saved', href: '/saved/', icon: 'bookmark' as const, match: (p: string) => p.startsWith('/saved/') },
+  { l: t(locale, 'nav.home'), href: `/${locale}/`, icon: 'home' as const, on: p === `/${locale}/` },
+  { l: t(locale, 'nav.tools'), href: `/${locale}/${CATEGORIES.work[locale]}/`, icon: 'calc' as const, on: toolSlugs.some((s) => p.startsWith(`/${locale}/${s}/`)) && !p.startsWith(pagePath('guides', locale)) },
+  { l: t(locale, 'nav.guides'), href: pagePath('guides', locale), icon: 'book' as const, on: p.startsWith(pagePath('guides', locale)) },
+  { l: t(locale, 'nav.history'), href: pagePath('history', locale), icon: 'history' as const, on: p.startsWith(pagePath('history', locale)) },
 ];
 ---
-<nav class="tabbar" aria-label="Bottom">
-  {tabs.map((t) => (
-    <a href={t.href} aria-current={t.match(path) ? 'page' : undefined}><Icon name={t.icon} size={22} />{t.l}</a>
-  ))}
+<nav class="tabbar" aria-label={t(locale, 'nav.bottom')}>
+  {tabs.map((x) => <a href={x.href} aria-current={x.on ? 'page' : undefined}><Icon name={x.icon} size={22} />{x.l}</a>)}
 </nav>

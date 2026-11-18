@@ -1,0 +1,48 @@
+---
+import { render, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../Breadcrumbs.astro';
+import ToolRenderer from '../ToolRenderer.astro';
+import AdSlot from '../AdSlot.astro';
+import Faq from '../Faq.astro';
+import AuthorBox from '../AuthorBox.astro';
+import RelatedTools from '../RelatedTools.astro';
+import ArticleList from '../ArticleList.astro';
+import { getTool, categoryPath, toolPath } from '../../config/tool-map';
+import { entryLocale, alternatesFor, articleEntries } from '../../lib/registry';
+import { webAppSchema, withBrand } from '../../lib/seo';
+import { t } from '../../i18n';
+interface Props { entry: CollectionEntry<'tools'> }
+const { entry } = Astro.props;
+const locale = entryLocale(entry.id);
+const d = entry.data;
+const tool = getTool(d.tool);
+const path = toolPath(d.tool, locale);
+const { Content } = await render(entry);
+const alternates = await alternatesFor(`tool:${d.tool}`);
+const articles = (await articleEntries()).filter((a) => entryLocale(a.id) === locale && a.data.tool === d.tool);
+---
+<BaseLayout locale={locale} title={withBrand(d.title)} description={d.description} path={path}
+  alternates={alternates} noindex={!d.reviewed} ogImage={`/og${path.replace(/\/$/, '')}.png`}
+  schema={[webAppSchema({ name: t(locale, `tools.${d.tool}.name`), path, description: d.description, locale, modified: d.updated })]}>
+  <Breadcrumbs locale={locale} crumbs={[{ name: t(locale, `categories.${tool.category}.name`), path: categoryPath(tool.category, locale) }, { name: t(locale, `tools.${d.tool}.name`), path }]} />
+  <div class="container">
+    <div class="page-head">
+      <h1>{d.h1}</h1>
+      <p class="answer-first" data-pagefind-meta="summary">{d.answer}</p>
+    </div>
+    <ToolRenderer tool={d.tool} locale={locale} />
+    <div class="ad-wrap"><AdSlot format="leaderboard" locale={locale} /><AdSlot format="mobile" locale={locale} class="ad-mobile-only" /></div>
+    <article class="section card prose-card" data-pagefind-body>
+      <div class="prose"><Content /></div>
+      {d.sources.length > 0 && (
+        <div class="sources"><h2>{t(locale, 'common.sources')}</h2><ul>{d.sources.map((s) => <li><a href={s.url} rel="noopener" target="_blank">{s.label}</a></li>)}</ul></div>
+      )}
+      <p class="small muted">{t(locale, 'common.notAdvice')}</p>
+    </article>
+    <Faq items={d.faq} locale={locale} />
+    <RelatedTools locale={locale} ids={d.related} />
+    <ArticleList locale={locale} entries={articles} title={t(locale, 'common.relatedArticles')} />
+    <AuthorBox locale={locale} author={d.author} reviewer={d.reviewer} updated={d.updated} />
+  </div>
+</BaseLayout>

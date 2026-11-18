@@ -1,0 +1,14 @@
+---
+import { SITE } from '../../../config/site';
+const [user, domain] = SITE.contactEmail.split('@');
+---
+<p>Sie haben eine Frage, einen Fehler gefunden oder wünschen sich einen neuen Rechner? Wir freuen uns über Ihre Nachricht.</p>
+<p style="font-size:20px"><b>{user}{domain ? <> [at] {domain}</> : null}</b></p>
+<p class="small muted">Zum Schutz vor Spam ausgeschrieben – bitte „[at]“ durch „@“ ersetzen.</p>
+<h2>Damit wir schnell helfen können</h2>
+<ul>
+  <li><b>Fehler im Rechner:</b> Bitte nennen Sie die Seite, Ihre Eingaben und das erwartete Ergebnis.</li>
+  <li><b>Feiertage:</b> Nennen Sie Bundesland bzw. Kanton und Jahr.</li>
+  <li><b>Kooperationen:</b> Eine kurze Beschreibung Ihres Anliegens genügt.</li>
+</ul>
+<p>Wir geben keine Rechtsberatung. Bei konkreten arbeitsrechtlichen Fragen wenden Sie sich bitte an Ihren Betriebsrat, Ihre Gewerkschaft oder eine Fachanwältin bzw. einen Fachanwalt für Arbeitsrecht.</p>

@@ -1,0 +1,58 @@
+{
+  "region": "ch-zh",
+  "year": 2026,
+  "generated": "2026-11-18",
+  "reviewed": false,
+  "holidays": [
+    {
+      "date": "2026-01-01",
+      "name": "Neujahr",
+      "key": "neujahr"
+    },
+    {
+      "date": "2026-01-02",
+      "name": "Berchtoldstag",
+      "key": "berchtoldstag"
+    },
+    {
+      "date": "2026-04-03",
+      "name": "Karfreitag",
+      "key": "karfreitag"
+    },
+    {
+      "date": "2026-04-06",
+      "name": "Ostermontag",
+      "key": "ostermontag"
+    },
+    {
+      "date": "2026-05-01",
+      "name": "Tag der Arbeit",
+      "key": "tag-der-arbeit"
+    },
+    {
+      "date": "2026-05-14",
+      "name": "Auffahrt",
+      "key": "christi-himmelfahrt"
+    },
+    {
+      "date": "2026-05-25",
+      "name": "Pfingstmontag",
+      "key": "pfingstmontag"
+    },
+    {
+      "date": "2026-08-01",
+      "name": "Bundesfeier (Nationalfeiertag)",
+      "key": "bundesfeier"
+    },
+    {
+      "date": "2026-12-25",
+      "name": "Weihnachtstag",
+      "key": "weihnachten-1"
+    },
+    {
+      "date": "2026-12-26",
+      "name": "Stephanstag",
+      "key": "weihnachten-2"
+    }
+  ]
+}

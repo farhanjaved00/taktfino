@@ -1,0 +1,23 @@
+---
+import type { LocaleCode } from '../config/locales';
+import type { ToolId } from '../config/tool-map';
+import Worktime from './tools/Worktime.astro';
+import Hours from './tools/Hours.astro';
+import Workdays from './tools/Workdays.astro';
+import Wage from './tools/Wage.astro';
+import Overtime from './tools/Overtime.astro';
+import Days from './tools/Days.astro';
+import Age from './tools/Age.astro';
+import { formatISO, addDays, parseISO } from '../lib/dates';
+interface Props { tool: ToolId; locale: LocaleCode; region?: string }
+const { tool, locale, region } = Astro.props;
+const todayIso = new Date().toISOString().slice(0, 10);
+const today = parseISO(todayIso)!;
+---
+{tool === 'worktime' && <Worktime locale={locale} />}
+{tool === 'hours' && <Hours locale={locale} />}
+{tool === 'workdays' && <Workdays locale={locale} region={region} year={today.y} />}
+{tool === 'wage' && <Wage locale={locale} todayIso={todayIso} />}
+{tool === 'overtime' && <Overtime locale={locale} />}
+{tool === 'days' && <Days locale={locale} todayIso={todayIso} plus90Iso={formatISO(addDays(today, 90))} />}
+{tool === 'age' && <Age locale={locale} todayIso={todayIso} />}

@@ -19,6 +19,9 @@ export const ICONS = {
   chevron: 'M9 5l7 7l-7 7',
   back: 'M15 5l-7 7l7 7',
   book: 'M4 4h6a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H4zM20 4h-6a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h7z',
+  calc: 'M6 3h12v18H6zM9 7h6M9 11h1M12 11h1M15 11h0M9 14h1M12 14h1M9 17h1M12 17h1M15 14v3',
+  warn: 'M12 3l10 18H2zM12 10v5M12 18v.01',
+  check: 'M5 12l5 5l9-10',
   history: 'M3 12a9 9 0 1 0 3-6.7M3 4v5h5M12 7v5l3 2',
 } as const;
 export type IconName = keyof typeof ICONS;

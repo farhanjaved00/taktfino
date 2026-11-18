@@ -1,0 +1,56 @@
+---
+import { render, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../Breadcrumbs.astro';
+import AdSlot from '../AdSlot.astro';
+import Faq from '../Faq.astro';
+import AuthorBox from '../AuthorBox.astro';
+import RelatedTools from '../RelatedTools.astro';
+import ArticleList from '../ArticleList.astro';
+import { categoryPath, toolPath, TOOLS } from '../../config/tool-map';
+import { entryLocale, alternatesFor, articlePath, articleEntries } from '../../lib/registry';
+import { articleSchema, withBrand } from '../../lib/seo';
+import { t } from '../../i18n';
+interface Props { entry: CollectionEntry<'articles'> }
+const { entry } = Astro.props;
+const locale = entryLocale(entry.id);
+const d = entry.data;
+const path = articlePath(entry);
+const { Content, headings } = await render(entry);
+const alternates = await alternatesFor(`article:${d.translationKey}`);
+const more = (await articleEntries()).filter((a) => entryLocale(a.id) === locale && a.id !== entry.id && (a.data.category === d.category || a.data.tool === d.tool)).slice(0, 4);
+const toc = headings.filter((h) => h.depth === 2);
+const related = TOOLS.filter((x) => x.category === d.category && x.id !== d.tool).map((x) => x.id).slice(0, 3);
+const minutes = Math.max(2, Math.round((entry.body || '').split(/\s+/).length / 200));
+---
+<BaseLayout locale={locale} title={withBrand(d.title)} description={d.description} path={path} alternates={alternates} noindex={!d.reviewed} ogType="article"
+  ogImage={`/og${path.replace(/\/$/, '')}.png`}
+  schema={[articleSchema({ title: d.title, description: d.description, path, date: d.date, updated: d.updated, author: d.author, reviewer: d.reviewer, locale, image: `/og${path.replace(/\/$/, '')}.png` })]}>
+  <Breadcrumbs locale={locale} crumbs={[{ name: t(locale, `categories.${d.category}.name`), path: categoryPath(d.category, locale) }, { name: d.title, path }]} />
+  <div class="container article-layout">
+    <article class="article" data-pagefind-body>
+      <h1>{d.title}</h1>
+      <AuthorBox locale={locale} author={d.author} reviewer={d.reviewer} updated={d.updated} />
+      <p class="small muted" style="margin:0 0 8px">{minutes} {t(locale, 'common.minRead')}</p>
+      <div class="try-box">
+        <div style="flex:1 1 240px"><div style="font-weight:700;font-size:18px">{t(locale, `tools.${d.tool}.name`)}</div><div class="muted" style="font-size:15px">{t(locale, `tools.${d.tool}.short`)}</div></div>
+        <a class="btn btn--primary" href={toolPath(d.tool, locale)}>{t(locale, 'common.calculate')}</a>
+      </div>
+      <div class="prose"><Content /></div>
+      <Faq items={d.faq} locale={locale} />
+      {d.sources.length > 0 && <div class="sources"><h2>{t(locale, 'common.sources')}</h2><ul>{d.sources.map((s) => <li><a href={s.url} rel="noopener" target="_blank">{s.label}</a></li>)}</ul></div>}
+      <p class="small muted">{t(locale, 'common.notAdvice')}</p>
+    </article>
+    <aside class="sticky-aside" aria-label={t(locale, 'nav.guides')}>
+      {toc.length > 0 && (
+        <nav class="card card--sm" aria-label="Inhalt"><div style="font-weight:700;margin-bottom:6px">Inhalt</div>
+          <ul style="list-style:none;padding:0;margin:0">{toc.map((h) => <li><a href={`#${h.slug}`} style="display:block;padding:8px 0;font-size:15px">{h.text}</a></li>)}</ul></nav>
+      )}
+      <div class="ad-desktop-only" style="justify-content:center"><AdSlot format="skyscraper" locale={locale} /></div>
+    </aside>
+  </div>
+  <div class="container">
+    <RelatedTools locale={locale} ids={[d.tool, ...related]} />
+    <ArticleList locale={locale} entries={more} title={t(locale, 'common.relatedArticles')} />
+  </div>
+</BaseLayout>

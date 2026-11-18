@@ -1,0 +1,233 @@
+---
+/** Arbeitszeitrechner — multi-day timesheet with ArbZG/AZG/ArG checks, night/Sunday/holiday hours, CSV/PDF export. */
+import type { LocaleCode } from '../../config/locales';
+import { REGIONS } from '../../config/tool-map';
+import { t, dict } from '../../i18n';
+import Icon from '../Icon.astro';
+interface Props { locale: LocaleCode }
+const { locale } = Astro.props;
+const u = (k: string, v: Record<string, string | number> = {}) => t(locale, `ui.worktime.${k}`, v);
+const c = (k: string) => t(locale, `common.${k}`);
+const msgs = { warn: (dict(locale) as { warn: Record<string, string> }).warn, ui: (dict(locale) as { ui: { worktime: Record<string, string> } }).ui.worktime, common: (dict(locale) as { common: Record<string, string> }).common };
+const regions = REGIONS.filter((r) => r.country === 'DE');
+const weekdays = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
+---
+<section class="card tool" data-worktime data-locale={locale} data-msgs={JSON.stringify(msgs)} aria-label={t(locale, 'tools.worktime.name')}>
+  <div class="tool-inputs" style="margin-top:0">
+    <div class="field">
+      <label for="wt-country">{c('country')}</label>
+      <select id="wt-country" class="input" data-in="country">
+        <option value="DE">{c('DE')}</option><option value="AT">{c('AT')}</option><option value="CH">{c('CH')}</option>
+      </select>
+    </div>
+    <div class="field" data-region-wrap>
+      <label for="wt-region">{u('holidaysIn')}</label>
+      <select id="wt-region" class="input" data-in="region">
+        <option value="">{u('noHolidays')}</option>
+        {regions.map((r) => <option value={r.code}>{r.name.de}</option>)}
+      </select>
+    </div>
+  </div>
+
+  <div class="table-wrap sheet-wrap">
+    <table class="sheet">
+      <thead><tr>
+        <th scope="col">{c('date')}</th><th scope="col">{c('start')}</th><th scope="col">{c('end')}</th><th scope="col">{c('break')}</th><th scope="col">{c('net')}</th><th scope="col"><span class="sr-only">{c('removeRow')}</span></th>
+      </tr></thead>
+      <tbody data-rows>
+        {[0, 1, 2, 3, 4].map((i) => (
+          <tr>
+            <td><input class="input input--sm" type="date" aria-label={c('date')} /><span class="sheet-wd" aria-hidden="true">{weekdays[i]}</span></td>
+            <td><input class="input input--sm" type="time" value="08:00" aria-label={c('start')} /></td>
+            <td><input class="input input--sm" type="time" value="16:30" aria-label={c('end')} /></td>
+            <td><input class="input input--sm input--break" type="number" min="0" max="600" step="5" value="30" inputmode="numeric" aria-label={c('break')} /></td>
+            <td class="sheet-net">8:00</td>
+            <td><button type="button" class="icon-btn" data-remove aria-label={c('removeRow')}><Icon name="close" size={16} /></button></td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+  <div class="actions no-print" style="margin-top:12px">
+    <button type="button" class="btn btn--outline" data-add><Icon name="calAdd" size={18} />{c('addRow')}</button>
+    <button type="button" class="btn btn--outline" data-week>{u('fillWeek')}</button>
+  </div>
+
+  <div class="result-box" aria-live="polite">
+    <div class="answer-label">{u('totalLabel')}</div>
+    <div class="answer" data-out="total">40:00 {c('hoursShort')}</div>
+    <div class="answer-sub" data-out="totalSub">= 40,00 {u('decimalHours')}</div>
+    <div class="stats">
+      <div><b data-out="breaks">2:30</b><span>{u('breaksTotal')}</span></div>
+      <div><b data-out="night">0:00</b><span>{u('nightHours')}</span></div>
+      <div><b data-out="sunday">0:00</b><span>{u('sundayHours')}</span></div>
+      <div><b data-out="holiday">0:00</b><span>{u('holidayHours')}</span></div>
+    </div>
+    <ul class="warnings" data-out="warnings"></ul>
+    <p class="small muted" data-out="rule">{u('ruleDE')}</p>
+  </div>
+
+  <div class="actions no-print">
+    <button class="btn btn--primary" type="button" data-action="copy"><Icon name="check" size={18} />{c('copy')}</button>
+    <button class="btn" type="button" data-action="share"><Icon name="link" size={18} />{c('share')}</button>
+    <button class="btn" type="button" data-action="csv"><Icon name="download" size={18} />{c('csv')}</button>
+    <button class="btn" type="button" data-action="pdf"><Icon name="print" size={18} />{c('pdf')}</button>
+  </div>
+  <p class="small muted" style="margin:12px 0 0">{c('privacyLocal')}</p>
+  <template data-row-tpl>
+    <tr>
+      <td><input class="input input--sm" type="date" aria-label={c('date')} /><span class="sheet-wd" aria-hidden="true"></span></td>
+      <td><input class="input input--sm" type="time" value="08:00" aria-label={c('start')} /></td>
+      <td><input class="input input--sm" type="time" value="16:30" aria-label={c('end')} /></td>
+      <td><input class="input input--sm input--break" type="number" min="0" max="600" step="5" value="30" inputmode="numeric" aria-label={c('break')} /></td>
+      <td class="sheet-net"></td>
+      <td><button type="button" class="icon-btn" data-remove aria-label={c('removeRow')}><Icon name="close" size={16} /></button></td>
+    </tr>
+  </template>
+</section>
+
+<script>
+  import { calcSheet, type Country, type DayInput } from '../../tools/worktime';
+  import { holidaysFor } from '../../tools/workdays';
+  import { formatHM, toDecimalHours } from '../../tools/time';
+  import { addDays, formatISO, parseISO, weekday } from '../../lib/dates';
+  import { copyText, downloadCsv, setQuery, getQuery, saveHistory, loadState, storeState, track, trackCalculate, toast, fmt } from '../../scripts/client';
+
+  const root = document.querySelector<HTMLElement>('[data-worktime]');
+  if (root) {
+    const locale = root.dataset.locale!;
+    const intl = locale === 'de' ? 'de-DE' : locale;
+    const M = JSON.parse(root.dataset.msgs!) as { warn: Record<string, string>; ui: Record<string, string>; common: Record<string, string> };
+    const fill = (s: string, v: Record<string, string | number>) => s.replace(/\{(\w+)\}/g, (_, k) => String(v[k] ?? ''));
+    const tbody = root.querySelector<HTMLTableSectionElement>('[data-rows]')!;
+    const tpl = root.querySelector<HTMLTemplateElement>('[data-row-tpl]')!;
+    const country = root.querySelector<HTMLSelectElement>('[data-in="country"]')!;
+    const region = root.querySelector<HTMLSelectElement>('[data-in="region"]')!;
+    const regionWrap = root.querySelector<HTMLElement>('[data-region-wrap]')!;
+    const out = (k: string) => root.querySelector<HTMLElement>(`[data-out="${k}"]`)!;
+    const WD = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
+    const STORE = 'worktime-sheet';
+    const hm = (m: number) => `${formatHM(m)}`;
+
+    function today() { const d = new Date(); return { y: d.getFullYear(), m: d.getMonth() + 1, d: d.getDate() }; }
+    function monday() { const t = today(); return addDays(t, -((weekday(t) + 6) % 7)); }
+
+    function rows(): HTMLTableRowElement[] { return [...tbody.querySelectorAll('tr')]; }
+    function read(): DayInput[] {
+      return rows().map((tr) => {
+        const [d, s, e, b] = tr.querySelectorAll('input');
+        return { date: d.value, start: s.value, end: e.value, breakMin: Number(b.value) || 0 };
+      });
+    }
+    function addRow(v?: Partial<DayInput>) {
+      const tr = tpl.content.firstElementChild!.cloneNode(true) as HTMLTableRowElement;
+      const [d, s, e, b] = tr.querySelectorAll('input');
+      const last = read().at(-1);
+      d.value = v?.date ?? (last?.date && parseISO(last.date) ? formatISO(addDays(parseISO(last.date)!, 1)) : formatISO(today()));
+      if (v?.start) s.value = v.start; if (v?.end) e.value = v.end; if (v?.breakMin !== undefined) b.value = String(v.breakMin);
+      tbody.appendChild(tr);
+    }
+    function setRows(list: DayInput[]) { tbody.innerHTML = ''; list.forEach((x) => addRow(x)); }
+    function fillWeek() {
+      const m = monday();
+      setRows([0, 1, 2, 3, 4].map((i) => ({ date: formatISO(addDays(m, i)), start: '08:00', end: '16:30', breakMin: 30 })));
+    }
+
+    function holidayMap(): Map<string, string> | undefined {
+      const c = country.value;
+      const r = c === 'AT' ? 'at' : c === 'CH' ? 'ch-zh' : region.value;
+      if (!r) return undefined;
+      const years = [...new Set(read().map((x) => Number(x.date.slice(0, 4))).filter(Boolean))];
+      const map = new Map<string, string>();
+      for (const h of holidaysFor(r, years)) if (!h.partial || h.defaultOn) map.set(h.date, h.name);
+      return map;
+    }
+
+    function encode(): string {
+      return read().map((x) => [x.date, x.start.replace(':', ''), x.end.replace(':', ''), x.breakMin].join('_')).join('.');
+    }
+    function decode(s: string): DayInput[] {
+      return s.split('.').map((p) => p.split('_')).filter((a) => a.length === 4).map(([d, st, en, b]) => ({
+        date: d, start: `${st.slice(0, 2)}:${st.slice(2)}`, end: `${en.slice(0, 2)}:${en.slice(2)}`, breakMin: Number(b) || 0,
+      }));
+    }
+
+    let last = calcSheet([], { country: 'DE' });
+    function render() {
+      regionWrap.hidden = country.value !== 'DE';
+      const data = read();
+      const res = calcSheet(data, { country: country.value as Country, holidays: holidayMap() });
+      last = res;
+      rows().forEach((tr, i) => {
+        const r = res.days[i];
+        const dt = parseISO(data[i].date);
+        tr.querySelector('.sheet-wd')!.textContent = dt ? WD[weekday(dt)] : '';
+        const net = tr.querySelector('.sheet-net')!;
+        net.textContent = r.valid ? hm(r.netMin) : '–';
+        tr.classList.toggle('has-warn', r.warnings.some((w) => w.code !== 'holiday' && w.code !== 'sunday'));
+      });
+      out('total').textContent = `${hm(res.totalNetMin)} ${M.common.hoursShort}`;
+      out('totalSub').textContent = `= ${fmt(intl, toDecimalHours(res.totalNetMin), 2, 2)} ${M.ui.decimalHours}`;
+      out('breaks').textContent = hm(res.totalBreakMin);
+      out('night').textContent = hm(res.totalNightMin);
+      out('sunday').textContent = hm(res.totalSundayMin);
+      out('holiday').textContent = hm(res.totalHolidayMin);
+      const items: string[] = [];
+      res.days.forEach((r, i) => {
+        const dt = parseISO(data[i].date);
+        const label = dt ? `${WD[weekday(dt)]} ${String(dt.d).padStart(2, '0')}.${String(dt.m).padStart(2, '0')}.` : `#${i + 1}`;
+        for (const w of r.warnings) {
+          const v: Record<string, string | number> = { ...w } as Record<string, string | number>;
+          if (w.code === 'over_max') v.max = w.max / 60;
+          if (w.code === 'rest_short') { v.rest = fmt(intl, w.rest / 60, 1); v.min = w.min / 60; }
+          items.push(`<li class="warn-${w.code === 'holiday' || w.code === 'sunday' ? 'info' : 'bad'}"><b>${label}:</b> ${fill(M.warn[w.code], v)}</li>`);
+        }
+      });
+      const weeks = Object.entries(res.weeks);
+      if (weeks.length > 1) items.push(...weeks.map(([k, m]) => `<li class="warn-info"><b>${M.ui.week} ${k.split('-W')[1]}:</b> ${hm(m)} ${M.common.hoursShort}</li>`));
+      out('warnings').innerHTML = items.join('');
+      out('rule').textContent = M.ui[`rule${country.value}`];
+      storeState(STORE, { country: country.value, region: region.value, rows: data });
+      trackCalculate('worktime');
+    }
+
+    function summary(): string {
+      const lines = read().map((x, i) => `${x.date}  ${x.start}–${x.end}  ${M.common.break}: ${x.breakMin}  → ${last.days[i].valid ? hm(last.days[i].netMin) : '–'}`);
+      return [...lines, `${M.common.total}: ${hm(last.totalNetMin)} ${M.common.hoursShort} (${fmt(intl, toDecimalHours(last.totalNetMin), 2, 2)} ${M.ui.decimalHours})`].join('\n');
+    }
+    function shareUrl() {
+      const u = new URL(location.origin + location.pathname);
+      u.searchParams.set('c', country.value); if (region.value) u.searchParams.set('r', region.value);
+      u.searchParams.set('d', encode());
+      return u.toString();
+    }
+
+    root.addEventListener('input', render);
+    root.addEventListener('change', render);
+    root.addEventListener('click', (e) => {
+      const b = (e.target as HTMLElement).closest<HTMLElement>('button');
+      if (!b) return;
+      if (b.hasAttribute('data-remove')) { b.closest('tr')!.remove(); if (!rows().length) addRow(); render(); return; }
+      if (b.hasAttribute('data-add')) { addRow(); render(); rows().at(-1)!.querySelector('input')!.focus(); return; }
+      if (b.hasAttribute('data-week')) { fillWeek(); render(); return; }
+      const a = b.dataset.action;
+      if (a === 'copy') { copyText(summary(), M.common.copied); track('copy_result', { tool: 'worktime' }); }
+      if (a === 'share') { const url = shareUrl(); setQuery({ c: country.value, r: region.value || null, d: encode() }); copyText(url, M.common.linkCopied); saveHistory({ tool: 'worktime', label: `${M.ui.historyLabel}: ${hm(last.totalNetMin)} h`, url }); track('share', { tool: 'worktime' }); }
+      if (a === 'csv') {
+        const head = [M.common.date, M.common.start, M.common.end, M.common.break, `${M.common.net} (h:mm)`, `${M.common.net} (${M.common.decimal})`, M.ui.nightHours, M.ui.sundayHours, M.ui.holidayHours];
+        const body = read().map((x, i) => { const r = last.days[i]; return [x.date, x.start, x.end, x.breakMin, r.valid ? hm(r.netMin) : '', r.valid ? fmt(intl, toDecimalHours(r.netMin), 2, 2) : '', hm(r.nightMin), hm(r.sundayMin), hm(r.holidayMin)]; });
+        downloadCsv([head, ...body, [M.common.total, '', '', last.totalBreakMin, hm(last.totalNetMin), fmt(intl, toDecimalHours(last.totalNetMin), 2, 2), hm(last.totalNightMin), hm(last.totalSundayMin), hm(last.totalHolidayMin)]], 'arbeitszeit.csv');
+        track('export', { tool: 'worktime', format: 'csv' });
+      }
+      if (a === 'pdf') { track('export', { tool: 'worktime', format: 'pdf' }); toast(M.ui.pdfHint); setTimeout(() => window.print(), 300); }
+    });
+
+    // initial state: share link → saved sheet → current week
+    const q = getQuery();
+    const saved = loadState<{ country: string; region: string; rows: DayInput[] }>(STORE);
+    if (q.get('d')) { country.value = q.get('c') || 'DE'; region.value = q.get('r') || ''; setRows(decode(q.get('d')!)); }
+    else if (saved?.rows?.length) { country.value = saved.country; region.value = saved.region; setRows(saved.rows); }
+    else fillWeek();
+    render();
+  }
+</script>

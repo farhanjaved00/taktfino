@@ -1,0 +1,80 @@
+---
+/** Tage-Rechner — days between two dates (optionally incl. end date), weeks/months, Y-M-D, working days by region. */
+import type { LocaleCode } from '../../config/locales';
+import { REGIONS } from '../../config/tool-map';
+import { t, dict } from '../../i18n';
+import Icon from '../Icon.astro';
+interface Props { locale: LocaleCode; todayIso: string; plus90Iso: string }
+const { locale, todayIso, plus90Iso } = Astro.props;
+const u = (k: string) => t(locale, `ui.days.${k}`);
+const c = (k: string) => t(locale, `common.${k}`);
+const M = { ui: (dict(locale) as { ui: { days: Record<string, string> } }).ui.days, common: (dict(locale) as { common: Record<string, string> }).common };
+---
+<section class="card tool" data-days-tool data-msgs={JSON.stringify(M)} aria-label={t(locale, 'tools.days.name')}>
+  <div class="tool-inputs" style="margin-top:0">
+    <div class="field"><label for="d-a">{c('from')}</label><input id="d-a" class="input" type="date" value={todayIso} data-in="a" /></div>
+    <div class="field"><label for="d-b">{c('to')}</label><input id="d-b" class="input" type="date" value={plus90Iso} data-in="b" /></div>
+    <div class="field"><label for="d-r">{u('regionForWorkdays')}</label>
+      <select id="d-r" class="input" data-in="r">{REGIONS.map((r) => <option value={r.code} selected={r.code === 'nw'}>{r.name.de}</option>)}</select></div>
+  </div>
+  <div class="tool-inputs"><button type="button" class="toggle" aria-pressed="false" data-in="incl"><span class="dot" aria-hidden="true"></span>{u('includeEnd')}</button></div>
+  <div class="result-box" aria-live="polite">
+    <div class="answer-label" data-out="label">{u('between')}</div>
+    <div class="answer" data-out="days">90 {c('days')}</div>
+    <div class="answer-sub" data-out="ymd"></div>
+    <div class="stats">
+      <div><b data-out="weeks">–</b><span>{c('weeks')}</span></div>
+      <div><b data-out="months">–</b><span>{u('months')}</span></div>
+      <div><b data-out="work">–</b><span>{u('workdays')}</span></div>
+      <div><b data-out="weekend">–</b><span>{u('weekendDays')}</span></div>
+    </div>
+  </div>
+  <div class="actions no-print">
+    <button class="btn btn--primary" type="button" data-action="copy"><Icon name="check" size={18} />{c('copy')}</button>
+    <button class="btn" type="button" data-action="share"><Icon name="link" size={18} />{c('share')}</button>
+  </div>
+</section>
+<script>
+  import { addDays, diffDays, formatISO, parseISO, ymdBetween } from '../../lib/dates';
+  import { countWorkdays } from '../../tools/workdays';
+  import { copyText, setQuery, getQuery, saveHistory, track, trackCalculate, fmt } from '../../scripts/client';
+  const root = document.querySelector<HTMLElement>('[data-days-tool]');
+  if (root) {
+    const M = JSON.parse(root.dataset.msgs!) as { ui: Record<string, string>; common: Record<string, string> };
+    const $ = (k: string) => root.querySelector<HTMLInputElement & HTMLSelectElement>(`[data-in="${k}"]`)!;
+    const incl = root.querySelector<HTMLButtonElement>('[data-in="incl"]')!;
+    const out = (k: string) => root.querySelector<HTMLElement>(`[data-out="${k}"]`)!;
+    const q = getQuery();
+    const now = new Date(); const today = { y: now.getFullYear(), m: now.getMonth() + 1, d: now.getDate() };
+    $('a').value = q.get('a') && parseISO(q.get('a')) ? q.get('a')! : formatISO(today);
+    $('b').value = q.get('b') && parseISO(q.get('b')) ? q.get('b')! : formatISO(addDays(today, 90));
+    if (q.get('i') === '1') incl.setAttribute('aria-pressed', 'true');
+    let text = '';
+    function render() {
+      const a = parseISO($('a').value), b = parseISO($('b').value); if (!a || !b) return;
+      const inc = incl.getAttribute('aria-pressed') === 'true';
+      const raw = diffDays(a, b); const sign = raw < 0 ? -1 : 1;
+      const n = Math.abs(raw) + (inc ? 1 : 0);
+      const ymd = ymdBetween(a, inc ? addDays(b, sign) : b);
+      const w = countWorkdays(a, b, { region: $('r').value });
+      const de = (s: string) => s.split('-').reverse().join('.');
+      out('label').textContent = `${M.ui.between} ${de($('a').value)} – ${de($('b').value)}${inc ? ` (${M.ui.inclShort})` : ''}`;
+      out('days').textContent = `${fmt('de-DE', n)} ${n === 1 ? M.common.day : M.common.days}`;
+      out('ymd').textContent = `${Math.abs(ymd.years)} ${M.ui.years}, ${Math.abs(ymd.months)} ${M.ui.months}, ${Math.abs(ymd.days)} ${M.common.days}`;
+      out('weeks').textContent = fmt('de-DE', n / 7, 1);
+      out('months').textContent = fmt('de-DE', n / 30.436875, 1);
+      out('work').textContent = fmt('de-DE', w.workdays, 1);
+      out('weekend').textContent = String(w.weekendDays);
+      text = `${out('label').textContent}: ${out('days').textContent}`;
+      trackCalculate('days');
+    }
+    root.addEventListener('input', render); root.addEventListener('change', render);
+    root.addEventListener('click', (e) => {
+      const b = (e.target as HTMLElement).closest<HTMLButtonElement>('button'); if (!b) return;
+      if (b === incl) { incl.setAttribute('aria-pressed', String(incl.getAttribute('aria-pressed') !== 'true')); render(); return; }
+      if (b.dataset.action === 'copy') { copyText(text, M.common.copied); track('copy_result', { tool: 'days' }); }
+      if (b.dataset.action === 'share') { const url = setQuery({ a: $('a').value, b: $('b').value, i: incl.getAttribute('aria-pressed') === 'true' ? '1' : null }); copyText(url, M.common.linkCopied); saveHistory({ tool: 'days', label: text, url }); track('share', { tool: 'days' }); }
+    });
+    render();
+  }
+</script>

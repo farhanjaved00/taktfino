@@ -1,0 +1,58 @@
+{
+  "region": "hb",
+  "year": 2026,
+  "generated": "2026-11-18",
+  "reviewed": false,
+  "holidays": [
+    {
+      "date": "2026-01-01",
+      "name": "Neujahr",
+      "key": "neujahr"
+    },
+    {
+      "date": "2026-04-03",
+      "name": "Karfreitag",
+      "key": "karfreitag"
+    },
+    {
+      "date": "2026-04-06",
+      "name": "Ostermontag",
+      "key": "ostermontag"
+    },
+    {
+      "date": "2026-05-01",
+      "name": "Tag der Arbeit",
+      "key": "tag-der-arbeit"
+    },
+    {
+      "date": "2026-05-14",
+      "name": "Christi Himmelfahrt",
+      "key": "christi-himmelfahrt"
+    },
+    {
+      "date": "2026-05-25",
+      "name": "Pfingstmontag",
+      "key": "pfingstmontag"
+    },
+    {
+      "date": "2026-10-03",
+      "name": "Tag der Deutschen Einheit",
+      "key": "tag-der-deutschen-einheit"
+    },
+    {
+      "date": "2026-10-31",
+      "name": "Reformationstag",
+      "key": "reformationstag"
+    },
+    {
+      "date": "2026-12-25",
+      "name": "1. Weihnachtstag",
+      "key": "weihnachten-1"
+    },
+    {
+      "date": "2026-12-26",
+      "name": "2. Weihnachtstag",
+      "key": "weihnachten-2"
+    }
+  ]
+}

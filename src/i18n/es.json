@@ -1,0 +1,3 @@
+{
+  "$comment": "Not live yet. Copy every key from de.json and translate (native speaker) before setting live: true in src/config/locales.ts — the build fails for a live language with missing keys."
+}

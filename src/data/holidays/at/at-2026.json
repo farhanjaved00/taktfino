@@ -1,0 +1,73 @@
+{
+  "region": "at",
+  "year": 2026,
+  "generated": "2026-11-18",
+  "reviewed": false,
+  "holidays": [
+    {
+      "date": "2026-01-01",
+      "name": "Neujahr",
+      "key": "neujahr"
+    },
+    {
+      "date": "2026-01-06",
+      "name": "Heilige Drei Könige",
+      "key": "heilige-drei-koenige"
+    },
+    {
+      "date": "2026-04-06",
+      "name": "Ostermontag",
+      "key": "ostermontag"
+    },
+    {
+      "date": "2026-05-01",
+      "name": "Staatsfeiertag",
+      "key": "tag-der-arbeit"
+    },
+    {
+      "date": "2026-05-14",
+      "name": "Christi Himmelfahrt",
+      "key": "christi-himmelfahrt"
+    },
+    {
+      "date": "2026-05-25",
+      "name": "Pfingstmontag",
+      "key": "pfingstmontag"
+    },
+    {
+      "date": "2026-06-04",
+      "name": "Fronleichnam",
+      "key": "fronleichnam"
+    },
+    {
+      "date": "2026-08-15",
+      "name": "Mariä Himmelfahrt",
+      "key": "mariae-himmelfahrt"
+    },
+    {
+      "date": "2026-10-26",
+      "name": "Nationalfeiertag",
+      "key": "nationalfeiertag"
+    },
+    {
+      "date": "2026-11-01",
+      "name": "Allerheiligen",
+      "key": "allerheiligen"
+    },
+    {
+      "date": "2026-12-08",
+      "name": "Mariä Empfängnis",
+      "key": "mariae-empfaengnis"
+    },
+    {
+      "date": "2026-12-25",
+      "name": "Christtag",
+      "key": "weihnachten-1"
+    },
+    {
+      "date": "2026-12-26",
+      "name": "Stefanitag",
+      "key": "weihnachten-2"
+    }
+  ]
+}

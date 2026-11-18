@@ -1,0 +1,16 @@
+---
+import { IMPRINT, SITE } from '../../../config/site';
+---
+<h2>Angaben gemäß § 5 DDG</h2>
+<p>{IMPRINT.name}<br />{IMPRINT.street}<br />{IMPRINT.city}<br />{IMPRINT.country}</p>
+<h2>Kontakt</h2>
+<p>E-Mail: {IMPRINT.email}{IMPRINT.phone && <><br />Telefon: {IMPRINT.phone}</>}</p>
+{IMPRINT.vatId && <><h2>Umsatzsteuer-ID</h2><p>Umsatzsteuer-Identifikationsnummer gemäß § 27a UStG: {IMPRINT.vatId}</p></>}
+<h2>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h2>
+<p>{IMPRINT.responsibleForContent}</p>
+<h2>Verbraucherstreitbeilegung</h2>
+<p>Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>
+<h2>Haftung für Inhalte</h2>
+<p>Die Rechner und Texte auf {SITE.name} werden sorgfältig erstellt und geprüft. Für die Richtigkeit, Vollständigkeit und Aktualität der Ergebnisse können wir jedoch keine Gewähr übernehmen. Sie ersetzen keine Rechtsberatung.</p>
+<h2>Haftung für Links</h2>
+<p>Unsere Seiten enthalten Links zu externen Websites, auf deren Inhalte wir keinen Einfluss haben. Für diese Inhalte ist der jeweilige Anbieter verantwortlich. Bei Bekanntwerden von Rechtsverletzungen entfernen wir solche Links umgehend.</p>

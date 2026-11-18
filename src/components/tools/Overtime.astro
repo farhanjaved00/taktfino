@@ -1,0 +1,79 @@
+---
+/** Überstundenrechner — Soll/Ist per week, overtime or Minusstunden, Zeitausgleich days, payout with premium. */
+import type { LocaleCode } from '../../config/locales';
+import { t, dict } from '../../i18n';
+import Icon from '../Icon.astro';
+interface Props { locale: LocaleCode }
+const { locale } = Astro.props;
+const u = (k: string) => t(locale, `ui.overtime.${k}`);
+const c = (k: string) => t(locale, `common.${k}`);
+const M = { ui: (dict(locale) as { ui: { overtime: Record<string, string> } }).ui.overtime, common: (dict(locale) as { common: Record<string, string> }).common };
+const days = [['Mo', '9:00'], ['Di', '9:00'], ['Mi', '8:00'], ['Do', '10:00'], ['Fr', '8:00']];
+---
+<section class="card tool" data-overtime data-msgs={JSON.stringify(M)} aria-label={t(locale, 'tools.overtime.name')}>
+  <div class="tool-inputs" style="margin-top:0">
+    <div class="field"><label for="o-wh">{u('contractHours')}</label><input id="o-wh" class="input input--num" type="text" inputmode="decimal" value="40" data-in="wh" /></div>
+    <div class="field"><label for="o-dpw">{u('daysPerWeek')}</label><input id="o-dpw" class="input input--num" type="number" min="1" max="7" value="5" data-in="dpw" /></div>
+  </div>
+  <p class="label" style="margin:18px 0 8px">{u('workedPerDay')}</p>
+  <div class="day-grid" data-days>
+    {days.map(([d, v]) => <label class="day-cell"><span>{d}</span><input class="input input--sm" type="text" inputmode="decimal" value={v} aria-label={`${d} – ${u('worked')}`} /></label>)}
+    {['Sa', 'So'].map((d) => <label class="day-cell"><span>{d}</span><input class="input input--sm" type="text" inputmode="decimal" value="" placeholder="0:00" aria-label={`${d} – ${u('worked')}`} /></label>)}
+  </div>
+  <div class="tool-inputs">
+    <div class="field"><label for="o-wage">{u('hourlyWage')}</label><input id="o-wage" class="input input--num" type="text" inputmode="decimal" value="" placeholder="z. B. 20" data-in="wage" /></div>
+    <div class="field"><label for="o-prem">{u('premium')}</label><input id="o-prem" class="input input--num" type="text" inputmode="decimal" value="25" data-in="prem" /></div>
+  </div>
+  <div class="result-box" aria-live="polite">
+    <div class="answer-label" data-out="label">{u('overtimeLabel')}</div>
+    <div class="answer" data-out="main">+4:00 {c('hoursShort')}</div>
+    <div class="stats">
+      <div><b data-out="target">40:00</b><span>{u('target')}</span></div>
+      <div><b data-out="worked">44:00</b><span>{u('actual')}</span></div>
+      <div><b data-out="daysOff">0,5</b><span>{u('daysOff')}</span></div>
+      <div><b data-out="payout">–</b><span>{u('payout')}</span></div>
+    </div>
+    <p class="small muted" data-out="note">{u('note')}</p>
+  </div>
+  <div class="actions no-print">
+    <button class="btn btn--primary" type="button" data-action="copy"><Icon name="check" size={18} />{c('copy')}</button>
+    <button class="btn" type="button" data-action="share"><Icon name="link" size={18} />{c('share')}</button>
+  </div>
+</section>
+<script>
+  import { calcOvertime } from '../../tools/overtime';
+  import { parseDuration, formatHM } from '../../tools/time';
+  import { copyText, setQuery, getQuery, saveHistory, track, trackCalculate, fmt } from '../../scripts/client';
+  const root = document.querySelector<HTMLElement>('[data-overtime]');
+  if (root) {
+    const M = JSON.parse(root.dataset.msgs!) as { ui: Record<string, string>; common: Record<string, string> };
+    const $ = (k: string) => root.querySelector<HTMLInputElement>(`[data-in="${k}"]`)!;
+    const out = (k: string) => root.querySelector<HTMLElement>(`[data-out="${k}"]`)!;
+    const cells = [...root.querySelectorAll<HTMLInputElement>('[data-days] input')];
+    const num = (s: string) => Number(s.replace(',', '.'));
+    const q = getQuery();
+    if (q.get('d')) q.get('d')!.split('.').forEach((v, i) => { if (cells[i]) cells[i].value = v.replace('-', ':'); });
+    if (q.get('wh')) $('wh').value = q.get('wh')!; if (q.get('dpw')) $('dpw').value = q.get('dpw')!;
+    let r = calcOvertime({ weeklyHours: 40, daysPerWeek: 5, workedMin: [], weeks: 1 });
+    function render() {
+      const worked = cells.map((x) => (x.value.trim() ? parseDuration(x.value) ?? 0 : 0));
+      r = calcOvertime({ weeklyHours: num($('wh').value) || 0, daysPerWeek: Number($('dpw').value) || 5, workedMin: worked, weeks: 1, hourlyWage: num($('wage').value) || 0, premiumPct: num($('prem').value) || 0 });
+      const sign = r.overtimeMin > 0 ? '+' : '';
+      out('label').textContent = r.overtimeMin >= 0 ? M.ui.overtimeLabel : M.ui.minusLabel;
+      out('main').textContent = `${sign}${formatHM(r.overtimeMin)} ${M.common.hoursShort}`;
+      out('target').textContent = formatHM(r.targetMin);
+      out('worked').textContent = formatHM(r.workedMin);
+      out('daysOff').textContent = fmt('de-DE', Math.max(0, r.daysOff), 2);
+      out('payout').textContent = r.payout ? r.payout.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' }) : '–';
+      trackCalculate('overtime');
+    }
+    root.addEventListener('input', render);
+    root.addEventListener('click', (e) => {
+      const b = (e.target as HTMLElement).closest<HTMLButtonElement>('button'); if (!b) return;
+      const text = `${M.ui.target}: ${formatHM(r.targetMin)} · ${M.ui.actual}: ${formatHM(r.workedMin)} · ${M.ui.overtimeLabel}: ${formatHM(r.overtimeMin)} h`;
+      if (b.dataset.action === 'copy') { copyText(text, M.common.copied); track('copy_result', { tool: 'overtime' }); }
+      if (b.dataset.action === 'share') { const url = setQuery({ wh: $('wh').value, dpw: $('dpw').value, d: cells.map((x) => x.value.replace(':', '-')).join('.') }); copyText(url, M.common.linkCopied); saveHistory({ tool: 'overtime', label: text, url }); track('share', { tool: 'overtime' }); }
+    });
+    render();
+  }
+</script>

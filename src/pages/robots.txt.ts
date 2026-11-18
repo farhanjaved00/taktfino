@@ -1,22 +1,8 @@
 import { SITE } from '../config/site';
-/**
- * Everything is open to search engines and AI search (Googlebot, Bingbot, OAI-SearchBot, PerplexityBot, …)
- * so the tools can be cited in AI answers. To opt out of AI *training* only, uncomment the block below.
- */
+import { LIVE_LOCALES } from '../config/locales';
+import { PAGES } from '../config/tool-map';
+/** Open to search engines and AI crawlers (GPTBot, PerplexityBot, Google-Extended …) per the plan. */
 export function GET() {
-  return new Response(`User-agent: *
-Allow: /
-Disallow: /search/
-Disallow: /saved/
-
-# Opt out of AI model training (does not affect Google Search, AI Overviews or ChatGPT search):
-# User-agent: GPTBot
-# Disallow: /
-# User-agent: Google-Extended
-# Disallow: /
-# User-agent: CCBot
-# Disallow: /
-
-Sitemap: ${SITE.url}/sitemap-index.xml
-`, { headers: { 'Content-Type': 'text/plain' } });
+  const disallow = LIVE_LOCALES.flatMap((l) => [`Disallow: /${l.code}/${PAGES.search[l.code]}/`, `Disallow: /${l.code}/${PAGES.history[l.code]}/`]);
+  return new Response(`User-agent: *\nAllow: /\n${disallow.join('\n')}\n\nSitemap: ${SITE.url}/sitemap-index.xml\n`, { headers: { 'Content-Type': 'text/plain' } });
 }

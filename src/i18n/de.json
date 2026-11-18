@@ -1,0 +1,264 @@
+{
+  "meta": {
+    "tagline": "Kostenlose Rechner für Arbeitszeit, Stunden, Arbeitstage und Lohn – für Deutschland, Österreich und die Schweiz."
+  },
+  "nav": {
+    "home": "Start",
+    "tools": "Rechner",
+    "guides": "Ratgeber",
+    "history": "Verlauf",
+    "search": "Suche",
+    "menu": "Menü öffnen",
+    "close": "Menü schließen",
+    "skip": "Zum Inhalt springen",
+    "searchPlaceholder": "Rechner suchen…",
+    "language": "Sprache",
+    "breadcrumb": "Brotkrumen",
+    "main": "Hauptmenü",
+    "bottom": "Schnellnavigation"
+  },
+  "categories": {
+    "work": {
+      "name": "Arbeitszeit",
+      "blurb": "Arbeitszeit, Stunden, Überstunden und Arbeitstage berechnen."
+    },
+    "pay": {
+      "name": "Lohn & Gehalt",
+      "blurb": "Stundenlohn, Monatsgehalt und Mindestlohn umrechnen."
+    },
+    "dates": {
+      "name": "Datum",
+      "blurb": "Tage zwischen Daten und das genaue Alter berechnen."
+    }
+  },
+  "tools": {
+    "worktime": {
+      "name": "Arbeitszeitrechner",
+      "short": "Arbeitszeit mit Pause, Nachtstunden und Export"
+    },
+    "hours": {
+      "name": "Stundenrechner",
+      "short": "Stunden addieren, Dezimalstunden umrechnen"
+    },
+    "workdays": {
+      "name": "Arbeitstage-Rechner",
+      "short": "Arbeitstage nach Bundesland, mit Urlaub"
+    },
+    "wage": {
+      "name": "Stundenlohnrechner",
+      "short": "Monatsgehalt ↔ Stundenlohn, Mindestlohn-Check"
+    },
+    "overtime": {
+      "name": "Überstundenrechner",
+      "short": "Überstunden, Zeitausgleich und Auszahlung"
+    },
+    "days": {
+      "name": "Tage-Rechner",
+      "short": "Tage zwischen zwei Daten, mit Werktagen"
+    },
+    "age": {
+      "name": "Alter berechnen",
+      "short": "Genaues Alter in Jahren, Monaten und Tagen"
+    }
+  },
+  "common": {
+    "result": "Ergebnis",
+    "calculate": "Berechnen",
+    "reset": "Zurücksetzen",
+    "copy": "Ergebnis kopieren",
+    "copied": "Kopiert",
+    "share": "Link teilen",
+    "linkCopied": "Link kopiert",
+    "csv": "CSV exportieren",
+    "pdf": "Als PDF speichern",
+    "print": "Drucken",
+    "hours": "Stunden",
+    "hoursShort": "Std.",
+    "minutes": "Minuten",
+    "minShort": "Min.",
+    "days": "Tage",
+    "day": "Tag",
+    "weeks": "Wochen",
+    "decimal": "Dezimal",
+    "country": "Land",
+    "region": "Bundesland",
+    "year": "Jahr",
+    "from": "Von",
+    "to": "Bis",
+    "date": "Datum",
+    "start": "Beginn",
+    "end": "Ende",
+    "break": "Pause (Min.)",
+    "net": "Netto",
+    "gross": "Brutto",
+    "total": "Summe",
+    "addRow": "Tag hinzufügen",
+    "removeRow": "Zeile entfernen",
+    "lastUpdated": "Zuletzt aktualisiert",
+    "author": "Autor",
+    "reviewer": "Geprüft von",
+    "howItWorks": "So funktioniert's",
+    "faq": "Häufige Fragen",
+    "relatedTools": "Ähnliche Rechner",
+    "relatedArticles": "Ratgeber zum Thema",
+    "sources": "Quellen",
+    "allTools": "Alle Rechner",
+    "allGuides": "Alle Ratgeber",
+    "readMore": "Weiterlesen",
+    "minRead": "Min. Lesezeit",
+    "notAdvice": "Hinweis: Die Rechner ersetzen keine Rechtsberatung. Tarifverträge, Betriebsvereinbarungen und Ihr Arbeitsvertrag können abweichen.",
+    "privacyLocal": "Ihre Eingaben bleiben in Ihrem Browser und werden nicht an uns gesendet.",
+    "DE": "Deutschland",
+    "AT": "Österreich",
+    "CH": "Schweiz",
+    "yes": "Ja",
+    "no": "Nein",
+    "weekday": "Wochentag",
+    "privacyChoices": "Datenschutz-Einstellungen",
+    "advertisement": "Anzeige",
+    "installApp": "App installieren"
+  },
+  "warn": {
+    "invalid": "Bitte Beginn und Ende im Format hh:mm eingeben.",
+    "break_short": "Pause zu kurz: gesetzlich mindestens {required} Min. (eingetragen: {actual} Min.).",
+    "over_max": "Mehr als {max} Std. Arbeitszeit an einem Tag – über der gesetzlichen Höchstgrenze.",
+    "rest_short": "Ruhezeit nur {rest} Std. seit dem letzten Arbeitsende – vorgeschrieben sind {min} Std.",
+    "sunday": "Sonntagsarbeit – nur in Ausnahmefällen erlaubt; ggf. Ersatzruhetag und Zuschlag prüfen.",
+    "holiday": "Feiertag ({name}) – Feiertagsarbeit nur in Ausnahmefällen erlaubt."
+  },
+  "home": {
+    "title": "Arbeitszeitrechner, Stundenrechner & mehr – kostenlos",
+    "description": "Kostenlose Rechner für Arbeitszeit mit Pausenregel, Stunden, Arbeitstage nach Bundesland, Stundenlohn und Überstunden. Für Deutschland, Österreich und die Schweiz.",
+    "h1": "Arbeitszeit, Stunden und Lohn – schnell und richtig berechnet",
+    "lede": "Rechner mit den gesetzlichen Regeln aus Deutschland, Österreich und der Schweiz – Pausen, Ruhezeiten, Feiertage und Mindestlohn inklusive.",
+    "pill": "Kostenlos · Ohne Anmeldung · Daten bleiben im Browser",
+    "toolsTitle": "Alle Rechner",
+    "guidesTitle": "Neueste Ratgeber",
+    "trustTitle": "Warum diesen Rechnern vertrauen?",
+    "trust1": "Gesetzliche Regeln (ArbZG, AZG, ArG) sind eingebaut und mit Quellen verlinkt.",
+    "trust2": "Jeder Rechner ist mit automatischen Tests abgesichert – Schaltjahre, Mitternacht, Feiertage.",
+    "trust3": "Texte werden von Muttersprachlern fachlich geprüft."
+  },
+  "picker": {
+    "title": "Sprache wählen",
+    "lede": "Choose your language · Elige tu idioma · Escolha seu idioma"
+  },
+  "history": {
+    "title": "Verlauf",
+    "description": "Ihre gespeicherten Berechnungen – nur auf diesem Gerät gespeichert.",
+    "empty": "Noch keine gespeicherten Berechnungen.",
+    "clear": "Verlauf löschen",
+    "remove": "Entfernen"
+  },
+  "search": {
+    "title": "Suche",
+    "description": "Alle Rechner und Ratgeber durchsuchen."
+  },
+  "notFound": {
+    "title": "Seite nicht gefunden",
+    "text": "Diese Seite gibt es nicht. Vielleicht hilft einer dieser Rechner:"
+  },
+  "ui": {
+    "worktime": {
+      "holidaysIn": "Feiertage erkennen für",
+      "noHolidays": "Keine Feiertage berücksichtigen",
+      "fillWeek": "Aktuelle Woche (Mo–Fr)",
+      "totalLabel": "Arbeitszeit gesamt (netto)",
+      "decimalHours": "Industriestunden",
+      "breaksTotal": "Pausen gesamt",
+      "nightHours": "Nachtstunden",
+      "sundayHours": "Sonntagsstunden",
+      "holidayHours": "Feiertagsstunden",
+      "ruleDE": "Deutschland (ArbZG): mehr als 6 Std. Arbeit → mind. 30 Min. Pause, mehr als 9 Std. → 45 Min. Höchstens 10 Std. pro Tag, 11 Std. Ruhezeit. Nachtzeit 23–6 Uhr.",
+      "ruleAT": "Österreich (AZG): mehr als 6 Std. Arbeit → mind. 30 Min. Pause. Höchstens 12 Std. pro Tag, 11 Std. Ruhezeit. Nachtzeit 22–5 Uhr.",
+      "ruleCH": "Schweiz (ArG): mehr als 5½ Std. → 15 Min., mehr als 7 Std. → 30 Min., mehr als 9 Std. → 60 Min. Pause. 11 Std. Ruhezeit. Nachtarbeit 23–6 Uhr.",
+      "week": "KW",
+      "historyLabel": "Arbeitszeit",
+      "pdfHint": "Im Druckdialog „Als PDF speichern“ wählen."
+    },
+    "hours": {
+      "spanTitle": "Stunden zwischen zwei Uhrzeiten",
+      "spanResult": "Dauer abzüglich Pause",
+      "decimalHours": "Industriestunden",
+      "sumTitle": "Stunden addieren und subtrahieren",
+      "sumHelp": "Eingabe als 7:30 (Stunden:Minuten) oder 7,5 (Dezimal). Mit − ziehen Sie Zeiten ab.",
+      "operation": "Rechenart",
+      "duration": "Dauer",
+      "addTime": "Zeit hinzufügen",
+      "convTitle": "Dezimalstunden ↔ Stunden:Minuten",
+      "decimalInput": "Dezimalstunden",
+      "hmInput": "Stunden:Minuten",
+      "tableTitle": "Tabelle: Minuten in Industrieminuten",
+      "industrial": "Industrieminuten",
+      "overMidnight": "über Mitternacht",
+      "badInput": "eine Eingabe ist ungültig"
+    },
+    "workdays": {
+      "vacation": "Urlaubstage abziehen",
+      "workingDays": "Arbeitstage pro Woche",
+      "halfDays": "24.12. und 31.12. als halbe Tage",
+      "resultLabel": "Arbeitstage",
+      "calendarDays": "Kalendertage",
+      "weekendDays": "freie Wochentage",
+      "holidaysOnWeekdays": "Feiertage an Arbeitstagen",
+      "beforeVacation": "vor Urlaub",
+      "halfDaysCount": "halbe Tage",
+      "missingYears": "Für {years} liegen noch keine geprüften Feiertagsdaten vor – Feiertage fehlen in der Zählung.",
+      "holiday": "Feiertag"
+    },
+    "wage": {
+      "mode": "Rechenrichtung",
+      "m2h": "Monatsgehalt → Stundenlohn",
+      "h2m": "Stundenlohn → Monatsgehalt",
+      "monthly": "Monatsgehalt brutto",
+      "hourly": "Stundenlohn brutto",
+      "weeklyHours": "Wochenstunden",
+      "hourlyResult": "Ihr Stundenlohn (brutto)",
+      "monthlyResult": "Ihr Monatsgehalt (brutto)",
+      "perHour": "pro Stunde",
+      "perMonth": "pro Monat",
+      "perYear": "pro Jahr (12 Gehälter)",
+      "hoursPerMonth": "Stunden pro Monat",
+      "mwOk": "✓ Über dem gesetzlichen Mindestlohn von {mw} (seit {from}).",
+      "mwBad": "⚠ Unter dem gesetzlichen Mindestlohn von {mw} (seit {from}).",
+      "mwNext": "Ab {from}: {mw}.",
+      "week": "Woche"
+    },
+    "overtime": {
+      "contractHours": "Vertragliche Wochenstunden",
+      "daysPerWeek": "Arbeitstage pro Woche",
+      "workedPerDay": "Tatsächlich gearbeitet (netto, z. B. 8:30 oder 8,5)",
+      "worked": "gearbeitet",
+      "hourlyWage": "Stundenlohn brutto (optional)",
+      "premium": "Überstundenzuschlag in %",
+      "overtimeLabel": "Überstunden",
+      "minusLabel": "Minusstunden",
+      "target": "Soll",
+      "actual": "Ist",
+      "daysOff": "Tage Zeitausgleich",
+      "payout": "Auszahlung inkl. Zuschlag (brutto)",
+      "note": "Ob Überstunden bezahlt oder durch Freizeit ausgeglichen werden, regeln Arbeitsvertrag oder Tarifvertrag – ein gesetzlicher Anspruch auf Zuschlag besteht in Deutschland nicht."
+    },
+    "days": {
+      "regionForWorkdays": "Feiertage für Arbeitstage",
+      "includeEnd": "Enddatum mitzählen",
+      "between": "Tage zwischen",
+      "months": "Monate",
+      "workdays": "Arbeitstage",
+      "weekendDays": "freie Wochentage",
+      "inclShort": "inkl. Enddatum",
+      "years": "Jahre"
+    },
+    "age": {
+      "birth": "Geburtsdatum",
+      "on": "Alter am",
+      "exact": "Genaues Alter",
+      "months": "Monate",
+      "years": "Jahre",
+      "bornOn": "Geboren am",
+      "future": "Das Geburtsdatum liegt nach dem Stichtag.",
+      "birthdayToday": "Heute ist Geburtstag – herzlichen Glückwunsch!",
+      "nextBirthday": "Nächster Geburtstag: {date} – in {days} Tagen ({age}. Geburtstag)."
+    }
+  }
+}

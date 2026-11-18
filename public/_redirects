@@ -1,3 +1,2 @@
-# Old/alternate URLs → canonical (Cloudflare Pages). Trailing slashes are added automatically.
-/home /  301
-/guide/* /guides/:splat 301
+# Language-less legacy paths → German (301). Root "/" stays the language picker (x-default), no auto-redirect.
+/home    /de/  301

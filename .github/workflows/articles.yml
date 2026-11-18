@@ -1,0 +1,42 @@
+name: Article drafts (DE)
+# Plan §12: brief (content/queue-de.csv) → AI draft → PULL REQUEST → native review → merge.
+# Mon/Wed/Fri = 3 drafts per week. Drafts are reviewed:false (noindex) until the reviewer sets reviewed:true.
+on:
+  schedule:
+    - cron: '0 6 * * 1,3,5'
+  workflow_dispatch:
+    inputs:
+      count:
+        description: 'How many drafts'
+        default: '1'
+permissions:
+  contents: write
+  pull-requests: write
+jobs:
+  draft:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: Write drafts
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_MODEL: ${{ vars.OPENAI_MODEL || 'gpt-4.1' }}
+          ARTICLES_PER_RUN: ${{ github.event.inputs.count || '1' }}
+          PR_BODY: ${{ runner.temp }}/pr-body.md
+        run: node scripts/generate-articles.mjs
+      - name: Check the site still builds
+        run: npm test && npm run build && node scripts/check-links.mjs
+      - name: Open pull request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: drafts/${{ github.run_id }}
+          title: 'Ratgeber-Entwurf zur Prüfung'
+          commit-message: 'Add AI-drafted guide for native review'
+          body-path: ${{ runner.temp }}/pr-body.md
+          labels: draft-review
+          delete-branch: true

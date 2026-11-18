@@ -1,0 +1,54 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Icon from '../../components/Icon.astro';
+import ArticleList from '../../components/ArticleList.astro';
+import { LIVE_LOCALES, type LocaleCode } from '../../config/locales';
+import { TOOLS, CATEGORIES, toolPath, categoryPath, type CategoryId } from '../../config/tool-map';
+import { alternatesFor, articleEntries, entryLocale } from '../../lib/registry';
+import { websiteSchema, organizationSchema } from '../../lib/seo';
+import { SITE } from '../../config/site';
+import { t } from '../../i18n';
+export function getStaticPaths() { return LIVE_LOCALES.map((l) => ({ params: { locale: l.code } })); }
+const locale = Astro.params.locale as LocaleCode;
+const articles = (await articleEntries()).filter((a) => entryLocale(a.id) === locale).slice(0, 6);
+const money = TOOLS.filter((x) => x.priority === 'money');
+const support = TOOLS.filter((x) => x.priority === 'supporting');
+---
+<BaseLayout locale={locale} title={`${t(locale, 'home.title')} | ${SITE.name}`.slice(0, 70)} description={t(locale, 'home.description')} path={`/${locale}/`}
+  alternates={await alternatesFor('home')} xDefault="/" schema={[websiteSchema(locale), organizationSchema()]}>
+  <section class="hero container">
+    <p class="pill">{t(locale, 'home.pill')}</p>
+    <h1>{t(locale, 'home.h1')}</h1>
+    <p class="lede">{t(locale, 'home.lede')}</p>
+    <div class="actions" style="justify-content:center">
+      <a class="btn btn--primary" href={toolPath('worktime', locale)}><Icon name="clock" size={18} />{t(locale, 'tools.worktime.name')}</a>
+      <a class="btn btn--outline" href={toolPath('hours', locale)}>{t(locale, 'tools.hours.name')}</a>
+      <a class="btn btn--outline" href={toolPath('workdays', locale)}>{t(locale, 'tools.workdays.name')}</a>
+    </div>
+  </section>
+  <section class="container section" aria-labelledby="tools-h">
+    <div class="section-head"><h2 id="tools-h">{t(locale, 'home.toolsTitle')}</h2></div>
+    <div class="cat-grid">
+      {[...money, ...support].map((x) => (
+        <a class="cat-card tool-card" href={toolPath(x.id, locale)}>
+          <span class="cat-card__icon"><Icon name={x.icon} size={22} color="#4338CA" /></span>
+          <div><h3 class="tool-card__h">{t(locale, `tools.${x.id}.name`)}</h3><p class="small muted" style="margin:4px 0 0">{t(locale, `tools.${x.id}.short`)}</p></div>
+        </a>
+      ))}
+    </div>
+    <div class="chip-row" style="margin-top:18px">
+      {(Object.keys(CATEGORIES) as CategoryId[]).map((c) => <a class="chip" href={categoryPath(c, locale)}>{t(locale, `categories.${c}.name`)}</a>)}
+    </div>
+  </section>
+  <section class="container section" aria-labelledby="trust-h">
+    <div class="card">
+      <h2 id="trust-h" style="margin-bottom:12px">{t(locale, 'home.trustTitle')}</h2>
+      <ul class="trust-list">
+        <li><Icon name="check" size={20} color="#047857" />{t(locale, 'home.trust1')}</li>
+        <li><Icon name="check" size={20} color="#047857" />{t(locale, 'home.trust2')}</li>
+        <li><Icon name="check" size={20} color="#047857" />{t(locale, 'home.trust3')}</li>
+      </ul>
+    </div>
+  </section>
+  <div class="container"><ArticleList locale={locale} entries={articles} title={t(locale, 'home.guidesTitle')} /></div>
+</BaseLayout>

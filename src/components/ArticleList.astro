@@ -1,0 +1,17 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import type { LocaleCode } from '../config/locales';
+import { articlePath } from '../lib/registry';
+import { t } from '../i18n';
+interface Props { locale: LocaleCode; entries: CollectionEntry<'articles'>[]; title: string }
+const { locale, entries, title } = Astro.props;
+const sorted = [...entries].sort((a, b) => b.data.updated.getTime() - a.data.updated.getTime());
+---
+{sorted.length > 0 && (
+  <section class="section" aria-label={title}>
+    <h2 style="margin-bottom:14px">{title}</h2>
+    <div class="related-grid">
+      {sorted.map((a) => <a href={articlePath(a)}><b>{a.data.title}</b><span>{t(locale, `categories.${a.data.category}.name`)}</span></a>)}
+    </div>
+  </section>
+)}
