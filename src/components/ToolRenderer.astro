@@ -12,6 +12,7 @@ import Week from './tools/Week.astro';
 import Minutes from './tools/Minutes.astro';
 import Timesheet from './tools/Timesheet.astro';
 import Notice from './tools/Notice.astro';
+import Surcharge from './tools/Surcharge.astro';
 import { formatISO, addDays, parseISO } from '../lib/dates';
 interface Props { tool: ToolId; locale: LocaleCode; region?: string }
 const { tool, locale, region } = Astro.props;
@@ -29,3 +30,4 @@ const today = parseISO(todayIso)!;
 {tool === 'minutes' && <Minutes locale={locale} />}
 {tool === 'timesheet' && <Timesheet locale={locale} />}
 {tool === 'notice' && <Notice locale={locale} />}
+{tool === 'surcharge' && <Surcharge locale={locale} />}

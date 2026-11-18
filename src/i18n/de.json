@@ -75,6 +75,10 @@
     "notice": {
       "name": "Kündigungsfrist-Rechner",
       "short": "Kündigungsfrist nach § 622 BGB – letzter Arbeitstag"
+    },
+    "surcharge": {
+      "name": "Zuschlagsrechner",
+      "short": "Nacht-, Sonntags- und Feiertagszuschläge – steuerfrei nach § 3b EStG"
     }
   },
   "common": {
@@ -372,6 +376,34 @@
       "colYears": "Betriebszugehörigkeit",
       "colPeriod": "Kündigungsfrist",
       "futureStart": "Der Beginn liegt nach dem Zugang der Kündigung."
+    },
+    "surcharge": {
+      "wage": "Stundenlohn brutto (€)",
+      "rates": "Zuschlagssätze laut Vertrag/Tarif (%)",
+      "night": "Nacht (20–6 Uhr)",
+      "sunday": "Sonntag",
+      "holiday": "Feiertag",
+      "special": "24.12. ab 14 Uhr, 25./26.12., 1. Mai",
+      "region": "Feiertage für",
+      "shifts": "Schichten",
+      "addShift": "Schicht hinzufügen",
+      "total": "Zuschläge gesamt (brutto)",
+      "taxFree": "davon steuerfrei",
+      "taxable": "steuerpflichtig",
+      "category": "Art",
+      "hours": "Stunden",
+      "paid": "Zuschlag",
+      "free": "steuerfrei",
+      "rows": {
+        "night": "Nacht 20–6 Uhr (25 %)",
+        "nightEarly": "Nacht 0–4 Uhr, Beginn vor 0 Uhr (40 %)",
+        "sunday": "Sonntag (50 %)",
+        "holiday": "Feiertag / 31.12. ab 14 Uhr (125 %)",
+        "special": "24.12. ab 14 Uhr, 25./26.12., 1. Mai (150 %)"
+      },
+      "capNote": "Steuerfrei nur auf einen Grundlohn bis 50 € pro Stunde.",
+      "legalRates": "Steuerfreie Höchstsätze einsetzen",
+      "pauseNote": "Pausen sind keine Arbeitszeit: Tragen Sie Schichten mit Pause als zwei Blöcke ein."
     }
   }
 }

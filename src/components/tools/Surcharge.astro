@@ -1,0 +1,116 @@
+---
+/** Zuschlagsrechner — night/Sunday/holiday surcharges per shift with the tax-free share under § 3b EStG. */
+import type { LocaleCode } from '../../config/locales';
+import { REGIONS } from '../../config/tool-map';
+import { t, dict } from '../../i18n';
+import Icon from '../Icon.astro';
+interface Props { locale: LocaleCode }
+const { locale } = Astro.props;
+const u = (k: string) => t(locale, `ui.surcharge.${k}`);
+const c = (k: string) => t(locale, `common.${k}`);
+const M = { ui: (dict(locale) as { ui: { surcharge: Record<string, unknown> } }).ui.surcharge, common: (dict(locale) as { common: Record<string, string> }).common };
+const regions = REGIONS.filter((r) => r.country === 'DE');
+const cats = ['night', 'nightEarly', 'sunday', 'holiday', 'special'];
+---
+<section class="card tool" data-surcharge data-msgs={JSON.stringify(M)} aria-label={t(locale, 'tools.surcharge.name')}>
+  <div class="tool-inputs" style="margin-top:0">
+    <div class="field"><label for="z-w">{u('wage')}</label><input id="z-w" class="input input--num" type="text" inputmode="decimal" value="20" data-in="wage" /></div>
+    <div class="field"><label for="z-r">{u('region')}</label>
+      <select id="z-r" class="input" data-in="region">{regions.map((r) => <option value={r.code} selected={r.code === 'nw'}>{r.name.de}</option>)}</select></div>
+  </div>
+  <fieldset class="weekday-set" style="margin-top:14px">
+    <legend class="label">{u('rates')}</legend>
+    <label class="field"><span class="small">{u('night')}</span><input class="input input--num" type="text" inputmode="decimal" value="25" data-rate="night" /></label>
+    <label class="field"><span class="small">{u('sunday')}</span><input class="input input--num" type="text" inputmode="decimal" value="50" data-rate="sunday" /></label>
+    <label class="field"><span class="small">{u('holiday')}</span><input class="input input--num" type="text" inputmode="decimal" value="125" data-rate="holiday" /></label>
+    <label class="field"><span class="small">{u('special')}</span><input class="input input--num" type="text" inputmode="decimal" value="150" data-rate="special" /></label>
+  </fieldset>
+  <p class="label" style="margin:18px 0 6px">{u('shifts')}</p>
+  <div class="table-wrap"><table class="sheet" style="min-width:480px">
+    <thead><tr><th scope="col">{c('date')}</th><th scope="col">{c('start')}</th><th scope="col">{c('end')}</th><th scope="col"><span class="sr-only">{c('removeRow')}</span></th></tr></thead>
+    <tbody data-rows></tbody>
+  </table></div>
+  <p class="small muted" style="margin:6px 0 0">{u('pauseNote')}</p>
+  <button type="button" class="btn btn--outline" data-add style="margin-top:10px"><Icon name="calAdd" size={18} />{u('addShift')}</button>
+
+  <div class="result-box" aria-live="polite">
+    <div class="answer-label">{u('total')}</div>
+    <div class="answer" data-out="paid">–</div>
+    <div class="answer-sub"><b data-out="free">–</b> {u('taxFree')} · <span data-out="taxable">–</span> {u('taxable')}</div>
+    <div class="table-wrap" style="margin-top:12px"><table class="data-table" style="background:#fff">
+      <thead><tr><th scope="col">{u('category')}</th><th scope="col">{u('hours')}</th><th scope="col">{u('paid')}</th><th scope="col">{u('free')}</th></tr></thead>
+      <tbody data-out="table">{cats.map((k) => <tr><td>{t(locale, `ui.surcharge.rows.${k}`)}</td><td>–</td><td>–</td><td>–</td></tr>)}</tbody>
+    </table></div>
+    <p class="small muted" data-out="note">{u('capNote')}</p>
+  </div>
+  <div class="actions no-print">
+    <button class="btn btn--primary" type="button" data-action="copy"><Icon name="check" size={18} />{c('copy')}</button>
+    <button class="btn" type="button" data-action="share"><Icon name="link" size={18} />{c('share')}</button>
+  </div>
+  <template data-tpl><tr>
+    <td><input class="input input--sm" type="date" aria-label={c('date')} /></td>
+    <td><input class="input input--sm" type="time" value="22:00" aria-label={c('start')} /></td>
+    <td><input class="input input--sm" type="time" value="06:00" aria-label={c('end')} /></td>
+    <td><button type="button" class="icon-btn" data-remove aria-label={c('removeRow')}><Icon name="close" size={16} /></button></td>
+  </tr></template>
+</section>
+<script>
+  import { calcSurcharges, type Shift } from '../../tools/surcharge';
+  import { holidaysFor } from '../../tools/workdays';
+  import { formatHM } from '../../tools/time';
+  import { addDays, formatISO, weekday } from '../../lib/dates';
+  import { copyText, setQuery, getQuery, saveHistory, track, trackCalculate } from '../../scripts/client';
+  const root = document.querySelector<HTMLElement>('[data-surcharge]');
+  if (root) {
+    const M = JSON.parse(root.dataset.msgs!) as { ui: Record<string, string> & { rows: Record<string, string> }; common: Record<string, string> };
+    const $ = (k: string) => root.querySelector<HTMLInputElement>(`[data-in="${k}"]`)!;
+    const out = (k: string) => root.querySelector<HTMLElement>(`[data-out="${k}"]`)!;
+    const tbody = root.querySelector<HTMLElement>('[data-rows]')!;
+    const tpl = root.querySelector<HTMLTemplateElement>('[data-tpl]')!;
+    const num = (s: string) => Number(s.replace(/\./g, '').replace(',', '.'));
+    const eur = (n: number) => n.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
+    const rate = (k: string) => num(root.querySelector<HTMLInputElement>(`[data-rate="${k}"]`)!.value) || 0;
+    function addRow(s?: Partial<Shift>) {
+      const tr = tpl.content.firstElementChild!.cloneNode(true) as HTMLTableRowElement;
+      const [d, a, b] = tr.querySelectorAll('input');
+      if (s?.date) d.value = s.date; if (s?.start) a.value = s.start; if (s?.end) b.value = s.end;
+      tbody.appendChild(tr);
+    }
+    const read = (): Shift[] => [...tbody.querySelectorAll('tr')].map((tr) => { const [d, a, b] = tr.querySelectorAll('input'); return { date: d.value, start: a.value, end: b.value }; });
+    // default: the coming Saturday-night and Sunday-night shifts
+    const now = new Date(); const today = { y: now.getFullYear(), m: now.getMonth() + 1, d: now.getDate() };
+    const sat = addDays(today, (6 - weekday(today) + 7) % 7);
+    const q = getQuery();
+    if (q.get('s')) q.get('s')!.split('.').forEach((p) => { const [d, a, b] = p.split('_'); addRow({ date: d, start: `${a.slice(0, 2)}:${a.slice(2)}`, end: `${b.slice(0, 2)}:${b.slice(2)}` }); });
+    else { addRow({ date: formatISO(sat), start: '22:00', end: '06:00' }); addRow({ date: formatISO(addDays(sat, 1)), start: '22:00', end: '06:00' }); }
+    if (q.get('lohn')) $('wage').value = q.get('lohn')!;
+    if (q.get('r')) $('region').value = q.get('r')!;
+    let text = '';
+    function render() {
+      const shifts = read();
+      const years = [...new Set(shifts.map((s) => Number(s.date.slice(0, 4))).filter(Boolean))];
+      const hol = new Set<string>();
+      for (const y of years) for (const h of holidaysFor($('region').value, [y, y + 1])) if (!h.partial || h.defaultOn) hol.add(h.date);
+      const wage = num($('wage').value) || 0;
+      const r = calcSurcharges(shifts, wage, { night: rate('night'), sunday: rate('sunday'), holiday: rate('holiday'), special: rate('special') }, hol);
+      out('paid').textContent = eur(r.paid);
+      out('free').textContent = eur(r.taxFree);
+      out('taxable').textContent = eur(r.taxable);
+      out('table').innerHTML = (['night', 'nightEarly', 'sunday', 'holiday', 'special'] as const).map((k) => {
+        const b = r.buckets[k];
+        return `<tr><td>${M.ui.rows[k]}</td><td>${b.minutes ? formatHM(b.minutes) : '–'}</td><td>${b.minutes ? eur(b.paid) : '–'}</td><td>${b.minutes ? eur(b.taxFree) : '–'}</td></tr>`;
+      }).join('');
+      text = `${M.ui.total}: ${eur(r.paid)} – ${M.ui.taxFree}: ${eur(r.taxFree)}, ${M.ui.taxable}: ${eur(r.taxable)}`;
+      trackCalculate('surcharge');
+    }
+    root.addEventListener('input', render); root.addEventListener('change', render);
+    root.addEventListener('click', (e) => {
+      const b = (e.target as HTMLElement).closest<HTMLButtonElement>('button'); if (!b) return;
+      if (b.hasAttribute('data-remove')) { b.closest('tr')!.remove(); render(); return; }
+      if (b.hasAttribute('data-add')) { const last = read().at(-1); addRow({ date: last?.date ? formatISO(addDays({ y: +last.date.slice(0, 4), m: +last.date.slice(5, 7), d: +last.date.slice(8) }, 1)) : formatISO(today) }); render(); return; }
+      if (b.dataset.action === 'copy') { copyText(text, M.common.copied); track('copy_result', { tool: 'surcharge' }); }
+      if (b.dataset.action === 'share') { const url = setQuery({ lohn: $('wage').value, r: $('region').value, s: read().map((s) => `${s.date}_${s.start.replace(':', '')}_${s.end.replace(':', '')}`).join('.') }); copyText(url, M.common.linkCopied); saveHistory({ tool: 'surcharge', label: text, url }); track('share', { tool: 'surcharge' }); }
+    });
+    render();
+  }
+</script>

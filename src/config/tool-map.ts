@@ -4,7 +4,7 @@
  */
 import type { LocaleCode } from './locales';
 
-export type ToolId = 'worktime' | 'hours' | 'workdays' | 'wage' | 'overtime' | 'days' | 'age' | 'week' | 'minutes' | 'timesheet' | 'notice';
+export type ToolId = 'worktime' | 'hours' | 'workdays' | 'wage' | 'overtime' | 'days' | 'age' | 'week' | 'minutes' | 'timesheet' | 'notice' | 'surcharge';
 export type CategoryId = 'work' | 'pay' | 'dates';
 
 export const CATEGORIES: Record<CategoryId, Record<LocaleCode, string>> = {
@@ -31,6 +31,7 @@ export const TOOLS: ToolDef[] = [
   { id: 'notice', category: 'work', priority: 'money', icon: 'calAdd', slug: { de: 'kuendigungsfrist-rechner', es: 'calculadora-preaviso', 'pt-br': 'calculadora-aviso-previo', en: 'notice-period-calculator' } },
   { id: 'overtime', category: 'work', priority: 'money', icon: 'calAdd', slug: { de: 'ueberstundenrechner', es: 'calculadora-horas-extras', 'pt-br': 'calculadora-horas-extras', en: 'overtime-calculator' } },
   { id: 'minutes', category: 'work', priority: 'supporting', icon: 'hour', slug: { de: 'minuten-in-stunden', es: 'minutos-a-horas', 'pt-br': 'minutos-em-horas', en: 'minutes-to-hours' } },
+  { id: 'surcharge', category: 'pay', priority: 'money', icon: 'pct', slug: { de: 'zuschlagsrechner', es: 'calculadora-recargos', 'pt-br': 'calculadora-adicionais', en: 'shift-premium-calculator' } },
   { id: 'days', category: 'dates', priority: 'supporting', icon: 'cal', slug: { de: 'tage-rechner', es: 'calculadora-de-dias', 'pt-br': 'calculadora-de-dias', en: 'days-calculator' } },
   { id: 'week', category: 'dates', priority: 'supporting', icon: 'cal', slug: { de: 'kalenderwoche', es: 'semana-del-ano', 'pt-br': 'semana-do-ano', en: 'week-number' } },
   { id: 'age', category: 'dates', priority: 'supporting', icon: 'cake', slug: { de: 'alter-berechnen', es: 'calculadora-de-edad', 'pt-br': 'calcular-idade', en: 'age-calculator' } },
