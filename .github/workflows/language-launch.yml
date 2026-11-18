@@ -1,8 +1,8 @@
 name: Language launch
 # Master Plan v2 §2/§21: when a language is due (src/data/language-schedule.json) draft it completely with OpenAI:
 # UI strings, all universal tool pages, static/legal pages, and switch it live.
-#   AUTO_PUBLISH repo variable != 'true' (default) → opens a pull request for native review (pages reviewed:false = noindex).
-#   AUTO_PUBLISH == 'true' → pushes straight to main (Cloudflare deploys it); pages that passed every check are indexable.
+#   AUTO_PUBLISH on (default; repo variable unset or 'true') → pushes straight to main (Cloudflare deploys it); pages that passed every check are indexable.
+#   AUTO_PUBLISH repo variable = 'false' → opens a pull request for native review instead (pages reviewed:false = noindex).
 # Run it by hand anytime: Actions → Language launch → Run workflow → lang = es / pt-br / nl / fr / pl / it / en.
 on:
   schedule:
@@ -39,14 +39,14 @@ jobs:
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           OPENAI_MODEL: ${{ vars.OPENAI_MODEL || 'gpt-4.1' }}
-          AUTO_PUBLISH: ${{ vars.AUTO_PUBLISH || 'false' }}
+          AUTO_PUBLISH: ${{ vars.AUTO_PUBLISH || 'true' }}
           PR_BODY: ${{ runner.temp }}/pr-body.md
         run: npx tsx scripts/draft-locale.ts ${{ steps.pick.outputs.lang }} --live
       - name: Check the site still builds
         if: steps.pick.outputs.lang != ''
         run: npm test && npm run build && node scripts/check-links.mjs
       - name: Publish directly (AUTO_PUBLISH)
-        if: steps.pick.outputs.lang != '' && vars.AUTO_PUBLISH == 'true'
+        if: steps.pick.outputs.lang != '' && vars.AUTO_PUBLISH != 'false'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -55,7 +55,7 @@ jobs:
           gh workflow run indexnow.yml --ref main || true
         env: { GH_TOKEN: '${{ github.token }}' }
       - name: Open pull request for review
-        if: steps.pick.outputs.lang != '' && vars.AUTO_PUBLISH != 'true'
+        if: steps.pick.outputs.lang != '' && vars.AUTO_PUBLISH == 'false'
         uses: peter-evans/create-pull-request@v7
         with:
           branch: locale/${{ steps.pick.outputs.lang }}

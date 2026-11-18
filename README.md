@@ -83,14 +83,14 @@ Queues exist for de, es, pt-br, nl, fr, pl, it (`content/queue-<lang>.csv`, colu
 
 ### `AUTO_PUBLISH` — the one switch between "review" and "fully automatic"
 
-| | `AUTO_PUBLISH` unset/false (default, plan §12) | `AUTO_PUBLISH=true` (repo variable) |
+| | `AUTO_PUBLISH=false` (repo variable; plan §12) | **on — current default** (variable unset or `true`) |
 | --- | --- | --- |
 | Articles | pull request, every draft `reviewed: false` (noindex) until a native speaker approves | pushed to main; drafts that pass **every** check get `reviewed: true` and are indexed at once, drafts with warnings stay noindex |
 | New language | pull request `locale/<lang>`; merge = language goes live with noindex pages | pushed to main and live immediately; clean tool pages indexable |
 | Legal pages (imprint, privacy, terms) | review | **always** `reviewed: false` — a human must check them |
 | Reviewer shown on page | yes, after review | no — auto-published pages name only the author (no fake "reviewed by") |
 
-**Risk of turning it on:** the plan (§12) requires a native review before indexing because unreviewed AI text is the main reason sites like this lose Google trust (Helpful Content / scaled content abuse) and because a wrong legal figure is a liability. With `AUTO_PUBLISH=true` also change `/de/redaktionelle-richtlinien/` (and the drafted editorial pages) so they no longer promise a human review of every page. Recommended: start with it **off** for German; turn it on only after the first 20–30 reviewed pages perform well, and spot-check the GitHub run summaries weekly.
+**Risk of turning it on:** the plan (§12) requires a native review before indexing because unreviewed AI text is the main reason sites like this lose Google trust (Helpful Content / scaled content abuse) and because a wrong legal figure is a liability. The editorial pages follow `AUTO_PUBLISH` in `site.ts` automatically. **Status: switched ON on 2026-11-18 at the owner's request** (workflows default to on; `AUTO_PUBLISH` in `src/config/site.ts` makes the editorial policy match). To go back to review mode set the repo variable `AUTO_PUBLISH=false` **and** `AUTO_PUBLISH = false` in `site.ts`. Spot-check the GitHub run summaries weekly.
 
 ## Ads, consent, analytics
 

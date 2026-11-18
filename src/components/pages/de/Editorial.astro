@@ -1,12 +1,15 @@
 ---
-import { SITE, PEOPLE } from '../../../config/site';
+import { SITE, PEOPLE, AUTO_PUBLISH } from '../../../config/site';
 import { pagePath } from '../../../config/tool-map';
 ---
 <p>So entstehen die Inhalte auf {SITE.name}:</p>
 <ol>
   <li><b>Recherche:</b> Welche Fragen stellen Menschen wirklich? Wir werten Suchanfragen aus und prüfen, was in den bestehenden Antworten fehlt.</li>
   <li><b>Entwurf:</b> Ein erster Entwurf kann mit Unterstützung einer KI entstehen – direkt auf Deutsch, nach einem genauen Briefing.</li>
-  <li><b>Fachliche Prüfung durch Muttersprachler:</b> {PEOPLE.reviewer.name} prüft Sprache, Rechenbeispiele und Rechtsgrundlagen. Erst danach wird eine Seite veröffentlicht und für Suchmaschinen freigegeben.</li>
+  {AUTO_PUBLISH
+    ? <li><b>Automatische Prüfung:</b> Jeder Entwurf durchläuft vor der Veröffentlichung automatische Prüfungen – Länge, Rechenbeispiele mit Tabelle, Link zum passenden Rechner, Wochentage im Kalender und Hinweise auf unbelegte Zahlen oder Studien. Entwürfe mit Auffälligkeiten werden nicht für Suchmaschinen freigegeben. Veröffentlichte Seiten prüfen wir stichprobenartig und korrigieren Fehler, sobald wir sie bemerken.</li>
+    : <li><b>Fachliche Prüfung durch Muttersprachler:</b> {PEOPLE.reviewer.name} prüft Sprache, Rechenbeispiele und Rechtsgrundlagen. Erst danach wird eine Seite veröffentlicht und für Suchmaschinen freigegeben.</li>}
+  <li><b>Rechner statt Behauptungen:</b> Die Ergebnisse selbst kommen nie von einer KI, sondern aus der getesteten Rechenlogik der Rechner.</li>
   <li><b>Quellen:</b> Gesetze und Zahlen verlinken wir auf offizielle Quellen wie gesetze-im-internet.de, das Bundesministerium für Arbeit und Soziales oder Destatis.</li>
   <li><b>Aktualisierung:</b> Feiertage und Mindestlohn prüfen wir jedes Jahr im November, die wichtigsten Seiten mindestens alle sechs Monate. Das Datum „Zuletzt aktualisiert“ ändert sich nur, wenn sich der Inhalt tatsächlich geändert hat.</li>
 </ol>

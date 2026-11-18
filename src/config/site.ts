@@ -24,6 +24,13 @@ export const IMPRINT = {
   responsibleForContent: '[Name, Anschrift wie oben]', // § 18 Abs. 2 MStV
 };
 
+/**
+ * Mirrors the AUTO_PUBLISH switch of the content bots (.github/workflows: on unless the repo variable AUTO_PUBLISH = 'false').
+ * Keeps the editorial policy honest: when true it does not promise a human review of every page.
+ * Change both together.
+ */
+export const AUTO_PUBLISH = true;
+
 /** Authors and reviewers (E-E-A-T). Pages reference them by id. */
 export const PEOPLE = {
   author: {
