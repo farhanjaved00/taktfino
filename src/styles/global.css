@@ -429,3 +429,33 @@ select.input { padding-right: 32px; background: #fff; }
 .ts-hol { display: block; font-size: 11px; color: var(--today); font-weight: 600; }
 .ts-note { width: 150px; }
 .ts-sheet td:first-child { min-width: 110px; }
+
+/* ---------- Responsive fixes (phone widths) */
+h1, h2, h3, .answer, .tool-card__h, .related-grid b { overflow-wrap: break-word; hyphens: auto; -webkit-hyphens: auto; }
+.prose, .article, .faq, .answer-sub, .answer-first { overflow-wrap: break-word; }
+.related-grid a, .cat-card, .tool-card { min-width: 0; }
+.prose .related-grid a, .article .related-grid a { text-decoration: none; }
+.related-grid b { line-height: 1.35; }
+@media (max-width: 1023px) {
+  .article-layout { grid-template-columns: minmax(0, 1fr); }
+  .tool-layout { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 640px) {
+  .related-grid { grid-template-columns: minmax(0, 1fr); }
+  .actions .btn { white-space: normal; text-align: center; }
+  .stats div { min-width: 0; }
+  .grid-2 > * { min-width: 0; }
+}
+.table-wrap { position: relative; }  /* keeps absolutely positioned sr-only text inside the scroll box */
+.seg { flex-wrap: wrap; max-width: 100%; }
+.field { min-width: 0; max-width: 100%; }
+select.input, .input { max-width: 100%; }
+summary.btn { white-space: normal; height: auto; min-height: 46px; padding-top: 8px; padding-bottom: 8px; text-align: left; }
+@media (max-width: 420px) {
+  .footer-grid { grid-template-columns: minmax(0, 1fr); }
+  .footer-grid > :first-child { grid-column: auto; }
+  .seg button { flex: 1 1 auto; }
+  .container { padding: 0 12px; }
+  .card { padding: 16px; }
+  .result-box { padding: 14px; }
+}
