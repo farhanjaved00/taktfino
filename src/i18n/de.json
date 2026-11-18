@@ -71,6 +71,10 @@
     "timesheet": {
       "name": "Stundenzettel",
       "short": "Monatlicher Stundenzettel – ausfüllen, als PDF drucken oder Excel"
+    },
+    "notice": {
+      "name": "Kündigungsfrist-Rechner",
+      "short": "Kündigungsfrist nach § 622 BGB – letzter Arbeitstag"
     }
   },
   "common": {
@@ -337,6 +341,37 @@
       "warnings": "{n} Hinweis(e) zu Pausen oder Höchstarbeitszeit – siehe Arbeitszeitrechner.",
       "weekend": "Wochenende",
       "printedOn": "Erstellt am"
+    },
+    "notice": {
+      "who": "Wer kündigt?",
+      "employer": "Arbeitgeber kündigt",
+      "employee": "Ich kündige (Arbeitnehmer)",
+      "start": "Beginn des Arbeitsverhältnisses",
+      "receipt": "Zugang der Kündigung",
+      "receiptHelp": "Tag, an dem die Kündigung beim Empfänger ankommt – nicht das Datum auf dem Schreiben.",
+      "probation": "In der Probezeit (max. 6 Monate)",
+      "contract": "Längere Frist im Vertrag/Tarif (optional)",
+      "contractNone": "Keine",
+      "contractMonths": "{n} Monat(e)",
+      "contractTo": "zum",
+      "toMonth": "Monatsende",
+      "toQuarter": "Quartalsende",
+      "sameForEmployee": "Vertrag: verlängerte Frist gilt auch für mich",
+      "endLabel": "Das Arbeitsverhältnis endet am",
+      "ruleProbation": "Probezeit: 2 Wochen zu jedem Tag (§ 622 Abs. 3 BGB)",
+      "ruleBasic": "Grundkündigungsfrist: 4 Wochen zum 15. oder zum Monatsende (§ 622 Abs. 1 BGB)",
+      "ruleExtended": "Verlängerte Frist: {n} Monat(e) zum Monatsende bei {y} Jahren Betriebszugehörigkeit (§ 622 Abs. 2 BGB)",
+      "ruleContract": "Vertragliche Frist: {n} Monat(e) – länger als die gesetzliche",
+      "employed": "Betriebszugehörigkeit",
+      "years": "Jahre",
+      "months": "Monate",
+      "latest": "Für dieses Enddatum muss die Kündigung spätestens am {date} zugehen.",
+      "daysLeft": "noch {n} Tage",
+      "probationHint": "Hinweis: Die Probezeit darf höchstens 6 Monate dauern.",
+      "tableTitle": "Gesetzliche Kündigungsfristen für Arbeitgeber",
+      "colYears": "Betriebszugehörigkeit",
+      "colPeriod": "Kündigungsfrist",
+      "futureStart": "Der Beginn liegt nach dem Zugang der Kündigung."
     }
   }
 }

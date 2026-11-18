@@ -1,0 +1,115 @@
+---
+/** Kündigungsfrist-Rechner (§ 622 BGB): end date, rule applied, years employed, latest receipt date. */
+import type { LocaleCode } from '../../config/locales';
+import { t, dict } from '../../i18n';
+import { calcNotice, EXTENDED } from '../../tools/notice';
+import { addYears, formatISO, todayIn } from '../../lib/dates';
+import { fmtDateLong } from '../../i18n/format';
+import Icon from '../Icon.astro';
+interface Props { locale: LocaleCode }
+const { locale } = Astro.props;
+const u = (k: string, v: Record<string, string | number> = {}) => t(locale, `ui.notice.${k}`, v);
+const c = (k: string) => t(locale, `common.${k}`);
+const M = { ui: (dict(locale) as { ui: { notice: Record<string, string> } }).ui.notice, common: (dict(locale) as { common: Record<string, string> }).common };
+const today = todayIn('Europe/Berlin');
+const start = addYears(today, -6);
+const r = calcNotice({ party: 'employer', receipt: today, start });
+---
+<section class="card tool" data-notice data-msgs={JSON.stringify(M)} aria-label={t(locale, 'tools.notice.name')}>
+  <div class="seg" role="group" aria-label={u('who')}>
+    <button type="button" aria-pressed="true" data-party="employer">{u('employer')}</button>
+    <button type="button" aria-pressed="false" data-party="employee">{u('employee')}</button>
+  </div>
+  <div class="tool-inputs">
+    <div class="field"><label for="n-start">{u('start')}</label><input id="n-start" class="input" type="date" value={formatISO(start)} data-in="start" /></div>
+    <div class="field"><label for="n-rec">{u('receipt')}</label><input id="n-rec" class="input" type="date" value={formatISO(today)} data-in="receipt" aria-describedby="n-rec-help" /></div>
+  </div>
+  <p id="n-rec-help" class="small muted" style="margin:6px 0 0">{u('receiptHelp')}</p>
+  <div class="tool-inputs">
+    <button type="button" class="toggle" aria-pressed="false" data-in="probation"><span class="dot" aria-hidden="true"></span>{u('probation')}</button>
+    <div class="field"><label for="n-cm">{u('contract')}</label>
+      <select id="n-cm" class="input" data-in="cm"><option value="0">{u('contractNone')}</option>{[1, 2, 3, 4, 5, 6, 7, 8, 9, 12].map((n) => <option value={n}>{u('contractMonths', { n })}</option>)}</select></div>
+    <div class="field" data-cto hidden><label for="n-ct">{u('contractTo')}</label>
+      <select id="n-ct" class="input" data-in="cto"><option value="month">{u('toMonth')}</option><option value="quarter">{u('toQuarter')}</option></select></div>
+    <button type="button" class="toggle" aria-pressed="false" data-in="same" hidden><span class="dot" aria-hidden="true"></span>{u('sameForEmployee')}</button>
+  </div>
+  <div class="result-box" aria-live="polite">
+    <div class="answer-label">{u('endLabel')}</div>
+    <div class="answer" data-out="end">{fmtDateLong(locale, r.endDate)}</div>
+    <div class="answer-sub" data-out="rule">{u('ruleExtended', { n: r.months ?? 0, y: r.yearsEmployed })}</div>
+    <div class="stats">
+      <div><b data-out="years">{r.employed.years}</b><span>{u('years')}</span></div>
+      <div><b data-out="months">{r.employed.months}</b><span>{u('months')}</span></div>
+      <div><b data-out="left">–</b><span>{c('days')}</span></div>
+      <div><b data-out="period">–</b><span>{u('colPeriod')}</span></div>
+    </div>
+    <p class="small" data-out="latest"></p>
+  </div>
+  <div class="actions no-print">
+    <button class="btn btn--primary" type="button" data-action="copy"><Icon name="check" size={18} />{c('copy')}</button>
+    <button class="btn" type="button" data-action="share"><Icon name="link" size={18} />{c('share')}</button>
+  </div>
+  <div class="table-wrap section">
+    <h2 class="tool-h" style="margin-bottom:10px">{u('tableTitle')}</h2>
+    <table class="data-table">
+      <thead><tr><th scope="col">{u('colYears')}</th><th scope="col">{u('colPeriod')}</th></tr></thead>
+      <tbody>
+        <tr><td>unter 2 Jahre</td><td>4 Wochen zum 15. oder Monatsende</td></tr>
+        {[...EXTENDED].reverse().map(([y, m]) => <tr><td>ab {y} Jahren</td><td>{m} {m === 1 ? 'Monat' : 'Monate'} zum Monatsende</td></tr>)}
+        <tr><td>Probezeit (max. 6 Monate)</td><td>2 Wochen zu jedem Tag</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+<script>
+  import { calcNotice, type Party } from '../../tools/notice';
+  import { parseISO, compare, diffDays } from '../../lib/dates';
+  import { copyText, setQuery, getQuery, saveHistory, track, trackCalculate } from '../../scripts/client';
+  const root = document.querySelector<HTMLElement>('[data-notice]');
+  if (root) {
+    const M = JSON.parse(root.dataset.msgs!) as { ui: Record<string, string>; common: Record<string, string> };
+    const f = (s: string, v: Record<string, string | number>) => s.replace(/\{(\w+)\}/g, (_, k) => String(v[k] ?? ''));
+    const $ = (k: string) => root.querySelector<HTMLInputElement>(`[data-in="${k}"]`)!; // selects and buttons share the props used here
+    const out = (k: string) => root.querySelector<HTMLElement>(`[data-out="${k}"]`)!;
+    const on = (b: HTMLElement) => b.getAttribute('aria-pressed') === 'true';
+    const long = (c: { y: number; m: number; d: number }) => new Date(Date.UTC(c.y, c.m - 1, c.d, 12)).toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+    const short = (c: { y: number; m: number; d: number }) => `${String(c.d).padStart(2, '0')}.${String(c.m).padStart(2, '0')}.${c.y}`;
+    let party: Party = 'employer';
+    const now = new Date(); const today = { y: now.getFullYear(), m: now.getMonth() + 1, d: now.getDate() };
+    const q = getQuery();
+    if (q.get('wer') === 'an') party = 'employee';
+    if (q.get('beginn') && parseISO(q.get('beginn'))) $('start').value = q.get('beginn')!;
+    $('receipt').value = q.get('zugang') && parseISO(q.get('zugang')) ? q.get('zugang')! : `${today.y}-${String(today.m).padStart(2, '0')}-${String(today.d).padStart(2, '0')}`;
+    if (q.get('probe') === '1') $('probation').setAttribute('aria-pressed', 'true');
+    if (q.get('vm')) $('cm').value = q.get('vm')!;
+    let text = '';
+    function render() {
+      root!.querySelectorAll<HTMLButtonElement>('[data-party]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.party === party)));
+      $('same').hidden = party !== 'employee';
+      (root!.querySelector('[data-cto]') as HTMLElement).hidden = $('cm').value === '0';
+      const start = parseISO($('start').value), receipt = parseISO($('receipt').value);
+      if (!start || !receipt) return;
+      if (compare(start, receipt) > 0) { out('end').textContent = '–'; out('rule').textContent = M.ui.futureStart; return; }
+      const r = calcNotice({ party, start, receipt, probation: on($('probation')), contractMonths: Number($('cm').value) || undefined, contractEnd: $('cto').value as 'month' | 'quarter', employeeSameAsEmployer: party === 'employee' && on($('same')) });
+      out('end').textContent = long(r.endDate);
+      out('rule').textContent = r.rule === 'probation' ? M.ui.ruleProbation : r.rule === 'basic' ? M.ui.ruleBasic : r.rule === 'extended' ? f(M.ui.ruleExtended, { n: r.months!, y: r.yearsEmployed }) : f(M.ui.ruleContract, { n: r.months! });
+      out('years').textContent = String(r.employed.years);
+      out('months').textContent = String(r.employed.months);
+      const left = diffDays(today, r.endDate);
+      out('left').textContent = left >= 0 ? String(left) : '–';
+      out('period').textContent = String(diffDays(receipt, r.endDate));
+      out('latest').textContent = r.rule === 'contract' ? '' : f(M.ui.latest, { date: short(r.latestReceiptForEnd) }) + (on($('probation')) && diffDays(start, receipt) > 183 ? ` ${M.ui.probationHint}` : '');
+      text = `${M.ui.endLabel} ${long(r.endDate)} – ${out('rule').textContent}`;
+      trackCalculate('notice');
+    }
+    root.addEventListener('input', render); root.addEventListener('change', render);
+    root.addEventListener('click', (e) => {
+      const b = (e.target as HTMLElement).closest<HTMLButtonElement>('button'); if (!b) return;
+      if (b.dataset.party) { party = b.dataset.party as Party; render(); return; }
+      if (b.classList.contains('toggle')) { b.setAttribute('aria-pressed', String(!on(b))); render(); return; }
+      if (b.dataset.action === 'copy') { copyText(text, M.common.copied); track('copy_result', { tool: 'notice' }); }
+      if (b.dataset.action === 'share') { const url = setQuery({ wer: party === 'employee' ? 'an' : 'ag', beginn: $('start').value, zugang: $('receipt').value, probe: on($('probation')) ? '1' : null, vm: $('cm').value !== '0' ? $('cm').value : null }); copyText(url, M.common.linkCopied); saveHistory({ tool: 'notice', label: text, url }); track('share', { tool: 'notice' }); }
+    });
+    render();
+  }
+</script>
