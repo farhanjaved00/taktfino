@@ -43,7 +43,8 @@ export const PEOPLE = {
       'pt-br': 'Farhan Javed é Principal Software Engineer e lidera a arquitetura e o desenvolvimento de uma plataforma SaaS de eventos virtuais, híbridos e presenciais para organizações do mundo todo. Fundou a Taktfino para criar calculadoras de horas, salário e datas com lógica testada automaticamente.',
       en: 'Farhan Javed is a Principal Software Engineer who leads architecture and engineering for a SaaS platform that runs virtual, hybrid and in-person events for organizations worldwide. He founded Taktfino to build work-time, pay and date calculators whose logic is covered by automated tests.',
     },
-    sameAs: [] as string[],
+    jobTitle: 'Principal Software Engineer',
+    sameAs: ['https://www.linkedin.com/in/muhammad-farhan-javed/'] as string[],
   },
   reviewer: {
     id: 'pruefer',
@@ -51,6 +52,7 @@ export const PEOPLE = {
     name: '',
     role: { de: 'Fachliche Prüfung (Muttersprachler)', es: 'Revisión', 'pt-br': 'Revisão', en: 'Reviewer' },
     bio: { de: '', es: '', 'pt-br': '', en: '' },
+    jobTitle: '',
     sameAs: [] as string[],
   },
 } as const;

@@ -7,6 +7,7 @@ import { pagePath } from '../../../config/tool-map';
 <section id={PEOPLE.author.id}>
   <h3>{PEOPLE.author.name} – {PEOPLE.author.role.de}</h3>
   <p>{PEOPLE.author.bio.de}</p>
+  {PEOPLE.author.sameAs.length > 0 && <p>Profil: {PEOPLE.author.sameAs.map((u, i) => <>{i > 0 && ' · '}<a href={u} rel="me noopener" target="_blank">{u.includes('linkedin.com') ? 'LinkedIn' : u.replace(/^https?:\/\/(www\.)?/, '')}</a></>)}</p>}
 </section>
 {hasReviewer() && <section id={PEOPLE.reviewer.id}>
   <h3>{PEOPLE.reviewer.name} – {PEOPLE.reviewer.role.de}</h3>

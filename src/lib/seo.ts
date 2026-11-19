@@ -36,7 +36,7 @@ export const organizationSchema = () => ({
 
 export const personUrl = (id: PersonId, locale: LocaleCode) => `/${locale}/${PAGES.about[locale]}/#${PEOPLE[id].id}`;
 export const personRef = (id: PersonId, locale: LocaleCode) => ({
-  '@type': 'Person', name: PEOPLE[id].name, url: abs(personUrl(id, locale)), ...(PEOPLE[id].sameAs.length ? { sameAs: PEOPLE[id].sameAs } : {}),
+  '@type': 'Person', name: PEOPLE[id].name, url: abs(personUrl(id, locale)), ...(PEOPLE[id].jobTitle ? { jobTitle: PEOPLE[id].jobTitle } : {}), ...(PEOPLE[id].sameAs.length ? { sameAs: PEOPLE[id].sameAs } : {}),
 });
 
 export const articleSchema = (a: { title: string; description: string; path: string; date: Date; updated: Date; author: PersonId; reviewer?: PersonId; locale: LocaleCode; image: string }) => ({
