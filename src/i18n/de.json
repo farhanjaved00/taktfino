@@ -493,5 +493,12 @@
     "vat": "USt-IdNr.",
     "guidesIntro": "Hier finden Sie alle Ratgeber von Taktfino: verständliche Erklärungen zu Arbeitszeit, Pausen, Ruhezeiten, Überstunden, Urlaub, Feiertagen und Lohn. Jeder Ratgeber beantwortet eine konkrete Frage, rechnet ein Beispiel durch und verlinkt den passenden Rechner, mit dem Sie Ihren eigenen Fall sofort nachrechnen können.\n\nGesetzliche Regeln verlinken wir auf die offiziellen Quellen. Wo Regeln je nach Bundesland, Tarifvertrag oder Arbeitsvertrag abweichen, weisen wir darauf hin. Die Ratgeber ersetzen keine Rechtsberatung – bei konkreten Streitfällen helfen Betriebsrat, Gewerkschaft oder eine Fachanwältin bzw. ein Fachanwalt für Arbeitsrecht.",
     "guidesTitle": "Ratgeber zu Arbeitszeit, Urlaub, Feiertagen & Lohn"
+  },
+  "consent": {
+    "title": "Datenschutz-Einstellungen",
+    "text": "Wir möchten mit Google Analytics verstehen, welche Rechner genutzt werden. Dafür setzt Google Cookies und die Daten können in die USA übertragen werden. Das passiert nur mit Ihrer Zustimmung – die Rechner funktionieren auch ohne.",
+    "accept": "Akzeptieren",
+    "reject": "Ablehnen",
+    "more": "Mehr in der Datenschutzerklärung"
   }
 }

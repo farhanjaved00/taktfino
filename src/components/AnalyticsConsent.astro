@@ -1,0 +1,66 @@
+---
+/**
+ * Consent for Google Analytics while AdSense is off (once AdSense is on, Google's certified CMP takes over – Consent.astro).
+ * Basic consent mode: NOTHING from Google is loaded or sent before the visitor clicks "Akzeptieren".
+ * The choice is kept in localStorage ('consent-analytics' = granted | denied); the footer button reopens the banner.
+ */
+import { GA4_ID, adsEnabled } from '../config/site';
+import { pagePath } from '../config/tool-map';
+import type { LocaleCode } from '../config/locales';
+import { t } from '../i18n';
+interface Props { locale: LocaleCode }
+const { locale } = Astro.props;
+const on = !!GA4_ID && !adsEnabled();
+---
+{on && (
+  <>
+    <div class="ga-consent" id="consent" role="dialog" aria-live="polite" aria-labelledby="consent-h" hidden data-ga={GA4_ID}>
+      <div class="ga-consent__box">
+        <p id="consent-h" class="ga-consent__h">{t(locale, 'consent.title')}</p>
+        <p class="ga-consent__text">{t(locale, 'consent.text')} <a href={pagePath('privacy', locale)}>{t(locale, 'consent.more')}</a></p>
+        <div class="ga-consent__actions">
+          <button type="button" class="btn btn--outline" data-consent="denied">{t(locale, 'consent.reject')}</button>
+          <button type="button" class="btn btn--outline" data-consent="granted">{t(locale, 'consent.accept')}</button>
+        </div>
+      </div>
+    </div>
+    <script>
+      const KEY = 'consent-analytics';
+      const box = document.getElementById('consent') as HTMLElement | null;
+      const id = box?.dataset.ga || '';
+      type W = Window & { dataLayer?: unknown[]; gtag?: (...a: unknown[]) => void; __gaLoaded?: boolean };
+      const w = window as W;
+      const read = () => { try { return localStorage.getItem(KEY); } catch { return null; } };
+      const write = (v: string) => { try { localStorage.setItem(KEY, v); } catch { /* private mode */ } };
+      function loadGa() {
+        if (w.__gaLoaded || !id) return;
+        w.__gaLoaded = true;
+        w.dataLayer = w.dataLayer || [];
+        w.gtag = function () { (w.dataLayer as unknown[]).push(arguments); };
+        w.gtag('consent', 'default', { ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied', analytics_storage: 'granted' });
+        w.gtag('js', new Date());
+        w.gtag('config', id);
+        const s = document.createElement('script'); s.async = true; s.src = `https://www.googletagmanager.com/gtag/js?id=${id}`; document.head.appendChild(s);
+      }
+      function clearGaCookies() {
+        for (const c of document.cookie.split(';')) {
+          const n = c.split('=')[0].trim();
+          if (n === '_ga' || n.startsWith('_ga_')) for (const d of [location.hostname, '.' + location.hostname]) document.cookie = `${n}=; Max-Age=0; path=/; domain=${d}`;
+        }
+      }
+      const choice = read();
+      if (choice === 'granted') loadGa();
+      else { clearGaCookies(); if (choice !== 'denied' && box) box.hidden = false; } // also removes leftovers after a withdrawal
+      box?.addEventListener('click', (e) => {
+        const v = (e.target as HTMLElement).closest<HTMLElement>('[data-consent]')?.dataset.consent;
+        if (!v) return;
+        write(v); box.hidden = true;
+        if (v === 'granted') loadGa();
+        else { clearGaCookies(); if (w.__gaLoaded) location.reload(); }
+      });
+      document.addEventListener('click', (e) => {
+        if ((e.target as HTMLElement).closest('[data-consent-open]') && box) { box.hidden = false; box.querySelector('button')?.focus(); }
+      });
+    </script>
+  </>
+)}

@@ -36,8 +36,10 @@ const analytics = !!CF_ANALYTICS_TOKEN || CF_WEB_ANALYTICS_AUTO;
 
 {GA4_ID && (
   <>
-    <h2>{analytics ? '6' : '5'}. Google Analytics 4</h2>
-    <p>Nur mit Ihrer Einwilligung (Art. 6 Abs. 1 lit. a DSGVO, § 25 Abs. 1 TDDDG) nutzen wir Google Analytics 4 der Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Irland. Ohne Einwilligung werden keine Analyse-Cookies gesetzt (Google Consent Mode v2). Sie können Ihre Einwilligung jederzeit über „Datenschutz-Einstellungen“ im Seitenfuß widerrufen.</p>
+    <h2>{analytics ? '6' : '5'}. Google Analytics 4 (nur mit Einwilligung)</h2>
+    <p>Wenn Sie im Hinweis „Datenschutz-Einstellungen“ auf „Akzeptieren“ klicken, nutzen wir Google Analytics 4 der Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Irland, um zu verstehen, welche Seiten und Rechner genutzt werden. Vorher wird kein Skript von Google geladen und es werden keine Daten an Google übertragen.</p>
+    <p>Nach Ihrer Zustimmung setzt Google Cookies (z. B. „_ga“), die Ihren Browser wiedererkennen, und erfasst Nutzungsdaten wie aufgerufene Seiten, Verweildauer, ungefähre Region (aus der IP-Adresse abgeleitet; die IP-Adresse selbst wird von Google Analytics 4 nicht gespeichert), Browser- und Gerätetyp sowie Ereignisse wie die Nutzung eines Rechners. Werbe- und Personalisierungsfunktionen sowie die Datenfreigabe an andere Google-Produkte haben wir deaktiviert. Daten können an die Google LLC in den USA übermittelt werden; Google ist unter dem EU-US Data Privacy Framework zertifiziert.</p>
+    <p>Rechtsgrundlage ist Ihre Einwilligung (Art. 6 Abs. 1 lit. a DSGVO, § 25 Abs. 1 TDDDG). Sie können sie jederzeit über „Datenschutz-Einstellungen“ im Seitenfuß widerrufen; die Google-Analytics-Cookies werden dann gelöscht. Ihre Auswahl selbst speichern wir im lokalen Speicher Ihres Browsers. Weitere Informationen: <a href="https://policies.google.com/privacy" rel="noopener">policies.google.com/privacy</a>.</p>
   </>
 )}
 

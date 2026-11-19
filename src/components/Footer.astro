@@ -1,5 +1,5 @@
 ---
-import { SITE, adsEnabled } from '../config/site';
+import { SITE, adsEnabled, GA4_ID } from '../config/site';
 import type { LocaleCode } from '../config/locales';
 import { TOOLS, toolsFor, CATEGORIES, toolPath, pagePath, type CategoryId } from '../config/tool-map';
 import { t } from '../i18n';
@@ -27,7 +27,7 @@ const year = new Date().getUTCFullYear();
       <span>© {year} {SITE.name}</span>
       <span class="footer-legal">
         <a href={pagePath('imprint', locale)}>{t(locale, 'pages.imprint')}</a> · <a href={pagePath('privacy', locale)}>{t(locale, 'pages.privacy')}</a> · <a href={pagePath('terms', locale)}>{t(locale, 'pages.terms')}</a>
-        {adsEnabled() && <> · <button type="button" data-consent-open>{t(locale, 'common.privacyChoices')}</button></>}
+        {(adsEnabled() || GA4_ID) && <> · <button type="button" data-consent-open>{t(locale, 'common.privacyChoices')}</button></>}
       </span>
     </div>
   </div>

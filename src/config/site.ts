@@ -71,7 +71,7 @@ export const ADS = {
 export const adsEnabled = () => ADS.client.startsWith('ca-pub-');
 
 /** Google Analytics 4 measurement ID (G-XXXX). Runs with Consent Mode v2 (denied until the visitor agrees). */
-export const GA4_ID = import.meta.env.PUBLIC_GA4_ID || '';
+export const GA4_ID = import.meta.env.PUBLIC_GA4_ID || 'G-PM0JQD2BQJ'; // public measurement ID, loads only after consent (AnalyticsConsent.astro)
 /** Cloudflare Web Analytics token (cookieless). Can run alongside or instead of GA4. */
 export const CF_ANALYTICS_TOKEN = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN || '';
 /** Cloudflare Web Analytics switched on in the Cloudflare dashboard (automatic setup, script injected by Cloudflare). Keeps the privacy policy accurate. */

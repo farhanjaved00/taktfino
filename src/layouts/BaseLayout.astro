@@ -9,13 +9,14 @@ import '../styles/global.css';
 import sg700 from '@fontsource/space-grotesk/files/space-grotesk-latin-700-normal.woff2?url';
 import inter400 from '@fontsource/inter/files/inter-latin-400-normal.woff2?url';
 import inter600 from '@fontsource/inter/files/inter-latin-600-normal.woff2?url';
-import { SITE, GSC_VERIFICATION, BING_VERIFICATION, CF_ANALYTICS_TOKEN, GA4_ID } from '../config/site';
+import { SITE, GSC_VERIFICATION, BING_VERIFICATION, CF_ANALYTICS_TOKEN, GA4_ID, adsEnabled } from '../config/site';
 import { getLocale, type LocaleCode } from '../config/locales';
 import { abs } from '../lib/seo';
 import type { PageEntry } from '../lib/registry';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import TabBar from '../components/TabBar.astro';
+import AnalyticsConsent from '../components/AnalyticsConsent.astro';
 import Consent from '../components/Consent.astro';
 import JsonLd from '../components/JsonLd.astro';
 import { t } from '../i18n';
@@ -74,7 +75,7 @@ const alts = alternates.length ? alternates : [];
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={abs(ogImage)} />
-    {GA4_ID && (
+    {GA4_ID && adsEnabled() && (
       <>
         <script is:inline define:vars={{ GA4_ID }}>
           window.dataLayer = window.dataLayer || [];
@@ -100,6 +101,7 @@ const alts = alternates.length ? alternates : [];
     <TabBar locale={locale} />
     <slot name="after" />
     <Consent locale={locale} />
+    <AnalyticsConsent locale={locale} />
     {CF_ANALYTICS_TOKEN && <script is:inline defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon={JSON.stringify({ token: CF_ANALYTICS_TOKEN })}></script>}
     <script>
       import { registerPwa } from '../scripts/client';
