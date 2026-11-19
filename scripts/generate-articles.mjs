@@ -91,7 +91,7 @@ Regeln – alle einhalten:
 9. VERBINDLICHE FAKTEN: Für Feiertage, Daten, Wochentage, Bundesländer, Anzahlen, Mindestlohn und Kalenderwochen verwendest du AUSSCHLIESSLICH die Angaben im Abschnitt „Verbindliche Fakten“. Übernimm Listen von Bundesländern vollständig. Was dort nicht steht, nennst du ohne konkrete Zahl oder lässt es weg. Einen Feiertag, der nicht in allen 16 Ländern gilt, nie als bundesweit bezeichnen.
 10. Mindestens 750 Wörter.
 11. Keywords NIE wörtlich in Klammern, Anführungszeichen oder kleingeschrieben einbauen. Schreibe Substantive groß („Brückentage 2027 in NRW“), formuliere natürlich. Keine Zeiträume erfinden: Freie Tage nur aus „Freie Zeiträume“ übernehmen.
-Antworte als JSON: {"description": "Meta-Beschreibung ≤ 150 Zeichen", "body": "Markdown-Artikel", "faq": [{"q": "...", "a": "..."}] (3–4 Fragen, kurz)}`;
+Antworte als JSON: {"title": "SEO-Titel, 40–58 Zeichen, beginnt möglichst mit dem Hauptkeyword (Substantive groß), konkret und ohne Clickbait", "description": "Meta-Beschreibung ≤ 150 Zeichen", "body": "Markdown-Artikel", "faq": [{"q": "...", "a": "..."}] (3–4 Fragen, kurz)}`;
 
 const LANGUAGE = { es: 'Spanish (Mexico first, understandable in Spain)', 'pt-br': 'Brazilian Portuguese', nl: 'Dutch', fr: 'French', pl: 'Polish', it: 'Italian', en: 'American English' };
 const systemFor = (l) => l === 'de' ? SYSTEM_DE : `You write guides for a free calculator website (work time, hours, dates, pay) for readers in ${LOCALES.find((x) => x.code === l).countries.join(', ')}.
@@ -104,16 +104,16 @@ Follow every rule:
 6. 700–1,200 words. No filler, no repetition.
 7. NEVER invent facts, numbers, studies, quotes or court cases. Name laws/articles only when certain. Where rules differ by country, state or contract, say so. No legal advice.
 8. Natural ${LANGUAGE[l]} as a native writer would use it – not a translation. Use the secondary keywords naturally once each.
-Answer as JSON: {"description": "meta description ≤ 150 characters", "body": "Markdown article", "faq": [{"q": "...", "a": "..."}] (3–4 short questions)}`;
+Answer as JSON: {"title": "SEO title, 40–58 characters, starting with the primary keyword where natural, specific, no clickbait", "description": "meta description ≤ 150 characters", "body": "Markdown article", "faq": [{"q": "...", "a": "..."}] (3–4 short questions)}`;
 
 async function draft(b) {
   if (LANG !== 'de') {
     const user = `Primary keyword: ${b.keyword}
 Secondary keywords: ${b.secondary.join(', ') || '-'}
-Title: ${b.title}
+Title: ${b.title || '(write it yourself, see JSON field title)'}
 Search intent: ${b.intent}
-Suggested H2: ${b.h2s}
-Questions (People also ask): ${b.questions}
+Suggested H2: ${b.h2s || '(none – choose 4–6 H2s that match the search intent)'}
+Questions (People also ask): ${b.questions || '(none – answer the 3–4 questions people most likely ask)'}
 Calculator link: ${b.toolUrl}
 Today: ${today.toISOString().slice(0, 10)}
 
@@ -123,10 +123,10 @@ ${calendar()}`;
   }
   const user = `Hauptkeyword: ${b.keyword}
 Nebenkeywords (je einmal natürlich verwenden): ${b.secondary.join(', ') || '-'}
-Titel: ${b.title}
+Titel: ${b.title || '(selbst formulieren, siehe JSON-Feld title)'}
 Suchintention: ${b.intent}
-Vorgeschlagene H2: ${b.h2s}
-Fragen (People also ask): ${b.questions}
+Vorgeschlagene H2: ${b.h2s || '(keine – wähle 4–6 H2 passend zur Suchintention)'}
+Fragen (People also ask): ${b.questions || '(keine – beantworte die 3–4 naheliegendsten Fragen)'}
 Rechner-Link: ${b.toolUrl}
 Heute: ${WD[today.getUTCDay()]}, ${today.getUTCDate()}. ${MONTHS[today.getUTCMonth()]} ${today.getUTCFullYear()}
 
@@ -170,12 +170,14 @@ async function runLang() {
     if (!ts || !cs) { console.warn(`skip (tool/category not available in ${LANG}): ${b.title}`); continue; }
     b.toolUrl = `/${LANG}/${ts}/`;
     if (existing.has(slug)) { console.warn(`skip (exists): ${slug}`); used.push({ r, slug }); continue; }
-    console.log(`${DRY ? '[dry] ' : ''}draft: ${b.title} → /${LANG}/${cs}/${slug}/`);
+    console.log(`${DRY ? '[dry] ' : ''}draft: ${b.title || `[${b.keyword}]`} → /${LANG}/${cs}/${slug}/`);
     if (DRY) { used.push({ r, slug }); continue; }
     const j = await draft(b);
     if (!j.body || !j.description) throw new Error('OpenAI response missing body/description');
     const issues = [];
-    const title = b.title.length > 60 ? (issues.push(`title ${b.title.length} chars (max 60) – cut`), b.title.slice(0, 60)) : b.title;
+    const t0 = (b.title || String(j.title || '')).trim();
+    if (!t0) throw new Error(`no title for ${b.keyword}`);
+    const title = t0.length > 60 ? (issues.push(`title ${t0.length} chars (max 60) – cut`), t0.slice(0, 60).replace(/\s+\S*$/, '')) : t0;
     const desc = j.description.length > 155 ? (issues.push('description cut (max 155)'), j.description.slice(0, 152) + '…') : j.description;
     const w = j.body.split(/\s+/).filter(Boolean).length;
     if (w < 700 || w > 1300) issues.push(`length ${w} words (target 700–1,200)`);

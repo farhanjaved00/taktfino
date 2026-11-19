@@ -7,7 +7,7 @@
  *                  (with AUTO_PUBLISH the article then stays noindex).
  * German content only for now (the only market with coded rules).
  */
-import { holidaysFor, DE_REGIONS, type HolidayEntry } from '../../src/tools/holiday-rules';
+import { holidaysFor, DE_REGIONS, easterSunday, type HolidayEntry } from '../../src/tools/holiday-rules';
 import { weeksInYear } from '../../src/tools/week';
 import wage from '../../src/data/minimum-wage.json' with { type: 'json' };
 
@@ -35,7 +35,7 @@ const ALIASES: Record<string, string[]> = {
   'weltkindertag': ['Weltkindertag'],
 };
 
-export interface DeHoliday { key: string; name: string; date: string; full: string[]; partial: { land: string; note?: string }[] }
+export interface DeHoliday { key: string; name: string; date: string; full: string[]; partial: { land: string; note?: string }[]; special?: boolean }
 
 /** Every German holiday of a year with the Länder where it applies (full) and where only in parts (partial). */
 export function deHolidays(year: number): DeHoliday[] {
@@ -77,6 +77,39 @@ export function freeBlocks(year: number) {
 }
 const span = (b: { from: string; to: string; days: number }) => `${de(b.from).replace(/\.\d{4}$/, '.')}–${de(b.to)} (${b.days} ${b.days === 1 ? 'Tag' : 'Tage'})`;
 
+/** Calendar days that are NOT public holidays but are searched a lot ("wann ist muttertag"). Computed, never guessed. */
+export function specialDays(year: number): { key: string; name: string; aliases: string[]; date: string }[] {
+  const e = easterSunday(year); const easter = `${year}-${String(e.m).padStart(2, '0')}-${String(e.d).padStart(2, '0')}`;
+  const iso = (m: number, d: number) => `${year}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+  const lastSunday = (m: number) => { let d = new Date(Date.UTC(year, m, 0)); while (d.getUTCDay() !== 0) d = new Date(d.getTime() - 864e5); return d.toISOString().slice(0, 10); };
+  let may = new Date(Date.UTC(year, 4, 1)); while (may.getUTCDay() !== 0) may = new Date(may.getTime() + 864e5);
+  const advent4 = (() => { let d = new Date(Date.UTC(year, 11, 24)); while (d.getUTCDay() !== 0) d = new Date(d.getTime() - 864e5); return d.toISOString().slice(0, 10); })();
+  const S = (key: string, name: string, date: string, aliases: string[] = []) => ({ key, name, aliases, date });
+  return [
+    S('valentinstag', 'Valentinstag', iso(2, 14)),
+    S('weiberfastnacht', 'Weiberfastnacht', addDays(easter, -52), ['Altweiberfastnacht']),
+    S('rosenmontag', 'Rosenmontag', addDays(easter, -48)),
+    S('faschingsdienstag', 'Faschingsdienstag', addDays(easter, -47), ['Fastnachtsdienstag', 'Veilchendienstag']),
+    S('aschermittwoch', 'Aschermittwoch', addDays(easter, -46)),
+    S('zeitumstellung-maerz', 'Beginn der Sommerzeit', lastSunday(3), ['Zeitumstellung im März', 'Umstellung auf Sommerzeit']),
+    S('palmsonntag', 'Palmsonntag', addDays(easter, -7)),
+    S('gruendonnerstag', 'Gründonnerstag', addDays(easter, -3)),
+    S('muttertag', 'Muttertag', new Date(may.getTime() + 7 * 864e5).toISOString().slice(0, 10)),
+    S('vatertag', 'Vatertag', addDays(easter, 39), ['Herrentag']),
+    S('zeitumstellung-oktober', 'Ende der Sommerzeit', lastSunday(10), ['Zeitumstellung im Oktober', 'Umstellung auf Winterzeit']),
+    S('halloween', 'Halloween', iso(10, 31)),
+    S('volkstrauertag', 'Volkstrauertag', addDays(advent4, -35)),
+    S('totensonntag', 'Totensonntag', addDays(advent4, -28), ['Ewigkeitssonntag']),
+    S('advent-1', '1. Advent', addDays(advent4, -21), ['erster Advent', 'Erster Advent']),
+    S('advent-2', '2. Advent', addDays(advent4, -14), ['zweiter Advent']),
+    S('advent-3', '3. Advent', addDays(advent4, -7), ['dritter Advent']),
+    S('advent-4', '4. Advent', advent4, ['vierter Advent']),
+    S('nikolaus', 'Nikolaus', iso(12, 6), ['Nikolaustag']),
+    S('heiligabend', 'Heiligabend', iso(12, 24)),
+    S('silvester', 'Silvester', iso(12, 31)),
+  ];
+}
+
 const namesOf = (h: { key: string; name: string }) => [h.name, ...(ALIASES[h.key] || [])];
 const minWage = (y: number) => [...wage.DE.rates].reverse().find((r) => r.from <= `${y}-12-31`)?.hourly;
 
@@ -113,6 +146,8 @@ export function factsFor(brief: { keyword: string; title: string; tool: string; 
     out.push(`Österreich ${y} (bundesweit): ${(holidaysFor('at', y) as HolidayEntry[]).map((h) => `${h.name} ${de(h.date)} (${wdOf(h.date)})`).join(', ')}. Karfreitag ist in Österreich seit 2019 kein allgemeiner Feiertag.`);
     out.push(`Schweiz ${y}: Einziger bundesweiter Feiertag ist die Bundesfeier am 1.8. (${wdOf(`${y}-08-01`)}); alle anderen Feiertage regeln die Kantone. Beispiel Kanton Zürich: ${(holidaysFor('ch-zh', y) as HolidayEntry[]).map((h) => `${h.name} ${de(h.date)}`).join(', ')}.`);
   }
+  if (/ostern|pfingst|mutter|vatertag|karneval|fasching|rosenmontag|advent|totensonntag|nikolaus|weihnacht|heiligabend|silvester|halloween|valentin|zeitumstellung|sommerzeit|winterzeit|wann ist|tage bis|wie viele tage/i.test(text))
+    for (const y of years) out.push(`\nBesondere Tage ${y} (keine gesetzlichen Feiertage, außer wo angegeben): ${specialDays(y).map((d) => `${d.name} ${de(d.date)} (${wdOf(d.date)})`).join(', ')}. Ostersonntag ${de(addDays(specialDays(y).find((d) => d.key === 'palmsonntag')!.date, 7))}, Pfingstsonntag ${de(addDays(specialDays(y).find((d) => d.key === 'palmsonntag')!.date, 56))}.`);
   return out.join('\n');
 }
 
@@ -158,13 +193,15 @@ export function checkFacts(body: string, brief: { keyword: string; title: string
   const single = years.length === 1 ? years[0] : undefined;
   const issues: string[] = [];
   const hol = new Map(years.map((y) => [y, deHolidays(y)]));
-  const allNames = [...new Set([...hol.values()].flat().flatMap(namesOf))].sort((a, b) => b.length - a.length);
+  const spec = new Map(years.map((y) => [y, specialDays(y)]));
+  const allNames = [...new Set([...[...hol.values()].flat().flatMap(namesOf), ...[...spec.values()].flat().flatMap((d) => [d.name, ...d.aliases])])].sort((a, b) => b.length - a.length);
   const findHolidays = (line: string) => {
     let rest = line; const found: string[] = [];
     for (const n of allNames) if (rest.includes(n)) { found.push(n); rest = rest.split(n).join(' '); }
     return found;
   };
-  const byName = (n: string, y: number) => hol.get(y)?.find((h) => namesOf(h).includes(n));
+  const byName = (n: string, y: number): DeHoliday | undefined => hol.get(y)?.find((h) => namesOf(h).includes(n))
+    ?? (() => { const d = (spec.get(y) ?? specialDays(y)).find((x) => [x.name, ...x.aliases].includes(n)); return d ? { key: d.key, name: d.name, date: d.date, full: [], partial: [], special: true } : undefined; })();
   let header = '', section = '';
   for (const raw of body.split('\n')) {
     const line = raw.trim();
@@ -202,7 +239,7 @@ export function checkFacts(body: string, brief: { keyword: string; title: string
     if (names.length === 1 && single) {
       const h = byName(names[0], single);
       const { all, partial } = landsIn(isRow ? cells.slice(1).join(' ') : line.replace(names[0], ''));
-      if (h && all.size >= 2 && h.full.length < 16) {
+      if (h && !h.special && all.size >= 2 && h.full.length < 16) {
         const p = new Set(h.partial.map((x) => x.land));
         const missing = h.full.filter((r) => !all.has(r) && !/(u\. ?a\.|unter anderem|z\. ?B\.|etwa|beispielsweise)/.test(line));
         const wrong = [...all].filter((r) => !h.full.includes(r) && !p.has(r));

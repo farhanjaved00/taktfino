@@ -1,7 +1,11 @@
 keyword,title,tool,category,intent,h2s,questions,week,volume,kd,secondary
-ile tygodni ma rok,Ile tygodni ma rok? 52 czy 53 – wyjaśnienie,week,dates,informational,Tygodnie w 2026 i 2027|Dlaczego niektóre lata mają 53 tygodnie|Numeracja tygodni ISO,Ile tygodni ma 2027 rok?|Kiedy zaczyna się pierwszy tydzień?,1,14800,15,który to tydzień roku
+ile tygodni ma rok,Ile tygodni ma rok? 52 czy 53 – wyjaśnienie,week,dates,informational,Tygodnie w 2026 i 2027|Dlaczego niektóre lata mają 53 tygodnie|Numeracja tygodni ISO,Ile tygodni ma 2027 rok?|Kiedy zaczyna się pierwszy tydzień?,1,14800,15,który to tydzień roku|ile jest tygodni w roku
 ile dni ma rok,"Ile dni ma rok? 365, 366 i rok przestępny",days,dates,informational,Dni w roku|Zasada roku przestępnego|Dni w miesiącach,Czy 2028 to rok przestępny?|Dlaczego 1900 nie był przestępny?,1,8100,14,rok przestępny
-ile dni do świąt,Ile dni do świąt? Odliczanie do Bożego Narodzenia,days,dates,informational,Dni do 25 grudnia|Jak liczyć dni między datami|Dni robocze do świąt,Ile tygodni do świąt?|Czy dzisiejszy dzień się liczy?,2,5400,10,
+ile dni do świąt,Ile dni do świąt? Odliczanie do Bożego Narodzenia,days,dates,informational,Dni do 25 grudnia|Jak liczyć dni między datami|Dni robocze do świąt,Ile tygodni do świąt?|Czy dzisiejszy dzień się liczy?,1,5400,10,ile dni do wigilii|ile dni do wigili|za ile dni wigilia
 stawka godzinowa netto,Stawka godzinowa netto: jak przeliczyć wynagrodzenie,wage,pay,informational,Z pensji miesięcznej na stawkę godzinową|Brutto a netto|Przykłady w tabeli,Ile godzin pracy ma miesiąc?|Jak policzyć stawkę z umowy zlecenia?,2,1000,32,
-jak liczyć nadgodziny,Jak liczyć nadgodziny? Wzór i przykłady,overtime,pay,informational,Co jest nadgodziną|Wzór z przykładem|Dodatek 50 % i 100 %,Ile nadgodzin można mieć w roku?|Czy nadgodziny można odebrać?,3,260,23,
-godziny na minuty,"Godziny na minuty: wzór, tabela, przykłady",minutes,dates,informational,Wzór: godziny × 60|Tabela przeliczeń|Godziny dziesiętne,"Ile minut to 1,5 godziny?|Jak zamienić 2:45 na minuty?",3,170,11,
+jak liczyć nadgodziny,Jak liczyć nadgodziny? Wzór i przykłady,overtime,pay,informational,Co jest nadgodziną|Wzór z przykładem|Dodatek 50 % i 100 %,Ile nadgodzin można mieć w roku?|Czy nadgodziny można odebrać?,2,260,23,
+godziny na minuty,"Godziny na minuty: wzór, tabela, przykłady",minutes,dates,informational,Wzór: godziny × 60|Tabela przeliczeń|Godziny dziesiętne,"Ile minut to 1,5 godziny?|Jak zamienić 2:45 na minuty?",2,170,11,
+za ile dni jest halloween,,days,dates,informational,,,3,4400,10,za ile dni jest hallowen
+20 tygodni ile to miesięcy,,week,dates,informational,,,3,2900,8,
+ile dni minęło od,,days,dates,informational,,,3,2900,14,
+ile dni do końca roku,,days,dates,informational,,,4,2900,15,

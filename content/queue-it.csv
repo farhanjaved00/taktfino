@@ -1,5 +1,9 @@
 keyword,title,tool,category,intent,h2s,questions,week,volume,kd,secondary
 quanti giorni mancano a natale,Quanti giorni mancano a Natale? Il conto alla rovescia,days,dates,informational,Giorni al 25 dicembre|Come contare i giorni tra due date|Giorni lavorativi a Natale,Quante settimane mancano a Natale?|Si conta anche oggi?,1,60500,18,
-anno bisestile,"Anno bisestile: regola, elenco e quanti giorni",days,dates,informational,La regola dell’anno bisestile|Elenco degli anni bisestili|29 febbraio e compleanni,Il 2028 è bisestile?|Perché il 1900 non era bisestile?,1,12100,27,quanti giorni ha un anno
-quante settimane ha un anno,"Quante settimane ha un anno? 52 o 53, spiegato",week,dates,informational,Settimane nel 2026 e 2027|Perché alcuni anni hanno 53 settimane|Settimane ISO,Il 2027 ha 53 settimane?|Quando inizia la settimana 1?,2,2900,28,
+anno bisestile,"Anno bisestile: regola, elenco e quanti giorni",days,dates,informational,La regola dell’anno bisestile|Elenco degli anni bisestili|29 febbraio e compleanni,Il 2028 è bisestile?|Perché il 1900 non era bisestile?,1,12100,27,quanti giorni ha un anno|quanti giorni ci sono in un anno
+quante settimane ha un anno,"Quante settimane ha un anno? 52 o 53, spiegato",week,dates,informational,Settimane nel 2026 e 2027|Perché alcuni anni hanno 53 settimane|Settimane ISO,Il 2027 ha 53 settimane?|Quando inizia la settimana 1?,1,2900,28,
 minuti in centesimi,Minuti in centesimi: conversione e tabella,minutes,dates,informational,La formula: minuti ÷ 60|Tabella 1–60 minuti|Ore centesimali in busta paga,Quanto sono 45 minuti in centesimi?|Come si scrive 7 ore e 30?,2,320,8,
+72 ore quanti giorni sono,,hours,dates,informational,,,2,2900,21,48 ore quanti giorni sono
+quanti giorni mancano ad halloween,,days,dates,informational,,,2,1900,14,
+quanti giorni lavorativi ci sono in un anno,,days,work,informational,,,3,1600,12,
+quanti giorni mancano a capodanno,,days,dates,informational,,,3,1900,17,

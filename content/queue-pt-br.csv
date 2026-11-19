@@ -1,10 +1,18 @@
 keyword,title,tool,category,intent,h2s,questions,week,volume,kd,secondary
-quantos dias faltam para o natal,Quantos dias faltam para o Natal? Contagem regressiva,days,dates,informational,Dias até 25 de dezembro|Como contar dias entre datas|Dias úteis até o Natal,Quantas semanas faltam para o Natal?|O dia de hoje entra na conta?,1,90500,27,
+quantos dias faltam para o natal,Quantos dias faltam para o Natal? Contagem regressiva,days,dates,informational,Dias até 25 de dezembro|Como contar dias entre datas|Dias úteis até o Natal,Quantas semanas faltam para o Natal?|O dia de hoje entra na conta?,1,90500,27,faltam quantos dias para o natal|falta quantos dias para o natal|quantos dias falta para o natal|quantos dias para o natal
 quantas semanas tem um ano,"Quantas semanas tem um ano? 52 ou 53, explicado",week,dates,informational,Semanas em 2026 e 2027|Por que alguns anos têm 53 semanas|Semana ISO: como contar,Quantas semanas tem 2027?|Quais anos têm 53 semanas?,1,74000,34,quantas semanas tem um mês
-quantos dias tem um ano,"Quantos dias tem um ano? 365, 366 e ano bissexto",days,dates,informational,Dias por ano|Ano bissexto: a regra completa|Dias por mês,Quantos dias tem 2028?|De quanto em quanto tempo há ano bissexto?,2,49500,28,ano bissexto
+quantos dias tem um ano,"Quantos dias tem um ano? 365, 366 e ano bissexto",days,dates,informational,Dias por ano|Ano bissexto: a regra completa|Dias por mês,Quantos dias tem 2028?|De quanto em quanto tempo há ano bissexto?,1,49500,28,ano bissexto
 quantas horas tem um ano,Quantas horas tem um ano? Cálculo e tabela,hours,dates,informational,"Horas de um ano normal e bissexto|Horas de trabalho por ano|Horas, minutos e segundos",Quantas horas tem um mês?|Quantas horas se trabalha por ano?,2,12100,28,
-banco de horas,Banco de horas: como funciona e como calcular,timesheet,work,informational,O que é banco de horas|Como calcular o saldo|Exemplo com folha de ponto,Banco de horas vence?|Como compensar horas negativas?,3,5400,16,
-horas em minutos,"Horas em minutos: fórmula, tabela e exemplos",minutes,dates,informational,A fórmula: horas × 60|Tabela de conversão|Horas decimais em minutos,"Quantos minutos são 1,5 hora?|Como converter 2:45 h em minutos?",3,5400,34,
-como calcular horas extras,Como calcular horas extras: passo a passo,overtime,pay,informational,O que conta como hora extra|Fórmula com exemplo|Adicional de 50 % e 100 %,Quanto vale a hora extra?|Quantas horas extras são permitidas por dia?,4,4400,23,
-como calcular horas trabalhadas,Como calcular horas trabalhadas no mês,hours,work,informational,"Entrada, saída e intervalo|Somar horas do mês|Converter em horas decimais",Como somar horas e minutos?|Intervalo conta como hora trabalhada?,4,2900,19,
-jornada de trabalho,Jornada de trabalho: horas por dia e semana,timesheet,work,informational,Jornada diária e semanal|Intervalos e descanso|Como registrar a jornada,Qual a jornada máxima por semana?|Como funciona a escala 12x36?,5,33100,48,
+banco de horas,Banco de horas: como funciona e como calcular,timesheet,work,informational,O que é banco de horas|Como calcular o saldo|Exemplo com folha de ponto,Banco de horas vence?|Como compensar horas negativas?,2,5400,16,
+horas em minutos,"Horas em minutos: fórmula, tabela e exemplos",minutes,dates,informational,A fórmula: horas × 60|Tabela de conversão|Horas decimais em minutos,"Quantos minutos são 1,5 hora?|Como converter 2:45 h em minutos?",2,5400,34,
+como calcular horas extras,Como calcular horas extras: passo a passo,overtime,pay,informational,O que conta como hora extra|Fórmula com exemplo|Adicional de 50 % e 100 %,Quanto vale a hora extra?|Quantas horas extras são permitidas por dia?,3,4400,23,
+como calcular horas trabalhadas,Como calcular horas trabalhadas no mês,hours,work,informational,"Entrada, saída e intervalo|Somar horas do mês|Converter em horas decimais",Como somar horas e minutos?|Intervalo conta como hora trabalhada?,3,2900,19,
+jornada de trabalho,Jornada de trabalho: horas por dia e semana,timesheet,work,informational,Jornada diária e semanal|Intervalos e descanso|Como registrar a jornada,Qual a jornada máxima por semana?|Como funciona a escala 12x36?,3,33100,48,
+72 horas são quantos dias,,hours,dates,informational,,,4,33100,18,48 horas são quantos dias|48 hrs sao quantos dias|72 horas é quantos dias
+24 semanas são quantos meses,,week,dates,informational,,,4,33100,25,18 semanas são quantos meses|22 semanas são quantos meses|28 semanas são quantos meses|36 semanas são quantos meses|20 semanas são quantos meses|12 semanas é quantos meses
+180 dias são quantos meses,,days,dates,informational,,,4,27100,25,120 dias são quantos meses|90 dias são quantos meses
+quantos dias faltam para acabar o ano,,days,dates,informational,,,5,33100,31,faltam quantos dias para acabar o ano
+quantos meses tem 28 dias,,days,dates,informational,,,5,18100,34,
+36 meses são quantos anos,,days,dates,informational,,,5,14800,30,
+quantos minutos tem um dia,,minutes,dates,informational,,,6,18100,38,quantos segundos tem um dia
+40 horas semanais são quantas horas por dia,,hours,work,informational,,,6,8100,22,

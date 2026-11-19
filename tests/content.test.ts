@@ -96,7 +96,7 @@ describe('article queues (planned keywords)', () => {
           expect(seen.get(k), `"${k}" planned twice (${seen.get(k)} and ${kw})`).toBeUndefined();
           seen.set(k, kw);
         }
-        expect(col(r, 'title').length, col(r, 'title')).toBeLessThanOrEqual(60);
+        expect(col(r, 'title').length, col(r, 'title')).toBeLessThanOrEqual(60); // empty = the bot writes it
         expect(TOOLS.some((t) => t.id === col(r, 'tool')), `${kw}: tool "${col(r, 'tool')}"`).toBe(true);
         expect(['work', 'pay', 'dates'], `${kw}: category`).toContain(col(r, 'category'));
         if (l !== 'de') expect(toolsFor(l as 'es').some((t) => t.id === col(r, 'tool')), `${kw}: tool ${col(r, 'tool')} does not exist in ${l}`).toBe(true);

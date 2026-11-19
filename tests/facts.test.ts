@@ -57,6 +57,24 @@ describe('second draft (Brückentage 2027)', () => {
   });
 });
 
+describe('calendar days (not holidays)', () => {
+  it('computes them from Easter and fixed rules', async () => {
+    const { specialDays } = await import('../scripts/lib/facts');
+    const d = Object.fromEntries(specialDays(2027).map((x) => [x.key, x.date]));
+    expect(d.rosenmontag).toBe('2027-02-08');
+    expect(d.muttertag).toBe('2027-05-09');
+    expect(d['advent-1']).toBe('2027-11-28');
+    expect(d.totensonntag).toBe('2027-11-21');
+    expect(d['zeitumstellung-maerz']).toBe('2027-03-28');
+    expect(d['zeitumstellung-oktober']).toBe('2027-10-31');
+  });
+  it('flags a wrong date for them', () => {
+    const b = { keyword: 'wann ist muttertag 2027', title: 'Muttertag 2027' };
+    expect(checkFacts('Der Muttertag ist 2027 am 16. Mai.', b).join()).toContain('Muttertag');
+    expect(checkFacts('Der Muttertag ist 2027 am Sonntag, 9. Mai.', b)).toEqual([]);
+  });
+});
+
 describe('published German pages pass the fact check', () => {
   for (const type of ['articles', 'regions', 'tools']) {
     const dir = path.join('src/content', type, 'de');

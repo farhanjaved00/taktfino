@@ -1,21 +1,23 @@
 keyword,title,tool,category,intent,h2s,questions,week,volume,kd,secondary
 minijob 2027,Minijob 2027: 633-€-Grenze und maximale Stunden,wage,pay,informational,Minijob-Grenze 2027|Wie viele Stunden im Minijob|Urlaub und Pausen im Minijob|Rechenbeispiel,Wie viel darf ich 2027 im Minijob verdienen?|Wie viele Stunden darf ich im Minijob arbeiten?,1,1600,15,minijob grenze 2027|minijob-grenze 2027|minijob änderungen 2027|mindestlohn 2027 minijob grenze
-wie viele wochen hat ein jahr,Wie viele Wochen hat ein Jahr? 52 oder 53,week,dates,informational,"Antwort in Zahlen|52 oder 53 Kalenderwochen|Wochen pro Monat (4,33)|Tabelle 2026–2030",Hat 2026 53 Kalenderwochen?|Wie viele Arbeitswochen hat ein Jahr?,2,33100,21,wie viel wochen hat ein jahr|wieviel wochen hat ein jahr|wochen im jahr|wie viele wochen hat das jahr
-gleitzeit,"Gleitzeit: Kernzeit, Gleitzeitkonto und Regeln",worktime,work,informational,Was ist Gleitzeit|Kernzeit und Rahmenarbeitszeit|Gleitzeitkonto|Pausen und Höchstarbeitszeit bei Gleitzeit,Gilt die Pausenpflicht auch bei Gleitzeit?|Darf ich bei Gleitzeit früher gehen?|Was passiert mit Gleitzeitstunden bei Kündigung?,2,6600,18,was ist gleitzeit|gleitzeit bedeutung|was bedeutet gleitzeit|gleitzeit definition
+wie viele wochen hat ein jahr,Wie viele Wochen hat ein Jahr? 52 oder 53,week,dates,informational,"Antwort in Zahlen|52 oder 53 Kalenderwochen|Wochen pro Monat (4,33)|Tabelle 2026–2030",Hat 2026 53 Kalenderwochen?|Wie viele Arbeitswochen hat ein Jahr?,1,33100,21,wie viel wochen hat ein jahr|wieviel wochen hat ein jahr|wochen im jahr|wie viele wochen hat das jahr
+gleitzeit,"Gleitzeit: Kernzeit, Gleitzeitkonto und Regeln",worktime,work,informational,Was ist Gleitzeit|Kernzeit und Rahmenarbeitszeit|Gleitzeitkonto|Pausen und Höchstarbeitszeit bei Gleitzeit,Gilt die Pausenpflicht auch bei Gleitzeit?|Darf ich bei Gleitzeit früher gehen?|Was passiert mit Gleitzeitstunden bei Kündigung?,1,6600,18,was ist gleitzeit|gleitzeit bedeutung|was bedeutet gleitzeit|gleitzeit definition
 urlaubsanspruch bei kündigung,Urlaubsanspruch bei Kündigung: So wird gerechnet,notice,work,informational,Voller oder anteiliger Urlaub|Kündigung in der ersten oder zweiten Jahreshälfte|Urlaubsabgeltung|Rechenbeispiele,Wie viel Urlaub steht mir bei Kündigung zu?|Wird Resturlaub bei Kündigung ausgezahlt?,2,6600,16,urlaub bei kündigung|resturlaub bei kündigung|urlaub auszahlen bei kündigung|arbeitgeber verweigert urlaub nach kündigung
-arbeitszeitkonto,Arbeitszeitkonto: Plus- und Minusstunden erklärt,overtime,work,informational,Was ist ein Arbeitszeitkonto|Plus- und Minusstunden|Ausgleichszeitraum|Arbeitszeitkonto bei Kündigung,Wie viele Minusstunden darf man haben?|Verfallen Plusstunden?,3,2900,20,arbeitszeitkonto gesetzliche regelung|arbeitszeitkonto muster|arbeitszeitkonto minusstunden
-feiertagszuschlag,"Feiertagszuschlag: Höhe, Anspruch und Steuerfreiheit",surcharge,pay,informational,"Gibt es einen Anspruch|Steuerfreie Sätze nach § 3b EStG|Weihnachten, Silvester und 1. Mai|Rechenbeispiel",Wie hoch ist der Feiertagszuschlag?|Ist der Feiertagszuschlag steuerfrei?,3,4400,21,feiertagszuschlag steuerfrei|feiertagszuschlag gesetzlich|feiertagszuschlag pflicht|gesetzlicher feiertagszuschlag
+arbeitszeitkonto,Arbeitszeitkonto: Plus- und Minusstunden erklärt,overtime,work,informational,Was ist ein Arbeitszeitkonto|Plus- und Minusstunden|Ausgleichszeitraum|Arbeitszeitkonto bei Kündigung,Wie viele Minusstunden darf man haben?|Verfallen Plusstunden?,2,2900,20,arbeitszeitkonto gesetzliche regelung|arbeitszeitkonto muster|arbeitszeitkonto minusstunden
+feiertagszuschlag,"Feiertagszuschlag: Höhe, Anspruch und Steuerfreiheit",surcharge,pay,informational,"Gibt es einen Anspruch|Steuerfreie Sätze nach § 3b EStG|Weihnachten, Silvester und 1. Mai|Rechenbeispiel",Wie hoch ist der Feiertagszuschlag?|Ist der Feiertagszuschlag steuerfrei?,2,4400,21,feiertagszuschlag steuerfrei|feiertagszuschlag gesetzlich|feiertagszuschlag pflicht|gesetzlicher feiertagszuschlag
 probezeit,"Probezeit: Dauer, Kündigungsfrist und Urlaub",notice,dates,informational,Wie lange dauert die Probezeit|Kündigungsfrist in der Probezeit|Urlaub in der Probezeit|Ende der Probezeit berechnen,Wie lange ist die Kündigungsfrist in der Probezeit?|Habe ich in der Probezeit Urlaub?,3,8100,17,kündigungsfrist probezeit|kündigung in der probezeit|probezeit kündigungsfrist|kündigung probezeit
-sonntagszuschlag,Sonntagszuschlag: Wie viel und ab wann steuerfrei?,surcharge,pay,informational,Anspruch auf Sonntagszuschlag|Steuerfrei bis 50 %|Sonntagsarbeit nach ArbZG|Rechenbeispiel,Wie hoch ist der Sonntagszuschlag?|Ist der Sonntagszuschlag steuerfrei?,4,2900,16,sonntagszuschlag steuerfrei|sonntagszuschlag pflicht|sonntagszuschlag gesetzlich|gesetzlicher sonntagszuschlag
-nachtzuschlag,"Nachtzuschlag: Höhe, Anspruch und Steuerfreiheit",surcharge,pay,informational,Was ist Nachtarbeit|Anspruch nach § 6 ArbZG|Steuerfrei 25 % bzw. 40 %|Rechenbeispiel,Wie hoch ist der Nachtzuschlag?|Ab wann gibt es Nachtzuschlag?,4,2900,23,ab wann nachtzuschlag|nachtzuschlag ab wann|nachtzuschlag steuerfrei|nachtzuschlag gesetzlich
+sonntagszuschlag,Sonntagszuschlag: Wie viel und ab wann steuerfrei?,surcharge,pay,informational,Anspruch auf Sonntagszuschlag|Steuerfrei bis 50 %|Sonntagsarbeit nach ArbZG|Rechenbeispiel,Wie hoch ist der Sonntagszuschlag?|Ist der Sonntagszuschlag steuerfrei?,3,2900,16,sonntagszuschlag steuerfrei|sonntagszuschlag pflicht|sonntagszuschlag gesetzlich|gesetzlicher sonntagszuschlag
+nachtzuschlag,"Nachtzuschlag: Höhe, Anspruch und Steuerfreiheit",surcharge,pay,informational,Was ist Nachtarbeit|Anspruch nach § 6 ArbZG|Steuerfrei 25 % bzw. 40 %|Rechenbeispiel,Wie hoch ist der Nachtzuschlag?|Ab wann gibt es Nachtzuschlag?,3,2900,23,ab wann nachtzuschlag|nachtzuschlag ab wann|nachtzuschlag steuerfrei|nachtzuschlag gesetzlich
 resturlaub,Resturlaub: Wann er verfällt und wie man ihn rettet,vacation,work,informational,Übertragung bis 31. März|Hinweispflicht des Arbeitgebers|Resturlaub bei Krankheit|Resturlaub berechnen,Wann verfällt Resturlaub?|Muss der Arbeitgeber auf Resturlaub hinweisen?,4,1900,19,resturlaub berechnen|wann verfällt urlaub|kündigung mit resturlaub
-rufbereitschaft,Rufbereitschaft: Zählt das als Arbeitszeit?,worktime,work,informational,Rufbereitschaft vs. Bereitschaftsdienst|Arbeitszeit oder Ruhezeit|Vergütung|Einsatz und Ruhezeit,Ist Rufbereitschaft Arbeitszeit?|Wird Rufbereitschaft bezahlt?,5,2900,30,rufbereitschaft vergütung|rufbereitschaft arbeitszeit|bereitschaftsdienst
-krank im urlaub,Krank im Urlaub: Bekomme ich die Tage zurück?,vacation,work,informational,Rechtslage nach § 9 BUrlG|Was Sie tun müssen|Krank im Ausland|Beispiel,Werden Urlaubstage bei Krankheit gutgeschrieben?|Muss ich mich im Urlaub krankmelden?,5,2900,25,im urlaub krank|krank im urlaub was tun|krank im urlaub zu spät gemeldet
+rufbereitschaft,Rufbereitschaft: Zählt das als Arbeitszeit?,worktime,work,informational,Rufbereitschaft vs. Bereitschaftsdienst|Arbeitszeit oder Ruhezeit|Vergütung|Einsatz und Ruhezeit,Ist Rufbereitschaft Arbeitszeit?|Wird Rufbereitschaft bezahlt?,4,2900,30,rufbereitschaft vergütung|rufbereitschaft arbeitszeit|bereitschaftsdienst
+krank im urlaub,Krank im Urlaub: Bekomme ich die Tage zurück?,vacation,work,informational,Rechtslage nach § 9 BUrlG|Was Sie tun müssen|Krank im Ausland|Beispiel,Werden Urlaubstage bei Krankheit gutgeschrieben?|Muss ich mich im Urlaub krankmelden?,4,2900,25,im urlaub krank|krank im urlaub was tun|krank im urlaub zu spät gemeldet
 minusstunden,Minusstunden: Wann der Arbeitgeber abziehen darf,overtime,work,informational,Wie Minusstunden entstehen|Abzug vom Gehalt|Nacharbeiten|Rechenbeispiel,Darf der Arbeitgeber Minusstunden abziehen?|Was passiert mit Minusstunden bei Kündigung?,5,1600,22,minusstunden durch arbeitgeber verursacht|minusstunden bei kündigung|615 bgb minusstunden
-urlaubsanspruch teilzeit,Urlaubsanspruch bei Teilzeit: Formel und Tabelle,vacation,work,informational,Formel|Tabelle 1–5 Tage pro Woche|Wechsel Vollzeit/Teilzeit|Beispiele,Wie viele Urlaubstage bei 3 Tagen pro Woche?|Wie viel Urlaub bei 20 Stunden?,6,2400,26,teilzeit urlaubsanspruch|urlaubsanspruch bei teilzeit
-dienstreise arbeitszeit,Dienstreise: Ist die Reisezeit Arbeitszeit?,worktime,work,informational,Grundsätze|Reisezeit als Arbeitszeit|Vergütung|Höchstarbeitszeit und Ruhezeit,Zählt die Anreise zur Arbeitszeit?|Muss Reisezeit bezahlt werden?,6,1600,23,arbeitszeit dienstreise|arbeitszeit bei dienstreisen|dienstreise arbeitszeit über 10 stunden
+urlaubsanspruch teilzeit,Urlaubsanspruch bei Teilzeit: Formel und Tabelle,vacation,work,informational,Formel|Tabelle 1–5 Tage pro Woche|Wechsel Vollzeit/Teilzeit|Beispiele,Wie viele Urlaubstage bei 3 Tagen pro Woche?|Wie viel Urlaub bei 20 Stunden?,5,2400,26,teilzeit urlaubsanspruch|urlaubsanspruch bei teilzeit
+dienstreise arbeitszeit,Dienstreise: Ist die Reisezeit Arbeitszeit?,worktime,work,informational,Grundsätze|Reisezeit als Arbeitszeit|Vergütung|Höchstarbeitszeit und Ruhezeit,Zählt die Anreise zur Arbeitszeit?|Muss Reisezeit bezahlt werden?,5,1600,23,arbeitszeit dienstreise|arbeitszeit bei dienstreisen|dienstreise arbeitszeit über 10 stunden
 urlaub minijob,Urlaub im Minijob: So viel steht Ihnen zu,vacation,pay,informational,Gleicher Anspruch wie Vollzeit|Formel nach Arbeitstagen|Rechenbeispiel|Urlaubsentgelt,Wie viel Urlaub bei Minijob?|Wird Urlaub im Minijob bezahlt?,6,1900,20,minijob urlaub|wieviel urlaub bei minijob|urlaub bei minijob|wie viel urlaub bei minijob
-zeiterfassung pflicht,Zeiterfassungspflicht: Was jetzt gilt,worktime,work,informational,BAG-Beschluss 2022|Was erfasst werden muss|Methoden|Vertrauensarbeitszeit,Ist Zeiterfassung Pflicht?|Gilt das auch im Homeoffice?,7,2400,34,digitale zeiterfassung pflicht|elektronische zeiterfassung pflicht|pflicht zur zeiterfassung
+zeiterfassung pflicht,Zeiterfassungspflicht: Was jetzt gilt,worktime,work,informational,BAG-Beschluss 2022|Was erfasst werden muss|Methoden|Vertrauensarbeitszeit,Ist Zeiterfassung Pflicht?|Gilt das auch im Homeoffice?,6,2400,34,digitale zeiterfassung pflicht|elektronische zeiterfassung pflicht|pflicht zur zeiterfassung
+wann ist valentinstag,,days,dates,informational,,,6,27100,23,
+ist rosenmontag ein feiertag,,workdays,dates,informational,,,7,12100,29,wann ist rosenmontag|wann ist karneval|wann ist fasching
 4 tage woche,"4-Tage-Woche: Arbeitszeit, Pausen und Urlaub",worktime,work,informational,Modelle|10-Stunden-Tage und ArbZG|Urlaubsanspruch|Gehalt,Ist eine 4-Tage-Woche mit 40 Stunden erlaubt?|Wie viel Urlaub bei 4-Tage-Woche?,7,3600,35,4-tage-woche|4 tage woche urlaubsanspruch|urlaubsanspruch 4 tage woche
 arbeitstage pro monat,Arbeitstage pro Monat: Durchschnitt und Tabelle,workdays,work,informational,"Durchschnitt 21,75 und echte Werte|Tabelle 2027 je Monat|Bedeutung für Gehalt und Planung",Wie viele Arbeitstage hat ein Monat im Durchschnitt?|Welcher Monat hat die meisten Arbeitstage?,7,2400,29,durchschnittliche arbeitstage pro monat|wie viele arbeitstage hat ein monat|arbeitstag monat
 40 stunden woche,"40-Stunden-Woche: Pro Tag, Monat und Jahr",hours,work,informational,"Aufteilung pro Tag|173,33 Stunden pro Monat|Arbeitsstunden pro Jahr|Pausen bei 8 Stunden",Wie viele Stunden sind 40 Stunden im Monat?|Wie viele Stunden Pause bei 8 Stunden?,8,2400,32,40 stunden woche wieviel im monat
@@ -26,10 +28,79 @@ schichtplan,Schichtplan: Arbeits- und Nachtstunden berechnen,worktime,work,infor
 arbeitsstunden pro jahr,Arbeitsstunden pro Jahr: Rechnung und Tabelle,hours,work,informational,Formel|Tabelle nach Wochenstunden|Abzug Urlaub und Feiertage|Teilzeit,Wie viele Arbeitsstunden hat ein Jahr?|Wie viele Stunden bei 40 Stunden pro Woche?,9,1900,16,arbeitsstunde pro jahr|wie viele arbeitsstunden hat ein jahr|wie viel arbeitsstunden hat ein jahr|jahresarbeitszeit
 urlaubsgeld,"Urlaubsgeld: Anspruch, Höhe und Steuer",wage,pay,informational,Kein gesetzlicher Anspruch|Tarifvertrag und Arbeitsvertrag|Steuer und Abgaben|Urlaubsgeld vs. Urlaubsentgelt,Habe ich Anspruch auf Urlaubsgeld?|Wird Urlaubsgeld versteuert?,10,4400,33,urlaubsgeld rechner|ig metall urlaubsgeld|soka bau urlaubsgeld
 netto stundenlohn,Netto-Stundenlohn berechnen – so geht's,wage,pay,informational,Brutto- und Nettostundenlohn|Formel|Rechenbeispiele|Was die Abzüge bestimmt,Wie berechne ich meinen Netto-Stundenlohn?|Wie viel netto bei 15 € brutto?,10,590,27,netto rechner stundenlohn|stundenlohn netto rechner|stundenlohn netto berechnen
-arbeitszeitnachweis,"Arbeitszeitnachweis: Inhalt, Vorlage und Pflichten",timesheet,work,informational,Was hineingehört|Wer ihn führen muss|Vorlage/Export|Aufbewahrung,Was muss ein Arbeitszeitnachweis enthalten?|Wie lange muss man ihn aufbewahren?,10,880,22,arbeitszeitnachweis vorlage|arbeitszeitnachweis vorlage kostenlos pdf|vorlage arbeitszeitnachweis
+wann ist ostern,,days,dates,informational,,,10,90500,14,in wie vielen tagen ist ostern|wann ist dieses jahr ostern
+arbeitszeitnachweis,"Arbeitszeitnachweis: Inhalt, Vorlage und Pflichten",timesheet,work,informational,Was hineingehört|Wer ihn führen muss|Vorlage/Export|Aufbewahrung,Was muss ein Arbeitszeitnachweis enthalten?|Wie lange muss man ihn aufbewahren?,11,880,22,arbeitszeitnachweis vorlage|arbeitszeitnachweis vorlage kostenlos pdf|vorlage arbeitszeitnachweis
 nachtschicht,"Nachtschicht: Regeln, Pausen und Zuschläge",worktime,work,informational,Nachtarbeit nach ArbZG|Pausen und Höchstarbeitszeit|Gesundheitsuntersuchung|Zuschläge,Wie lange darf eine Nachtschicht dauern?|Gibt es einen Anspruch auf Nachtzuschlag?,11,6600,40,nachtarbeit
-mindestlohn österreich,Mindestlohn Österreich: Kollektivvertrag erklärt,wage,pay,informational,Kein gesetzlicher Mindestlohn|Kollektivverträge|Stundenlohn berechnen|Vergleich mit Deutschland,Gibt es in Österreich einen Mindestlohn?|Wie hoch ist der Mindestlohn in Österreich?,11,4400,25,mindestlohn österreich 2026|österreich mindestlohn
-urlaubsanspruch österreich,Urlaubsanspruch in Österreich: 5 oder 6 Wochen,workdays,work,informational,5 Wochen gesetzlicher Urlaub|6 Wochen nach 25 Dienstjahren|Teilzeit|Urlaub verjähren,Wie viel Urlaub habe ich in Österreich?|Wann bekomme ich 6 Wochen Urlaub?,11,1600,32,urlaubsanspruch österreich pro monat
+gründonnerstag feiertag,,workdays,dates,informational,,,11,14800,30,
+mindestlohn österreich,Mindestlohn Österreich: Kollektivvertrag erklärt,wage,pay,informational,Kein gesetzlicher Mindestlohn|Kollektivverträge|Stundenlohn berechnen|Vergleich mit Deutschland,Gibt es in Österreich einen Mindestlohn?|Wie hoch ist der Mindestlohn in Österreich?,12,4400,25,mindestlohn österreich 2026|österreich mindestlohn
+urlaubsanspruch österreich,Urlaubsanspruch in Österreich: 5 oder 6 Wochen,workdays,work,informational,5 Wochen gesetzlicher Urlaub|6 Wochen nach 25 Dienstjahren|Teilzeit|Urlaub verjähren,Wie viel Urlaub habe ich in Österreich?|Wann bekomme ich 6 Wochen Urlaub?,12,1600,32,urlaubsanspruch österreich pro monat
 zeitumstellung 2027,Zeitumstellung 2027: Datum und Folgen für die Schicht,hours,dates,informational,Datum Sommerzeit/Winterzeit 2027|Nachtschicht bei Zeitumstellung|Arbeitszeit richtig erfassen,Wann ist die Zeitumstellung 2027?|Wird die Stunde bei Nachtschicht bezahlt?,12,590,16,zeitumstellung abschaffung 2027|zeitumstellung oktober 2027|zeitumstellung 2027 märz
-überstunden teilzeit,Überstunden in Teilzeit: Ab wann gibt es Zuschlag?,overtime,work,informational,Mehrarbeit vs. Überstunden|Zuschläge laut Tarifvertrag|Rechenbeispiel|Überstunden ablehnen,Bekomme ich in Teilzeit Überstundenzuschlag?|Muss ich in Teilzeit Überstunden machen?,12,320,14,teilzeit überstunden|überstunden bei teilzeit
-arbeitszeitgesetz,Arbeitszeitgesetz einfach erklärt: Alle Regeln,worktime,work,informational,Wer fällt unter das ArbZG|Höchstarbeitszeit (§ 3)|Pausen (§ 4)|Ruhezeit (§ 5)|Nachtarbeit (§ 6)|Sonn- und Feiertage (§§ 9–11)|Aufzeichnungspflicht (§ 16),Wie viele Stunden darf man am Tag arbeiten?|Was gilt für Pausen?|Wer kontrolliert das Arbeitszeitgesetz?,12,27100,58,
+überstunden teilzeit,Überstunden in Teilzeit: Ab wann gibt es Zuschlag?,overtime,work,informational,Mehrarbeit vs. Überstunden|Zuschläge laut Tarifvertrag|Rechenbeispiel|Überstunden ablehnen,Bekomme ich in Teilzeit Überstundenzuschlag?|Muss ich in Teilzeit Überstunden machen?,13,320,14,teilzeit überstunden|überstunden bei teilzeit
+arbeitszeitgesetz,Arbeitszeitgesetz einfach erklärt: Alle Regeln,worktime,work,informational,Wer fällt unter das ArbZG|Höchstarbeitszeit (§ 3)|Pausen (§ 4)|Ruhezeit (§ 5)|Nachtarbeit (§ 6)|Sonn- und Feiertage (§§ 9–11)|Aufzeichnungspflicht (§ 16),Wie viele Stunden darf man am Tag arbeiten?|Was gilt für Pausen?|Wer kontrolliert das Arbeitszeitgesetz?,13,27100,58,
+kündigung arbeitsvertrag,,notice,work,informational,,,13,18100,14,
+fristlose kündigung,,notice,work,informational,,,14,9900,17,außerordentliche kündigung|außerordentliche kündigung im arbeitsrecht
+elternzeit vater,,parental,work,informational,,,14,6600,17,elternzeit für väter|vater elternzeit
+betriebsbedingte kündigung,,notice,work,informational,,,14,9900,27,
+wie viele tage hat ein jahr,,days,dates,informational,,,15,12100,35,wie viel tagen hat ein jahr|wie viel tage hat ein jahr|wie viel tage hat das jahr|wie viele tage hat das jahr
+wie viele stunden hat ein jahr,,hours,dates,informational,,,15,9900,30,wieviele stunden hat ein jahr
+minijob rentenversicherung,,wage,pay,informational,,,15,9900,34,
+elternzeit wie lange,,parental,work,informational,,,16,9900,35,wie lange elternzeit
+abfindung bei kündigung,,notice,pay,informational,,,16,6600,27,
+feiertage mai,,workdays,dates,informational,,,16,22200,36,
+kalender mit kalenderwochen,,week,dates,informational,,,17,3600,15,
+elternzeit wann beantragen,,parental,work,informational,,,17,8100,37,wann elternzeit beantragen
+1 mai feiertag,,workdays,dates,informational,,,17,18100,39,
+urlaubsanspruch elternzeit,,vacation,work,informational,,,18,3600,17,elternzeit urlaubsanspruch|urlaubsanspruch bei elternzeit
+mutterschutz wie lange,,maternity,work,informational,,,18,6600,34,wie lange ist mutterschutz|wie lange mutterschutz
+wann ist muttertag,,days,dates,informational,,,18,110000,33,
+christi himmelfahrt feiertag,,workdays,dates,informational,,,19,14800,37,wann ist christi himmelfahrt
+wann ist vatertag,,days,dates,informational,,,19,40500,19,
+wann ist pfingsten,,days,dates,informational,,,19,33100,18,
+minijob wie viele stunden,,wage,pay,informational,,,20,5400,30,wie viele stunden minijob|minijob stunden pro woche
+stunden in tage,,hours,dates,informational,,,20,3600,21,
+elternzeit verlängern,,parental,work,informational,,,20,2900,18,
+urlaubsanspruch mutterschutz,,vacation,work,informational,,,21,2400,15,mutterschutz urlaubsanspruch|urlaubsanspruch im mutterschutz
+wie viele stunden hat eine woche,,hours,dates,informational,,,21,4400,28,
+fronleichnam feiertag bayern,,workdays,dates,informational,,,21,12100,14,
+arztbesuch während der arbeitszeit,,worktime,work,informational,,,22,2900,19,arzttermin während der arbeitszeit|arzttermine während der arbeitszeit|arztbesuch während arbeitszeit|arzttermin während arbeitszeit|arztbesuche während der arbeitszeit
+48 stunden woche,,worktime,work,informational,,,22,4400,30,
+probezeit verlängern,,notice,work,informational,,,22,1900,13,
+teilzeit in elternzeit,,parental,work,informational,,,23,2900,21,elternzeit in teilzeit
+krank in der probezeit,,notice,work,informational,,,23,1600,12,
+urlaub in der probezeit,,vacation,work,informational,,,23,1900,16,
+mutterschutz gehalt,,maternity,pay,informational,,,24,1900,16,gehalt im mutterschutz|gehalt mutterschutz|geld im mutterschutz|geld mutterschutz
+teilzeit wie viele stunden,,hours,work,informational,,,24,3600,31,wie viele stunden sind teilzeit|wie viel stunden ist teilzeit|wie viel stunden sind teilzeit|teilzeit stunden
+recht auf teilzeit,,worktime,work,informational,,,24,4400,38,
+fahrzeit arbeitszeit,,worktime,work,informational,,,25,2400,22,fahrtzeit arbeitszeit|reisezeit arbeitszeit|arbeitszeit fahrzeit
+antrag auf elternzeit,,parental,work,informational,,,25,3600,38,antrag auf elternzeit beim arbeitgeber|antrag elternzeit arbeitgeber|elternzeit antrag arbeitgeber|elternzeit beantragen arbeitgeber|elternzeit beim arbeitgeber beantragen|antrag auf elternzeit arbeitgeber|beantragen von elternzeit
+outlook kalenderwochen anzeigen,,week,dates,informational,,,25,1900,21,kalenderwoche anzeigen outlook|kalenderwoche outlook anzeigen|kalenderwochen outlook anzeigen|outlook anzeige kalenderwoche
+gesetzlicher urlaubsanspruch ab 50,,vacation,work,informational,,,26,1900,24,
+umziehen arbeitszeit,,worktime,work,informational,,,26,1300,17,arbeitszeit umziehen
+jugendarbeitsschutzgesetz arbeitszeit,,worktime,work,informational,,,26,2400,32,jugendarbeitsschutzgesetz arbeitszeiten|jugendschutzgesetz arbeitszeiten|arbeitszeit jugendarbeitsschutzgesetz
+wie viele tage darf man am stück arbeiten,,worktime,work,informational,,,27,1300,19,
+vollzeit teilzeit rechner,,wage,pay,informational,,,27,1900,30,teilzeit vollzeit rechner|teilzeit rechner
+stundenlohn minijob,,wage,pay,informational,,,27,2400,38,
+ab wann mutterschutz,,maternity,work,informational,,,28,1900,31,mutterschutz ab wann|wann beginnt der mutterschutz|wann beginnt mutterschutz|mutterschutz wann beginnt
+minijob überstunden,,overtime,pay,informational,,,28,590,10,überstunden minijob
+mutterschutz nach geburt,,maternity,work,informational,,,28,1900,33,
+urlaubsanspruch bei krankheit,,vacation,work,informational,,,29,1300,23,
+wie viele tage hat ein monat,,days,dates,informational,,,29,1600,30,wie viele monaten haben 28 tage
+mutterschutz frühgeburt,,maternity,work,informational,,,29,1000,23,frühgeburt mutterschutz|mutterschutz bei frühgeburt
+überstunden mit gehalt abgegolten,,overtime,pay,informational,,,30,880,22,überstunden mit dem gehalt abgegolten|überstunden sind mit dem gehalt abgegolten
+unterschied mehrarbeit überstunden,,overtime,pay,informational,,,30,590,15,unterschied überstunden mehrarbeit
+überstunden abbauen,,overtime,pay,informational,,,30,880,25,abbau von überstunden
+dürfen azubis überstunden machen,,overtime,pay,informational,,,31,590,18,
+samstagsarbeit zuschlag,,surcharge,pay,informational,,,31,720,24,zuschlag bei samstagsarbeit
+spätschicht zuschlag,,surcharge,pay,informational,,,31,590,22,
+kalenderwochen 2028,,week,dates,informational,,,32,,,
+wann ist nikolaus,,days,dates,informational,,,32,9900,30,
+15 august feiertag,,workdays,dates,informational,,,32,9900,36,
+in wie viele tagen ist silvester,,days,dates,informational,,,33,2900,10,wie viele tage bis silvester
+wann ist der erste advent,,days,dates,informational,,,33,9900,26,
+arbeitstage 2028,,workdays,work,informational,,,33,,,
+wann ist totensonntag,,days,dates,informational,,,34,22200,33,
+brückentage 2028,,workdays,work,informational,,,34,,,
+reformationstag feiertag wo,,workdays,dates,informational,,,34,12100,30,31.10 feiertag
+wie viele tage bis weihnachten,,days,dates,informational,,,35,12100,25,in wie vielen tagen ist weihnachten|wie viel tage bis weihnachten|wie viele tage noch bis weihnachten|in wie viel tagen ist weihnachten|wie viele tage bis heiligabend|in wie viel tagen ist heiligabend|wann ist weihnachten
+feiertage 2028,,workdays,dates,informational,,,35,,,
+wann ist halloween,,days,dates,informational,,,35,33100,29,in wie vielen tagen ist halloween|in wie viele tagen ist halloween
