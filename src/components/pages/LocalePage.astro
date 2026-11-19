@@ -17,7 +17,7 @@ import Privacy from './de/Privacy.astro';
 import Terms from './de/Terms.astro';
 import Editorial from './de/Editorial.astro';
 import { getCollection, render } from 'astro:content';
-import { IMPRINT } from '../../config/site';
+import { IMPRINT, hasReviewer } from '../../config/site';
 interface Props { locale: LocaleCode; page: PageId | 'notfound' }
 const { locale, page } = Astro.props;
 const md = locale === 'de' || !(page in { about: 1, contact: 1, imprint: 1, privacy: 1, terms: 1, editorial: 1 }) ? undefined
@@ -38,7 +38,7 @@ const H: Record<string, [string, string]> = {
 ---
 {md && Body && (
   <StaticPage locale={locale} id={page as PageId} path={path} h1={md.data.h1} description={md.data.description} noindex={page === 'imprint' || !md.data.reviewed}
-    schema={page === 'about' ? [{ '@context': 'https://schema.org', '@type': 'AboutPage', url: abs(path), mainEntity: [personRef('author', locale), personRef('reviewer', locale)] }] : []}>
+    schema={page === 'about' ? [{ '@context': 'https://schema.org', '@type': 'AboutPage', url: abs(path), mainEntity: [personRef('author', locale), ...(hasReviewer() ? [personRef('reviewer', locale)] : [])] }] : []}>
     {(page === 'imprint' || page === 'privacy') && (
       <p>{t(locale, 'pagesMeta.controller')}: {IMPRINT.name}<br />{IMPRINT.street}<br />{IMPRINT.city}<br />{IMPRINT.country}<br />
         {t(locale, 'pagesMeta.email')}: {IMPRINT.email}{IMPRINT.phone && <><br />{t(locale, 'pagesMeta.phone')}: {IMPRINT.phone}</>}{IMPRINT.vatId && <><br />{t(locale, 'pagesMeta.vat')}: {IMPRINT.vatId}</>}</p>
@@ -48,7 +48,7 @@ const H: Record<string, [string, string]> = {
 )}
 {locale === 'de' && page in H && (
   <StaticPage locale={locale} id={page as PageId} path={path} h1={H[page][0]} description={H[page][1]} noindex={page === 'imprint'}
-    schema={page === 'about' ? [{ '@context': 'https://schema.org', '@type': 'AboutPage', url: abs(path), mainEntity: [personRef('author', locale), personRef('reviewer', locale)] }] : []}>
+    schema={page === 'about' ? [{ '@context': 'https://schema.org', '@type': 'AboutPage', url: abs(path), mainEntity: [personRef('author', locale), ...(hasReviewer() ? [personRef('reviewer', locale)] : [])] }] : []}>
     {page === 'about' && <About />}
     {page === 'contact' && <Contact />}
     {page === 'imprint' && <Imprint />}

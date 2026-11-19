@@ -1,5 +1,5 @@
 ---
-import { SITE, PEOPLE } from '../../../config/site';
+import { SITE, PEOPLE, hasReviewer } from '../../../config/site';
 import { pagePath } from '../../../config/tool-map';
 ---
 <p>{SITE.name} ist eine Sammlung kostenloser Rechner für Arbeitszeit, Stunden, Arbeitstage und Lohn – gebaut für Deutschland, Österreich und die Schweiz. Die Rechner kennen die gesetzlichen Pausen- und Ruhezeitregeln, die Feiertage der Bundesländer und den aktuellen Mindestlohn.</p>
@@ -8,10 +8,10 @@ import { pagePath } from '../../../config/tool-map';
   <h3>{PEOPLE.author.name} – {PEOPLE.author.role.de}</h3>
   <p>{PEOPLE.author.bio.de}</p>
 </section>
-<section id={PEOPLE.reviewer.id}>
+{hasReviewer() && <section id={PEOPLE.reviewer.id}>
   <h3>{PEOPLE.reviewer.name} – {PEOPLE.reviewer.role.de}</h3>
   <p>{PEOPLE.reviewer.bio.de}</p>
-</section>
+</section>}
 <h2>Wie wir die Rechner testen</h2>
 <ul>
   <li>Die Rechenlogik ist von der Oberfläche getrennt und durch automatische Tests abgesichert – unter anderem für Schaltjahre, den 29. Februar, Nachtschichten über Mitternacht, die Zeitumstellung und Feiertage.</li>

@@ -14,14 +14,14 @@ export const SITE = {
 
 /** Legal notice (Impressum, § 5 DDG). Real name and a summonable postal address are required in Germany. */
 export const IMPRINT = {
-  name: '[Vor- und Nachname / Firmenname]',
-  street: '[Straße und Hausnummer]',
-  city: '[PLZ Ort]',
-  country: '[Land]',
+  name: 'Farhan Javed',
+  street: 'House No. 555, J Block, Al Rehman Garden Phase 2',
+  city: 'Lahore',
+  country: 'Pakistan',
   email: 'kontakt@taktfino.com',
   phone: '', // optional; a second fast contact channel (form or phone) is recommended
   vatId: '', // USt-IdNr., if any
-  responsibleForContent: '[Name, Anschrift wie oben]', // § 18 Abs. 2 MStV
+  responsibleForContent: 'Farhan Javed, Anschrift wie oben', // § 18 Abs. 2 MStV
 };
 
 /**
@@ -35,20 +35,27 @@ export const AUTO_PUBLISH = true;
 export const PEOPLE = {
   author: {
     id: 'autor',
-    name: '[Autor Name]',
-    role: { de: 'Gründer & Autor', es: 'Fundador y autor', 'pt-br': 'Fundador e autor', en: 'Founder & author' },
-    bio: { de: '[Kurze Biografie: wer Sie sind, Erfahrung mit Arbeitszeit/Lohn/Tools, warum man Ihnen vertrauen kann.]', es: '', 'pt-br': '', en: '' },
+    name: 'Farhan Javed',
+    role: { de: 'Gründer & Entwickler', es: 'Fundador y desarrollador', 'pt-br': 'Fundador e desenvolvedor', en: 'Founder & developer' },
+    bio: {
+      de: 'Farhan Javed ist Principal Software Engineer und leitet Architektur und Entwicklung einer SaaS-Plattform, mit der Organisationen weltweit virtuelle, hybride und Präsenz-Veranstaltungen durchführen. Er hat Taktfino gegründet, um Rechner für Arbeitszeit, Lohn und Datum zu bauen, die nach den gesetzlichen Regeln rechnen und deren Rechenlogik automatisch getestet wird.',
+      es: 'Farhan Javed es Principal Software Engineer y dirige la arquitectura y el desarrollo de una plataforma SaaS para eventos virtuales, híbridos y presenciales de organizaciones de todo el mundo. Fundó Taktfino para crear calculadoras de horas, salario y fechas con lógica probada automáticamente.',
+      'pt-br': 'Farhan Javed é Principal Software Engineer e lidera a arquitetura e o desenvolvimento de uma plataforma SaaS de eventos virtuais, híbridos e presenciais para organizações do mundo todo. Fundou a Taktfino para criar calculadoras de horas, salário e datas com lógica testada automaticamente.',
+      en: 'Farhan Javed is a Principal Software Engineer who leads architecture and engineering for a SaaS platform that runs virtual, hybrid and in-person events for organizations worldwide. He founded Taktfino to build work-time, pay and date calculators whose logic is covered by automated tests.',
+    },
     sameAs: [] as string[],
   },
   reviewer: {
     id: 'pruefer',
-    name: '[Reviewer Name]',
+    /** Empty = no human reviewer yet: the About page and schema then show only the author. */
+    name: '',
     role: { de: 'Fachliche Prüfung (Muttersprachler)', es: 'Revisión', 'pt-br': 'Revisão', en: 'Reviewer' },
-    bio: { de: '[Kurze Biografie des Prüfers: z. B. HR-/Lohnbuchhaltungs-Erfahrung.]', es: '', 'pt-br': '', en: '' },
+    bio: { de: '', es: '', 'pt-br': '', en: '' },
     sameAs: [] as string[],
   },
 } as const;
 export type PersonId = keyof typeof PEOPLE;
+export const hasReviewer = () => PEOPLE.reviewer.name.trim() !== '';
 
 export const ADS = {
   client: import.meta.env.PUBLIC_ADSENSE_CLIENT || '',
