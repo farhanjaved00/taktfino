@@ -14,3 +14,10 @@
 
 /sw.js
   Cache-Control: no-cache
+
+# Preview/pages.dev copies must never be indexed (canonical is https://taktfino.com)
+https://:project.pages.dev/*
+  X-Robots-Tag: noindex
+
+https://:version.:project.pages.dev/*
+  X-Robots-Tag: noindex
