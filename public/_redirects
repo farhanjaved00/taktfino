@@ -1,2 +1,2 @@
-# Language-less legacy paths → German (301). Root "/" stays the language picker (x-default), no auto-redirect.
+# Language-less legacy paths → German (301). "/" → /de/ is added by scripts/postbuild.mjs while only one language is live.
 /home    /de/  301

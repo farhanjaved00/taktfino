@@ -7,8 +7,9 @@ import AdSlot from '../AdSlot.astro';
 import Faq from '../Faq.astro';
 import AuthorBox from '../AuthorBox.astro';
 import RelatedTools from '../RelatedTools.astro';
+import ArticleList from '../ArticleList.astro';
 import { REGIONS, categoryPath, toolPath } from '../../config/tool-map';
-import { entryLocale, alternatesFor, regionPath, regionEntries } from '../../lib/registry';
+import { entryLocale, alternatesFor, regionPath, regionEntries, articleEntries } from '../../lib/registry';
 import { webAppSchema, withBrand } from '../../lib/seo';
 import { holidaysFor, monthlyWorkdays, availableYears, countWorkdays } from '../../tools/workdays';
 import { fmtDate, fmtMonth, fmtNum, fmtWeekday } from '../../i18n/format';
@@ -25,6 +26,7 @@ const alternates = await alternatesFor(`region:${d.tool}:${d.region}`);
 const nowY = new Date().getUTCFullYear();
 const years = availableYears(d.region).filter((y) => y >= nowY).slice(0, 2);
 const tables = years.map((y) => ({ y, months: monthlyWorkdays(d.region, y), total: countWorkdays({ y, m: 1, d: 1 }, { y, m: 12, d: 31 }, { region: d.region }), holidays: holidaysFor(d.region, [y]) }));
+const guides = (await articleEntries()).filter((a) => entryLocale(a.id) === locale && a.data.reviewed && a.data.tool === 'workdays').slice(0, 6);
 const siblings = (await regionEntries()).filter((e) => entryLocale(e.id) === locale && e.id !== entry.id && REGIONS.find((r) => r.code === e.data.region)?.live);
 ---
 <BaseLayout locale={locale} title={withBrand(d.title)} description={d.description} path={path} alternates={alternates} noindex={!d.reviewed}
@@ -55,6 +57,7 @@ const siblings = (await regionEntries()).filter((e) => entryLocale(e.id) === loc
       {d.sources.length > 0 && <div class="sources"><h2>{t(locale, 'common.sources')}</h2><ul>{d.sources.map((s) => <li><a href={s.url} rel="noopener" target="_blank">{s.label}</a></li>)}</ul></div>}
     </article>
     <Faq items={d.faq} locale={locale} />
+    <ArticleList locale={locale} entries={guides} title={t(locale, 'common.relatedArticles')} />
     {siblings.length > 0 && (
       <section class="section"><h2 style="margin-bottom:14px">Arbeitstage in anderen Bundesländern</h2>
         <div class="chip-row">{siblings.map((s) => <a class="chip" href={regionPath(s)}>{REGIONS.find((r) => r.code === s.data.region)!.name[locale]}</a>)}</div></section>

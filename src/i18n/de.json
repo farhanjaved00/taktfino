@@ -20,15 +20,21 @@
   "categories": {
     "work": {
       "name": "Arbeitszeit",
-      "blurb": "Arbeitszeit, Stunden, Überstunden und Arbeitstage berechnen."
+      "blurb": "Arbeitszeit, Stunden, Überstunden und Arbeitstage berechnen.",
+      "meta": "Rechner für Arbeitszeit, Stunden, Überstunden, Urlaub, Kündigungsfrist und Arbeitstage – mit den Regeln aus Deutschland, Österreich und der Schweiz.",
+      "intro": "Rund um die Arbeitszeit stellen sich im Alltag immer wieder dieselben Fragen: Wie viele Stunden habe ich diese Woche gearbeitet, wie viel Pause ist Pflicht, wie rechne ich Minuten in Dezimalstunden um und wie viele Arbeitstage hat der Monat in meinem Bundesland? Die Rechner in diesem Bereich beantworten genau das – mit den gesetzlichen Regeln aus Deutschland, Österreich und der Schweiz.\n\nDer Arbeitszeitrechner zieht die vorgeschriebenen Pausen automatisch ab und weist auf Überschreitungen der Höchstarbeitszeit oder zu kurze Ruhezeiten hin. Der Stundenrechner addiert Zeiten und rechnet in Industrieminuten um, und mit dem Stundenzettel erfassen Sie einen ganzen Monat und laden ihn als PDF oder Excel herunter. Für Überstunden, Urlaubsanspruch und Kündigungsfrist gibt es eigene Rechner, die die Fristen und Ansprüche aus dem Gesetz berechnen; der Arbeitstage-Rechner berücksichtigt die Feiertage aller 16 Bundesländer.\n\nAlle Berechnungen laufen direkt in Ihrem Browser, Ihre Eingaben werden nicht übertragen. Die Ratgeber erklären die Regeln hinter den Zahlen – mit Rechenbeispielen und Links zu den Gesetzestexten."
     },
     "pay": {
       "name": "Lohn & Gehalt",
-      "blurb": "Stundenlohn, Monatsgehalt und Mindestlohn umrechnen."
+      "blurb": "Stundenlohn, Monatsgehalt und Mindestlohn umrechnen.",
+      "meta": "Stundenlohn, Monatsgehalt, Mindestlohn sowie Nacht-, Sonntags- und Feiertagszuschläge berechnen – kostenlos und mit aktuellen Werten für 2026 und 2027.",
+      "intro": "Wie viel verdiene ich pro Stunde, wenn ich mein Monatsgehalt kenne? Liegt mein Lohn über dem gesetzlichen Mindestlohn? Und welcher Teil meiner Zuschläge für Nacht-, Sonntags- oder Feiertagsarbeit bleibt steuerfrei? In diesem Bereich finden Sie Rechner und Ratgeber zu genau diesen Fragen.\n\nDer Stundenlohnrechner rechnet Monatsgehalt und Stundenlohn in beide Richtungen um – auf Basis Ihrer tatsächlichen Wochenstunden – und vergleicht das Ergebnis mit dem gesetzlichen Mindestlohn in Deutschland. Der Zuschlagsrechner zeigt, welche Zuschläge nach § 3b EStG bis zu welcher Höhe steuerfrei sind, getrennt nach Nachtarbeit, Sonntagen, Feiertagen und den besonderen Tagen wie Weihnachten und dem 1. Mai.\n\nDie Werte für Mindestlohn und Minijob-Grenze werden vor jedem Stichtag mit der offiziellen Veröffentlichung abgeglichen. Alle Rechner sind kostenlos, ohne Anmeldung und rechnen ausschließlich in Ihrem Browser. Sie ersetzen keine Lohnabrechnung oder Steuerberatung, geben Ihnen aber schnell eine verlässliche Größenordnung."
     },
     "dates": {
       "name": "Datum",
-      "blurb": "Tage zwischen Daten und das genaue Alter berechnen."
+      "blurb": "Tage zwischen Daten und das genaue Alter berechnen.",
+      "meta": "Tage zwischen zwei Daten, Alter, Kalenderwoche sowie Mutterschutz und Elternzeit berechnen – mit Feiertagen, Schaltjahren und genauen Fristen.",
+      "intro": "Wie viele Tage liegen zwischen zwei Daten? Welche Kalenderwoche haben wir gerade? Wie alt bin ich genau – in Jahren, Monaten und Tagen? Und wann beginnt der Mutterschutz oder endet die Elternzeit? Die Rechner in diesem Bereich beantworten Fragen rund ums Datum präzise und berücksichtigen Schaltjahre, Wochenenden und Feiertage.\n\nDer Tage-Rechner zählt Kalendertage oder nur Werktage zwischen zwei Daten, der Kalenderwochen-Rechner zeigt die aktuelle KW nach ISO 8601 und alle Wochen eines Jahres mit Datum, und mit „Alter berechnen“ sehen Sie Ihr genaues Alter sowie die Tage bis zum nächsten Geburtstag. Für werdende Eltern berechnen der Mutterschutz-Rechner die Schutzfrist rund um den Entbindungstermin und der Elternzeit-Rechner Ende, Anmeldefrist und Kündigungsschutz.\n\nDie Ratgeber in diesem Bereich – etwa zu den Feiertagen eines Jahres – erklären Hintergründe und Sonderfälle. Alle Rechner sind kostenlos und speichern nichts auf unseren Servern."
     }
   },
   "tools": {
@@ -160,8 +166,8 @@
     "holiday": "Feiertag ({name}) – Feiertagsarbeit nur in Ausnahmefällen erlaubt."
   },
   "home": {
-    "title": "Arbeitszeitrechner, Stundenrechner & mehr – kostenlos",
-    "description": "Kostenlose Rechner für Arbeitszeit mit Pausenregel, Stunden, Arbeitstage nach Bundesland, Stundenlohn und Überstunden. Für Deutschland, Österreich und die Schweiz.",
+    "title": "Arbeitszeitrechner, Stundenrechner & mehr",
+    "description": "Kostenlose Rechner für Arbeitszeit mit Pause, Stunden, Arbeitstage nach Bundesland, Stundenlohn und Überstunden – für Deutschland, Österreich und Schweiz.",
     "h1": "Arbeitszeit, Stunden und Lohn – schnell und richtig berechnet",
     "lede": "Rechner mit den gesetzlichen Regeln aus Deutschland, Österreich und der Schweiz – Pausen, Ruhezeiten, Feiertage und Mindestlohn inklusive.",
     "pill": "Kostenlos · Ohne Anmeldung · Daten bleiben im Browser",
@@ -484,6 +490,8 @@
     "controller": "Verantwortlich",
     "email": "E-Mail",
     "phone": "Telefon",
-    "vat": "USt-IdNr."
+    "vat": "USt-IdNr.",
+    "guidesIntro": "Hier finden Sie alle Ratgeber von Taktfino: verständliche Erklärungen zu Arbeitszeit, Pausen, Ruhezeiten, Überstunden, Urlaub, Feiertagen und Lohn. Jeder Ratgeber beantwortet eine konkrete Frage, rechnet ein Beispiel durch und verlinkt den passenden Rechner, mit dem Sie Ihren eigenen Fall sofort nachrechnen können.\n\nGesetzliche Regeln verlinken wir auf die offiziellen Quellen. Wo Regeln je nach Bundesland, Tarifvertrag oder Arbeitsvertrag abweichen, weisen wir darauf hin. Die Ratgeber ersetzen keine Rechtsberatung – bei konkreten Streitfällen helfen Betriebsrat, Gewerkschaft oder eine Fachanwältin bzw. ein Fachanwalt für Arbeitsrecht.",
+    "guidesTitle": "Ratgeber zu Arbeitszeit, Urlaub, Feiertagen & Lohn"
   }
 }

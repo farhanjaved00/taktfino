@@ -5,10 +5,10 @@ import type { LocaleCode } from '../../config/locales';
 import { alternatesFor } from '../../lib/registry';
 import type { PageId } from '../../config/tool-map';
 import { SITE } from '../../config/site';
-interface Props { locale: LocaleCode; id: PageId; path: string; h1: string; description: string; noindex?: boolean; schema?: unknown[]; wide?: boolean }
+interface Props { locale: LocaleCode; id: PageId; path: string; h1: string; title?: string; description: string; noindex?: boolean; schema?: unknown[]; wide?: boolean }
 const p = Astro.props;
 ---
-<BaseLayout locale={p.locale} title={`${p.h1} | ${SITE.name}`} description={p.description} path={p.path} alternates={p.noindex ? [] : await alternatesFor(`page:${p.id}`)} noindex={p.noindex} schema={p.schema}>
+<BaseLayout locale={p.locale} title={`${p.title || p.h1} | ${SITE.name}`} description={p.description} path={p.path} alternates={p.noindex ? [] : await alternatesFor(`page:${p.id}`)} noindex={p.noindex} schema={p.schema}>
   <Breadcrumbs locale={p.locale} crumbs={[{ name: p.h1, path: p.path }]} />
   <div class="container">
     <article class="article" style={p.wide ? '' : 'max-width:860px'}>

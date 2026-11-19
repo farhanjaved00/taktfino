@@ -18,7 +18,9 @@ const d = entry.data;
 const path = articlePath(entry);
 const { Content, headings } = await render(entry);
 const alternates = await alternatesFor(`article:${d.translationKey}`);
-const more = (await articleEntries()).filter((a) => entryLocale(a.id) === locale && a.id !== entry.id && (a.data.category === d.category || a.data.tool === d.tool)).slice(0, 4);
+const others = (await articleEntries()).filter((a) => entryLocale(a.id) === locale && a.id !== entry.id && a.data.reviewed);
+const close = others.filter((a) => a.data.category === d.category || a.data.tool === d.tool);
+const more = [...close, ...others.filter((a) => !close.includes(a))].slice(0, 4); // never a dead end
 const toc = headings.filter((h) => h.depth === 2);
 const related = toolsFor(locale).filter((x) => x.category === d.category && x.id !== d.tool).map((x) => x.id).slice(0, 3);
 const minutes = Math.max(2, Math.round((entry.body || '').split(/\s+/).length / 200));

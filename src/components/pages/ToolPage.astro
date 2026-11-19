@@ -20,7 +20,10 @@ const tool = getTool(d.tool);
 const path = toolPath(d.tool, locale);
 const { Content } = await render(entry);
 const alternates = await alternatesFor(`tool:${d.tool}`);
-const articles = (await articleEntries()).filter((a) => entryLocale(a.id) === locale && a.data.tool === d.tool);
+const localArticles = (await articleEntries()).filter((a) => entryLocale(a.id) === locale && a.data.reviewed);
+const toolCat = tool.category;
+const sameTool = localArticles.filter((a) => a.data.tool === d.tool);
+const articles = [...sameTool, ...localArticles.filter((a) => a.data.tool !== d.tool && a.data.category === toolCat)].slice(0, Math.max(4, sameTool.length));
 ---
 <BaseLayout locale={locale} title={withBrand(d.title)} description={d.description} path={path}
   alternates={alternates} noindex={!d.reviewed} ogImage={`/og${path.replace(/\/$/, '')}.png`}

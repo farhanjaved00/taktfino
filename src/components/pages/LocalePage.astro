@@ -28,12 +28,12 @@ const Body = md ? (await render(md)).Content : null;
 const path = page === 'notfound' ? `/${locale}/404/` : pagePath(page, locale);
 const articles = (await articleEntries()).filter((a) => entryLocale(a.id) === locale);
 const H: Record<string, [string, string]> = {
-  about: ['Über uns', `Wer hinter ${SITE.name} steht und wie wir die Rechner testen.`],
-  contact: ['Kontakt', `So erreichen Sie ${SITE.name}.`],
-  imprint: ['Impressum', `Impressum von ${SITE.name}.`],
-  privacy: ['Datenschutzerklärung', `Wie ${SITE.name} mit Daten umgeht.`],
-  terms: ['Nutzungsbedingungen', `Bedingungen für die Nutzung von ${SITE.name}.`],
-  editorial: ['Redaktionelle Richtlinien', `Wie die Inhalte auf ${SITE.name} entstehen und geprüft werden.`],
+  about: ['Über uns', `Wer hinter ${SITE.name} steht, wie die Rechner entstehen und wie wir ihre Rechenlogik mit automatischen Tests absichern.`],
+  contact: ['Kontakt', `So erreichen Sie ${SITE.name}: Fragen, Fehlermeldungen und Wünsche für neue Rechner per E-Mail – wir antworten so schnell wie möglich.`],
+  imprint: ['Impressum', `Impressum von ${SITE.name}: Angaben zum Betreiber nach § 5 DDG, Kontakt und Verantwortlicher für den Inhalt.`],
+  privacy: ['Datenschutzerklärung', `Datenschutzerklärung von ${SITE.name}: Rechner laufen im Browser, keine Cookies von uns, Hosting über Cloudflare – alle Details.`],
+  terms: ['Nutzungsbedingungen', `Nutzungsbedingungen von ${SITE.name}: kostenlose Rechner ohne Gewähr, keine Rechts- oder Steuerberatung, Haftung und Urheberrecht.`],
+  editorial: ['Redaktionelle Richtlinien', `Wie die Inhalte auf ${SITE.name} entstehen und geprüft werden: Quellen, automatische Prüfungen, Korrekturen und Unabhängigkeit.`],
 };
 ---
 {md && Body && (
@@ -58,7 +58,8 @@ const H: Record<string, [string, string]> = {
   </StaticPage>
 )}
 {page === 'guides' && (
-  <StaticPage locale={locale} id="guides" path={path} h1={t(locale, 'nav.guides')} description={t(locale, 'pagesMeta.guides')} wide>
+  <StaticPage locale={locale} id="guides" path={path} h1={t(locale, 'nav.guides')} title={t(locale, 'pagesMeta.guidesTitle')} description={t(locale, 'pagesMeta.guides')} wide>
+    <div class="prose" style="margin-bottom:8px">{t(locale, 'pagesMeta.guidesIntro').split('\n\n').map((para) => <p>{para}</p>)}</div>
     {(Object.keys(CATEGORIES) as CategoryId[]).map((c) => <ArticleList locale={locale} entries={articles.filter((a) => a.data.category === c)} title={t(locale, `categories.${c}.name`)} />)}
   </StaticPage>
 )}

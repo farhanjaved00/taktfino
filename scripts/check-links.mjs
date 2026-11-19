@@ -24,6 +24,7 @@ if (fs.existsSync(path.join(root, '_redirects'))) {
   for (const line of fs.readFileSync(path.join(root, '_redirects'), 'utf8').split('\n')) {
     const src = line.trim().split(/\s+/)[0];
     if (!src || src.startsWith('#') || src.includes('*')) continue;
+    if (src === '/') continue; // intentional: with one live language the picker at / is replaced by a 301 (postbuild)
     if (exists(src)) { console.log(`REDIRECT SHADOWS PAGE ${src}`); bad++; }
   }
 }

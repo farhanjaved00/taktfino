@@ -17,7 +17,7 @@ const avail = toolsFor(locale).map((x) => x.id);
 const heroTools = (['worktime', 'hours', 'workdays', 'timesheet', 'days'] as const).filter((id) => avail.includes(id)).slice(0, 3);
 ---
 <BaseLayout locale={locale} title={`${t(locale, 'home.title')} | ${SITE.name}`.slice(0, 70)} description={t(locale, 'home.description')} path={`/${locale}/`}
-  alternates={await alternatesFor('home')} xDefault="/" schema={[websiteSchema(locale), organizationSchema()]}>
+  alternates={await alternatesFor('home')} xDefault={LIVE_LOCALES.length > 1 ? '/' : `/${locale}/`} schema={[websiteSchema(locale), organizationSchema()]}>
   <section class="hero container">
     <p class="pill">{t(locale, 'home.pill')}</p>
     <h1>{t(locale, 'home.h1')}</h1>

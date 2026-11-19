@@ -13,6 +13,14 @@ for (const dir of fs.readdirSync('dist')) {
 }
 execSync('npx pagefind --site dist --quiet', { stdio: 'inherit' });
 
+// One live language → "/" 301 to it (the picker would be a thin page). Prepend so it wins over other rules.
+const liveCodes = [...fs.readFileSync('src/config/locales.ts', 'utf8').matchAll(/code: '([a-z-]+)'[^\n]*live: true/g)].map((m) => m[1]);
+if (liveCodes.length === 1) {
+  const rf = 'dist/_redirects';
+  const cur = fs.existsSync(rf) ? fs.readFileSync(rf, 'utf8') : '';
+  fs.writeFileSync(rf, `/ /${liveCodes[0]}/ 301\n` + cur);
+}
+
 const key = process.env.INDEXNOW_KEY;
 if (key && /^[a-zA-Z0-9-]{8,128}$/.test(key)) fs.writeFileSync(`dist/${key}.txt`, key);
 

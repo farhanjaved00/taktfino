@@ -1,5 +1,6 @@
 ---
-/** Root: language picker and x-default. No IP/browser-language redirect (per plan). */
+/** Root: language picker and x-default once 2+ languages are live. With one live language the root is 301-redirected
+ *  to it (scripts/postbuild.mjs writes the rule) – a picker with one option would be a thin page. No IP/browser redirect (per plan). */
 import '../styles/global.css';
 import '@fontsource/inter/latin-400.css';
 import '@fontsource/space-grotesk/latin-700.css';
@@ -14,9 +15,10 @@ import { t } from '../i18n';
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{SITE.name}</title>
   <meta name="description" content={LIVE_LOCALES.map((l) => t(l.code, 'meta.tagline')).join(' ')} />
-  <link rel="canonical" href={abs('/')} />
+  {LIVE_LOCALES.length === 1 && <meta name="robots" content="noindex, follow" />}
+  <link rel="canonical" href={abs(LIVE_LOCALES.length === 1 ? `/${LIVE_LOCALES[0].code}/` : '/')} />
   {LIVE_LOCALES.map((l) => <link rel="alternate" hreflang={l.hreflang} href={abs(`/${l.code}/`)} />)}
-  <link rel="alternate" hreflang="x-default" href={abs('/')} />
+  <link rel="alternate" hreflang="x-default" href={abs(LIVE_LOCALES.length === 1 ? `/${LIVE_LOCALES[0].code}/` : '/')} />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <meta name="theme-color" content="#4338CA" />
 </head>

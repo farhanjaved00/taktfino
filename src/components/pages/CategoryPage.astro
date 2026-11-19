@@ -14,7 +14,7 @@ const path = categoryPath(category, locale);
 const name = t(locale, `categories.${category}.name`);
 const articles = (await articleEntries()).filter((a) => entryLocale(a.id) === locale && a.data.category === category);
 ---
-<BaseLayout locale={locale} title={`${name} – Rechner & Ratgeber | ${SITE.name}`} description={t(locale, `categories.${category}.blurb`)} path={path} alternates={await alternatesFor(`category:${category}`)}>
+<BaseLayout locale={locale} title={`${name} – Rechner & Ratgeber | ${SITE.name}`} description={t(locale, `categories.${category}.meta`)} path={path} alternates={await alternatesFor(`category:${category}`)}>
   <Breadcrumbs locale={locale} crumbs={[{ name, path }]} />
   <div class="container">
     <div class="page-head"><h1>{name}</h1><p>{t(locale, `categories.${category}.blurb`)}</p></div>
@@ -27,5 +27,6 @@ const articles = (await articleEntries()).filter((a) => entryLocale(a.id) === lo
       ))}
     </div>
     <ArticleList locale={locale} entries={articles} title={t(locale, 'nav.guides')} />
+    <section class="section card prose-card"><div class="prose">{t(locale, `categories.${category}.intro`).split('\n\n').map((para) => <p>{para}</p>)}</div></section>
   </div>
 </BaseLayout>
