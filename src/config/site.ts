@@ -72,5 +72,7 @@ export const adsEnabled = () => ADS.client.startsWith('ca-pub-');
 export const GA4_ID = import.meta.env.PUBLIC_GA4_ID || '';
 /** Cloudflare Web Analytics token (cookieless). Can run alongside or instead of GA4. */
 export const CF_ANALYTICS_TOKEN = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN || '';
+/** Cloudflare Web Analytics switched on in the Cloudflare dashboard (automatic setup, script injected by Cloudflare). Keeps the privacy policy accurate. */
+export const CF_WEB_ANALYTICS_AUTO = true;
 export const GSC_VERIFICATION = import.meta.env.PUBLIC_GSC_VERIFICATION || '';
 export const BING_VERIFICATION = import.meta.env.PUBLIC_BING_VERIFICATION || '';
