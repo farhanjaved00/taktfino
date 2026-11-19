@@ -6,7 +6,7 @@
 export const SITE = {
   /** Brand (domain taktfino.com) – run the trademark checks before launch */
   name: 'Taktfino',
-  url: (import.meta.env.SITE_URL || 'https://www.taktfino.com').replace(/\/$/, ''),
+  url: (import.meta.env.SITE_URL || 'https://taktfino.com').replace(/\/$/, ''),
   /** Brand profiles for Organization.sameAs (X, YouTube, Pinterest, LinkedIn…) */
   sameAs: [] as string[],
   contactEmail: 'kontakt@taktfino.com', // create via Cloudflare Email Routing → forwards to your inbox

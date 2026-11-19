@@ -64,8 +64,8 @@ To publish a page: check language, numbers and legal facts → set `reviewed: tr
 
 1. Push to a GitHub repo (`main`).
 2. Cloudflare → Workers & Pages → Create → Pages → connect the repo. Build command `npm run build`, output `dist`, env `NODE_VERSION=24`.
-3. Environment variables: `SITE_URL` (e.g. `https://www.brand.com`), later `PUBLIC_GSC_VERIFICATION`, `PUBLIC_BING_VERIFICATION`, `PUBLIC_CF_ANALYTICS_TOKEN` and/or `PUBLIC_GA4_ID`, `PUBLIC_ADSENSE_CLIENT`, `INDEXNOW_KEY` (see `.env.example`).
-4. Domain (Spaceship registrar, DNS on Cloudflare): add `www` + apex as custom domains; Redirect Rule apex → `https://www.…` (301). HTTPS and HSTS come from Cloudflare + `public/_headers`.
+3. Environment variables: `SITE_URL` (`https://taktfino.com`, no www), later `PUBLIC_GSC_VERIFICATION`, `PUBLIC_BING_VERIFICATION`, `PUBLIC_CF_ANALYTICS_TOKEN` and/or `PUBLIC_GA4_ID`, `PUBLIC_ADSENSE_CLIENT`, `INDEXNOW_KEY` (see `.env.example`).
+4. Domain (Spaceship registrar, DNS on Cloudflare): add `taktfino.com` and `www.taktfino.com` as custom domains; Redirect Rule `www` → `https://taktfino.com` (301) – the site uses no www. HTTPS and HSTS come from Cloudflare + `public/_headers`.
 5. GitHub → Settings → Secrets/Variables: secrets `CF_PAGES_DEPLOY_HOOK`, `OPENAI_API_KEY`, `INDEXNOW_KEY`; variables `SITE_URL`, optional `OPENAI_MODEL`, `ARTICLES_PER_RUN`, `AUTO_PUBLISH` (see below). Actions → General → Workflow permissions → "Read and write" + allow GitHub Actions to create pull requests.
 6. Search Console (domain property) and Bing Webmaster Tools: verify, submit `/sitemap-index.xml`. UptimeRobot on `/de/`.
 

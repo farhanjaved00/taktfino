@@ -1,7 +1,7 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 
-const SITE = process.env.SITE_URL || 'https://www.taktfino.com';
+const SITE = process.env.SITE_URL || 'https://taktfino.com';
 
 export default defineConfig({
   site: SITE,
