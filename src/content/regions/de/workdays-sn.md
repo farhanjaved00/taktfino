@@ -9,8 +9,7 @@ h1: "Feiertage und Arbeitstage in Sachsen"
 answer: "Sachsen hat 11 gesetzliche Feiertage: die 9 bundesweiten plus den Reformationstag und den Buß- und Bettag. Bei einer Fünf-Tage-Woche ergeben sich 2026 genau 253 und 2027 genau 255 Arbeitstage. Die Tabellen zeigen alle Monate und Feiertage; mit dem Rechner zählen Sie eigene Zeiträume inklusive Urlaub und halber Tage an Heiligabend und Silvester."
 updated: 2026-11-19
 author: author
-reviewer: reviewer
-reviewed: false
+reviewed: true
 faq:
   - q: "Ist der Buß- und Bettag in Sachsen ein Feiertag?"
     a: "Ja, als einziges Bundesland. 2026 am 18. November, 2027 am 17. November, jeweils ein Mittwoch."

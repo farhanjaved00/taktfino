@@ -9,8 +9,7 @@ h1: "Feiertage und Arbeitstage in Rheinland-Pfalz"
 answer: "Rheinland-Pfalz hat 11 gesetzliche Feiertage: die 9 bundesweiten plus Fronleichnam und Allerheiligen. Bei einer Fünf-Tage-Woche ergeben sich 2026 genau 253 und 2027 genau 254 Arbeitstage. Die Tabellen zeigen alle Monate und Feiertage; mit dem Rechner zählen Sie eigene Zeiträume inklusive Urlaub und halber Tage an Heiligabend und Silvester."
 updated: 2026-11-19
 author: author
-reviewer: reviewer
-reviewed: false
+reviewed: true
 faq:
   - q: "Ist Fronleichnam in Rheinland-Pfalz ein Feiertag?"
     a: "Ja. 2026 am Donnerstag, 4. Juni, 2027 am Donnerstag, 27. Mai."

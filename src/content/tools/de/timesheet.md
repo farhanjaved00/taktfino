@@ -9,8 +9,7 @@ answer: "Ein Stundenzettel hält für jeden Arbeitstag Beginn, Ende, Pausen und 
 related: ["worktime", "overtime", "hours", "workdays"]
 updated: 2026-11-18
 author: author
-reviewer: reviewer
-reviewed: false
+reviewed: true
 sources:
   - label: "§ 17 Mindestlohngesetz – Erstellen und Bereithalten von Dokumenten"
     url: "https://www.gesetze-im-internet.de/milog/__17.html"

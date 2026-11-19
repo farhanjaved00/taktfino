@@ -9,8 +9,7 @@ answer: "Ihre Arbeitszeit ist die Zeit zwischen Arbeitsbeginn und Arbeitsende mi
 related: ["timesheet", "hours", "overtime", "workdays", "wage"]
 updated: 2026-11-18
 author: author
-reviewer: reviewer
-reviewed: false
+reviewed: true
 sources:
   - label: "Arbeitszeitgesetz (ArbZG) – gesetze-im-internet.de"
     url: "https://www.gesetze-im-internet.de/arbzg/"

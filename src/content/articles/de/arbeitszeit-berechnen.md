@@ -9,8 +9,7 @@ translationKey: calculate-working-time
 date: 2026-11-18
 updated: 2026-11-18
 author: author
-reviewer: reviewer
-reviewed: false
+reviewed: true
 faq:
   - q: "Wie rechne ich 8:15 bis 16:45 mit 30 Minuten Pause?"
     a: "16:45 − 8:15 = 8 Stunden 30 Minuten Anwesenheit. Minus 30 Minuten Pause ergibt 8:00 Stunden Arbeitszeit."

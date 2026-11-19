@@ -9,8 +9,7 @@ answer: "Die gesetzliche Kündigungsfrist in Deutschland beträgt 4 Wochen zum 1
 related: ["workdays", "days", "timesheet", "overtime"]
 updated: 2026-11-18
 author: author
-reviewer: reviewer
-reviewed: false
+reviewed: true
 sources:
   - label: "§ 622 BGB – Kündigungsfristen bei Arbeitsverhältnissen"
     url: "https://www.gesetze-im-internet.de/bgb/__622.html"

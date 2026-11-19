@@ -9,8 +9,7 @@ translationKey: industrial-minutes
 date: 2026-11-18
 updated: 2026-11-18
 author: author
-reviewer: reviewer
-reviewed: false
+reviewed: true
 faq:
   - q: "Wie viele Industrieminuten sind 45 Minuten?"
     a: "75 Industrieminuten, also 0,75 Stunden."

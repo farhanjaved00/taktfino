@@ -9,8 +9,7 @@ translationKey: workdays-2027
 date: 2026-11-18
 updated: 2026-11-18
 author: author
-reviewer: reviewer
-reviewed: false
+reviewed: true
 faq:
   - q: "Wie viele Arbeitstage hat ein Jahr mit 30 Tagen Urlaub?"
     a: "2027 je nach Bundesland 223 bis 226 Arbeitstage (Fünf-Tage-Woche), zum Beispiel 224 in Nordrhein-Westfalen."

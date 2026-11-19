@@ -9,8 +9,7 @@ answer: "Die Zahl der Tage zwischen zwei Daten ist die Differenz der Kalendertag
 related: ["workdays", "week", "age", "worktime"]
 updated: 2026-11-18
 author: author
-reviewer: reviewer
-reviewed: false
+reviewed: true
 faq:
   - q: "Zählt der erste Tag mit?"
     a: "Standardmäßig nicht: Von Montag bis Dienstag ist es 1 Tag. Schalten Sie „Enddatum mitzählen“ ein, zählen beide Tage – das ist zum Beispiel bei Urlaubs- oder Reisetagen üblich."

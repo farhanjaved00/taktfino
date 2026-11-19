@@ -9,8 +9,7 @@ answer: "Eine Kalenderwoche (KW) beginnt in Deutschland, Österreich und der Sch
 related: ["days", "workdays", "worktime", "age"]
 updated: 2026-11-18
 author: author
-reviewer: reviewer
-reviewed: false
+reviewed: true
 faq:
   - q: "Wann beginnt die Kalenderwoche 1?"
     a: "KW 1 ist die erste Woche, die mindestens vier Tage im neuen Jahr hat – also die Woche mit dem ersten Donnerstag. Der 4. Januar liegt deshalb immer in KW 1. 2027 beginnt KW 1 am Montag, 4. Januar."

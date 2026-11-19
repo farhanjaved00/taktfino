@@ -9,8 +9,7 @@ answer: "Ihr Urlaubsanspruch ergibt sich aus den Urlaubstagen laut Vertrag, umge
 related: ["workdays", "notice", "days", "parental"]
 updated: 2026-11-18
 author: author
-reviewer: reviewer
-reviewed: false
+reviewed: true
 sources:
   - label: "Bundesurlaubsgesetz (BUrlG)"
     url: "https://www.gesetze-im-internet.de/burlg/"

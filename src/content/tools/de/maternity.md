@@ -9,8 +9,7 @@ answer: "Der Mutterschutz beginnt sechs Wochen vor dem errechneten Geburtstermin
 related: ["days", "workdays", "week", "notice"]
 updated: 2026-11-18
 author: author
-reviewer: reviewer
-reviewed: false
+reviewed: true
 sources:
   - label: "§ 3 Mutterschutzgesetz – Schutzfristen vor und nach der Entbindung"
     url: "https://www.gesetze-im-internet.de/muschg_2018/__3.html"

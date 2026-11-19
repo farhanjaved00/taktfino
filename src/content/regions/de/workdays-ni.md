@@ -9,8 +9,7 @@ h1: "Feiertage und Arbeitstage in Niedersachsen"
 answer: "Niedersachsen hat 10 gesetzliche Feiertage: die 9 bundesweiten plus den Reformationstag am 31. Oktober, der seit 2018 arbeitsfrei ist. Bei einer Fünf-Tage-Woche ergeben sich 2026 genau 254 und 2027 genau 256 Arbeitstage – zusammen mit Brandenburg, Bremen, Hamburg und Schleswig-Holstein die meisten in Deutschland."
 updated: 2026-11-18
 author: author
-reviewer: reviewer
-reviewed: false
+reviewed: true
 faq:
   - q: "Seit wann ist der Reformationstag in Niedersachsen ein Feiertag?"
     a: "Seit 2018. Damals haben Niedersachsen, Bremen, Hamburg und Schleswig-Holstein den 31. Oktober zum dauerhaften Feiertag gemacht."

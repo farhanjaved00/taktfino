@@ -9,8 +9,7 @@ translationKey: rest-period
 date: 2026-11-18
 updated: 2026-11-18
 author: author
-reviewer: reviewer
-reviewed: false
+reviewed: true
 sources:
   - label: "§ 5 Arbeitszeitgesetz – Ruhezeit"
     url: "https://www.gesetze-im-internet.de/arbzg/__5.html"

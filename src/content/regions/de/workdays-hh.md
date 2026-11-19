@@ -9,8 +9,7 @@ h1: "Feiertage und Arbeitstage in Hamburg"
 answer: "Hamburg hat 10 gesetzliche Feiertage: die 9 bundesweiten plus den Reformationstag am 31. Oktober. Bei einer Fünf-Tage-Woche ergeben sich 2026 genau 254 und 2027 genau 256 Arbeitstage. Die Tabellen zeigen alle Monate und Feiertage; mit dem Rechner zählen Sie eigene Zeiträume inklusive Urlaub und halber Tage an Heiligabend und Silvester."
 updated: 2026-11-19
 author: author
-reviewer: reviewer
-reviewed: false
+reviewed: true
 faq:
   - q: "Wie viele Feiertage hat Hamburg?"
     a: "10: die 9 bundesweiten Feiertage und den Reformationstag am 31. Oktober."

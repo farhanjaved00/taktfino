@@ -9,8 +9,7 @@ h1: "Feiertage und Arbeitstage in Baden-Württemberg"
 answer: "Baden-Württemberg hat 12 gesetzliche Feiertage: die 9 bundesweiten plus Heilige Drei Könige, Fronleichnam und Allerheiligen. Bei einer Fünf-Tage-Woche ergeben sich 2026 genau 252 und 2027 genau 253 Arbeitstage – zusammen mit Bayern die wenigsten in Deutschland. Die Tabellen zeigen jeden Monat und jeden Feiertag."
 updated: 2026-11-18
 author: author
-reviewer: reviewer
-reviewed: false
+reviewed: true
 sources:
   - label: "Feiertagsgesetz Baden-Württemberg"
     url: "https://www.landesrecht-bw.de/jportal/?quelle=jlink&query=FeiertG+BW&psml=bsbawueprod.psml&max=true"

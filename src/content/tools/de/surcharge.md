@@ -9,8 +9,7 @@ answer: "Zuschläge für Nacht-, Sonntags- und Feiertagsarbeit sind nach § 3b E
 related: ["worktime", "wage", "timesheet", "overtime"]
 updated: 2026-11-18
 author: author
-reviewer: reviewer
-reviewed: false
+reviewed: true
 sources:
   - label: "§ 3b Einkommensteuergesetz – Steuerfreiheit von Zuschlägen"
     url: "https://www.gesetze-im-internet.de/estg/__3b.html"

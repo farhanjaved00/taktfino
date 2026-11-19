@@ -9,8 +9,7 @@ translationKey: feiertage-2027
 date: 2026-11-18
 updated: 2026-11-18
 author: author
-reviewer: reviewer
-reviewed: false
+reviewed: true
 faq:
   - q: "Wie viele Feiertage gibt es 2027?"
     a: "9 Feiertage gelten 2027 in ganz Deutschland. Je nach Bundesland kommen 1 bis 3 regionale hinzu: Berlin, Bremen, Hamburg, Hessen, Niedersachsen und Schleswig-Holstein haben 10, Baden-Württemberg, Bayern, Brandenburg und das Saarland 12."

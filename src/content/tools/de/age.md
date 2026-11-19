@@ -9,8 +9,7 @@ answer: "Ihr genaues Alter ergibt sich aus den vollen Jahren seit der Geburt, de
 related: ["days", "workdays", "hours"]
 updated: 2026-11-18
 author: author
-reviewer: reviewer
-reviewed: false
+reviewed: true
 faq:
   - q: "Wie berechne ich mein Alter in Tagen?"
     a: "Zählen Sie alle Tage vom Geburtsdatum bis heute, Schalttage eingeschlossen. Der Rechner zeigt diese Zahl unter „Tage“ an."

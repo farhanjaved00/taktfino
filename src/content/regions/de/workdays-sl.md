@@ -9,8 +9,7 @@ h1: "Feiertage und Arbeitstage in Saarland"
 answer: "Saarland hat 12 gesetzliche Feiertage: die 9 bundesweiten plus Fronleichnam, Mariä Himmelfahrt und Allerheiligen. Bei einer Fünf-Tage-Woche ergeben sich 2026 genau 253 und 2027 genau 254 Arbeitstage. Die Tabellen zeigen alle Monate und Feiertage; mit dem Rechner zählen Sie eigene Zeiträume inklusive Urlaub und halber Tage an Heiligabend und Silvester."
 updated: 2026-11-19
 author: author
-reviewer: reviewer
-reviewed: false
+reviewed: true
 faq:
   - q: "Ist Mariä Himmelfahrt im Saarland ein Feiertag?"
     a: "Ja, im ganzen Land. 2026 fällt der 15. August auf einen Samstag, 2027 auf einen Sonntag."

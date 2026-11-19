@@ -9,8 +9,7 @@ h1: "Feiertage und Arbeitstage in Mecklenburg-Vorpommern"
 answer: "Mecklenburg-Vorpommern hat 11 gesetzliche Feiertage: die 9 bundesweiten plus den Internationalen Frauentag (8. März) und den Reformationstag (31. Oktober). Bei einer Fünf-Tage-Woche ergeben sich 2026 genau 254 und 2027 genau 255 Arbeitstage. Die Tabellen zeigen alle Monate und Feiertage; mit dem Rechner zählen Sie eigene Zeiträume inklusive Urlaub und halber Tage an Heiligabend und Silvester."
 updated: 2026-11-19
 author: author
-reviewer: reviewer
-reviewed: false
+reviewed: true
 faq:
   - q: "Ist der Frauentag in Mecklenburg-Vorpommern ein Feiertag?"
     a: "Ja, seit 2023. 2027 fällt der 8. März auf einen Montag."

@@ -9,8 +9,7 @@ h1: "Feiertage und Arbeitstage in Nordrhein-Westfalen"
 answer: "Nordrhein-Westfalen hat 11 gesetzliche Feiertage – die 9 bundesweiten plus Fronleichnam und Allerheiligen. Bei einer Fünf-Tage-Woche ergeben sich 2026 genau 253 und 2027 genau 254 Arbeitstage. Die Tabellen unten zeigen jeden Monat und jeden Feiertag; mit dem Rechner zählen Sie beliebige Zeiträume."
 updated: 2026-11-18
 author: author
-reviewer: reviewer
-reviewed: false
+reviewed: true
 faq:
   - q: "Ist Rosenmontag in NRW ein Feiertag?"
     a: "Nein. Rosenmontag ist kein gesetzlicher Feiertag. Viele Arbeitgeber im Rheinland geben ihren Beschäftigten aber frei – das ist eine freiwillige oder tarifliche Regelung."

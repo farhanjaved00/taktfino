@@ -9,8 +9,7 @@ answer: "Jeder Elternteil hat Anspruch auf bis zu drei Jahre Elternzeit pro Kind
 related: ["maternity", "days", "workdays", "vacation"]
 updated: 2026-11-18
 author: author
-reviewer: reviewer
-reviewed: false
+reviewed: true
 sources:
   - label: "§ 15 BEEG – Anspruch auf Elternzeit"
     url: "https://www.gesetze-im-internet.de/beeg/__15.html"

@@ -9,8 +9,7 @@ answer: "Die Zahl der Arbeitstage ergibt sich aus allen Tagen eines Zeitraums mi
 related: ["days", "worktime", "overtime", "hours"]
 updated: 2026-11-18
 author: author
-reviewer: reviewer
-reviewed: false
+reviewed: true
 faq:
   - q: "Wie viele Arbeitstage hat 2027?"
     a: "Bei einer Fünf-Tage-Woche je nach Bundesland zwischen 253 (Baden-Württemberg, Bayern) und 256 (z. B. Brandenburg, Bremen, Hamburg, Niedersachsen, Schleswig-Holstein). 2027 gibt es 261 Wochentage von Montag bis Freitag."

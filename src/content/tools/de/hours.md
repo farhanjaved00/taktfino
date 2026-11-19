@@ -9,8 +9,7 @@ answer: "Mit dem Stundenrechner berechnen Sie die Dauer zwischen zwei Uhrzeiten 
 related: ["worktime", "minutes", "overtime", "wage"]
 updated: 2026-11-18
 author: author
-reviewer: reviewer
-reviewed: false
+reviewed: true
 faq:
   - q: "Wie rechne ich Minuten in Dezimalstunden um?"
     a: "Teilen Sie die Minuten durch 60. Beispiel: 20 Minuten ÷ 60 = 0,33 Stunden. 8 Stunden 20 Minuten sind also 8,33 Stunden."

@@ -9,8 +9,7 @@ answer: "Überstunden sind die Differenz zwischen tatsächlich gearbeiteter Zeit
 related: ["worktime", "hours", "wage", "workdays"]
 updated: 2026-11-18
 author: author
-reviewer: reviewer
-reviewed: false
+reviewed: true
 sources:
   - label: "Arbeitszeitgesetz (ArbZG)"
     url: "https://www.gesetze-im-internet.de/arbzg/"

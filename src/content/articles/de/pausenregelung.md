@@ -9,8 +9,7 @@ translationKey: break-rules
 date: 2026-11-18
 updated: 2026-11-18
 author: author
-reviewer: reviewer
-reviewed: false
+reviewed: true
 sources:
   - label: "§ 4 Arbeitszeitgesetz – Ruhepausen"
     url: "https://www.gesetze-im-internet.de/arbzg/__4.html"

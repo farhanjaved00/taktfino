@@ -9,8 +9,7 @@ answer: "Minuten rechnen Sie in Stunden um, indem Sie durch 60 teilen: 135 Minut
 related: ["hours", "worktime", "wage", "week"]
 updated: 2026-11-18
 author: author
-reviewer: reviewer
-reviewed: false
+reviewed: true
 faq:
   - q: "Wie viele Stunden sind 90 Minuten?"
     a: "90 Minuten sind 1 Stunde und 30 Minuten oder 1,5 Stunden (90 ÷ 60 = 1,5)."

@@ -9,8 +9,7 @@ h1: "Feiertage und Arbeitstage in Hessen"
 answer: "Hessen hat 10 gesetzliche Feiertage: die 9 bundesweiten plus Fronleichnam. Bei einer Fünf-Tage-Woche ergeben sich 2026 genau 253 und 2027 genau 255 Arbeitstage. Die Tabellen zeigen alle Monate und Feiertage; mit dem Rechner zählen Sie eigene Zeiträume inklusive Urlaub und halber Tage an Heiligabend und Silvester."
 updated: 2026-11-18
 author: author
-reviewer: reviewer
-reviewed: false
+reviewed: true
 sources:
   - label: "Hessisches Feiertagsgesetz (HFeiertagsG)"
     url: "https://www.rv.hessenrecht.hessen.de/bshe/document/jlr-FeiertGHE1971rahmen"

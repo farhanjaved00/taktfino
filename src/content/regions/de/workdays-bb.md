@@ -9,8 +9,7 @@ h1: "Feiertage und Arbeitstage in Brandenburg"
 answer: "Brandenburg hat 12 gesetzliche Feiertage: die 9 bundesweiten plus Ostersonntag, Pfingstsonntag und den Reformationstag. Bei einer Fünf-Tage-Woche ergeben sich 2026 genau 254 und 2027 genau 256 Arbeitstage. Die Tabellen zeigen alle Monate und Feiertage; mit dem Rechner zählen Sie eigene Zeiträume inklusive Urlaub und halber Tage an Heiligabend und Silvester."
 updated: 2026-11-19
 author: author
-reviewer: reviewer
-reviewed: false
+reviewed: true
 faq:
   - q: "Warum hat Brandenburg 12 Feiertage?"
     a: "Weil dort zusätzlich Ostersonntag, Pfingstsonntag und der Reformationstag gesetzliche Feiertage sind. Die beiden Sonntage bringen aber keinen zusätzlichen freien Werktag."

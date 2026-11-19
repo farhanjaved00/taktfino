@@ -9,8 +9,7 @@ answer: "Den Stundenlohn berechnen Sie mit der Formel Monatsgehalt ÷ (Wochenstu
 related: ["worktime", "overtime", "hours", "workdays"]
 updated: 2026-11-18
 author: author
-reviewer: reviewer
-reviewed: false
+reviewed: true
 sources:
   - label: "Mindestlohn – Bundesministerium für Arbeit und Soziales"
     url: "https://www.bmas.de/DE/Arbeit/Arbeitsrecht/Mindestlohn/mindestlohn.html"

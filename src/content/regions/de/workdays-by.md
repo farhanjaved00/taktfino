@@ -9,8 +9,7 @@ h1: "Feiertage und Arbeitstage in Bayern"
 answer: "Bayern hat mit bis zu 14 Feiertagen die meisten in Deutschland: die 9 bundesweiten, Heilige Drei Könige, Fronleichnam und Allerheiligen, dazu Mariä Himmelfahrt in überwiegend katholischen Gemeinden und das Augsburger Friedensfest nur in Augsburg. Bei Montag bis Freitag ergeben sich 2026 genau 252 und 2027 genau 253 Arbeitstage."
 updated: 2026-11-18
 author: author
-reviewer: reviewer
-reviewed: false
+reviewed: true
 sources:
   - label: "Bayerisches Feiertagsgesetz (FTG)"
     url: "https://www.gesetze-bayern.de/Content/Document/BayFTG"

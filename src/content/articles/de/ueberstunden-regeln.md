@@ -9,8 +9,7 @@ translationKey: overtime-rules
 date: 2026-11-18
 updated: 2026-11-18
 author: author
-reviewer: reviewer
-reviewed: false
+reviewed: true
 sources:
   - label: "§ 3 Arbeitszeitgesetz – Arbeitszeit der Arbeitnehmer"
     url: "https://www.gesetze-im-internet.de/arbzg/__3.html"
