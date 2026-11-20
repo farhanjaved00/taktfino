@@ -106,6 +106,24 @@ Follow every rule:
 8. Natural ${LANGUAGE[l]} as a native writer would use it – not a translation. Use the secondary keywords naturally once each.
 Answer as JSON: {"title": "SEO title, 40–58 characters, starting with the primary keyword where natural, specific, no clickbait", "description": "meta description ≤ 150 characters", "body": "Markdown article", "faq": [{"q": "...", "a": "..."}] (3–4 short questions)}`;
 
+function evaluate(j, b) {
+  if (!j.body || !j.description) throw new Error('OpenAI response missing body/description');
+  const issues = [];
+  const t0 = (b.title || String(j.title || '')).trim();
+  if (!t0) throw new Error(`no title for ${b.keyword}`);
+  const title = t0.length > 60 ? (issues.push(`title ${t0.length} chars (max 60) – cut`), t0.slice(0, 60).replace(/\s+\S*$/, '')) : t0;
+  const desc = j.description.length > 155 ? (issues.push('description cut (max 155)'), j.description.slice(0, 152) + '…') : j.description;
+  const w = j.body.split(/\s+/).filter(Boolean).length;
+  if (w < 700 || w > 1300) issues.push(`length ${w} words (target 700–1,200)`);
+  if (!/\n\|.*\|\n\|\s*:?-{3}/.test('\n' + j.body)) issues.push('no table');
+  if (!j.body.split(/\s+/).slice(0, 100).join(' ').includes(b.toolUrl)) issues.push(`calculator link ${b.toolUrl} missing in first 100 words`);
+  if (/\b\d{1,3}(,\d+)?\s?%|Studie|laut einer Umfrage|Urteil vom|\bstud(y|ies|io|ie)\b|\bestudio\b|\bpesquisa\b|\benquête\b|\bbadani/i.test(j.body)) issues.push('contains percentages/studies/court cases – verify source or remove');
+  if (LANG === 'de') for (const p of weekdayProblems(j.body)) issues.push(`Wochentag falsch: ${p}`);
+  if (LANG === 'de') for (const p of checkFacts(j.body + '\n' + (j.faq || []).map((x) => `${x.q} ${x.a}`).join('\n'), b)) issues.push(`Fakt falsch: ${p}`);
+  if (LANG === 'de') issues.push(...keywordStuffing(j.body, [b.keyword, ...b.secondary]));
+  return { issues, title, desc };
+}
+
 async function draft(b) {
   if (LANG !== 'de') {
     const user = `Primary keyword: ${b.keyword}
@@ -151,6 +169,7 @@ async function ask(system, user) {
 }
 
 const ALL_REPORTS = [];
+const FIX_ROUNDS = Number(process.env.FIX_ROUNDS ?? 2);
 
 async function runLang() {
   if (!fs.existsSync(QUEUE)) { console.warn(`no queue for ${LANG}`); return; }
@@ -172,21 +191,20 @@ async function runLang() {
     if (existing.has(slug)) { console.warn(`skip (exists): ${slug}`); used.push({ r, slug }); continue; }
     console.log(`${DRY ? '[dry] ' : ''}draft: ${b.title || `[${b.keyword}]`} → /${LANG}/${cs}/${slug}/`);
     if (DRY) { used.push({ r, slug }); continue; }
-    const j = await draft(b);
-    if (!j.body || !j.description) throw new Error('OpenAI response missing body/description');
-    const issues = [];
-    const t0 = (b.title || String(j.title || '')).trim();
-    if (!t0) throw new Error(`no title for ${b.keyword}`);
-    const title = t0.length > 60 ? (issues.push(`title ${t0.length} chars (max 60) – cut`), t0.slice(0, 60).replace(/\s+\S*$/, '')) : t0;
-    const desc = j.description.length > 155 ? (issues.push('description cut (max 155)'), j.description.slice(0, 152) + '…') : j.description;
-    const w = j.body.split(/\s+/).filter(Boolean).length;
-    if (w < 700 || w > 1300) issues.push(`length ${w} words (target 700–1,200)`);
-    if (!/\n\|.*\|\n\|\s*:?-{3}/.test('\n' + j.body)) issues.push('no table');
-    if (!j.body.split(/\s+/).slice(0, 100).join(' ').includes(b.toolUrl)) issues.push(`calculator link ${b.toolUrl} missing in first 100 words`);
-    if (/\b\d{1,3}(,\d+)?\s?%|Studie|laut einer Umfrage|Urteil vom|\bstud(y|ies|io|ie)\b|\bestudio\b|\bpesquisa\b|\benquête\b|\bbadani/i.test(j.body)) issues.push('contains percentages/studies/court cases – verify source or remove');
-    if (LANG === 'de') for (const p of weekdayProblems(j.body)) issues.push(`Wochentag falsch: ${p}`);
-    if (LANG === 'de') for (const p of checkFacts(j.body + '\n' + (j.faq || []).map((x) => `${x.q} ${x.a}`).join('\n'), b)) issues.push(`Fakt falsch: ${p}`);
-    if (LANG === 'de') issues.push(...keywordStuffing(j.body, [b.keyword, ...b.secondary]));
+    // Auto-fix: up to 2 repair rounds – the model gets its own draft plus the exact problems.
+    let j = await draft(b), res = evaluate(j, b);
+    for (let round = 1; round <= FIX_ROUNDS && res.issues.length; round++) {
+      console.log(`  fix round ${round}: ${res.issues.length} issue(s)`);
+      try {
+        const fixed = await ask(LANG === 'de' ? SYSTEM_DE : systemFor(LANG),
+          `Here is your previous article as JSON:\n${JSON.stringify(j)}\n\nThe automatic checks found these problems:\n- ${res.issues.join('\n- ')}\n\n` +
+          (LANG === 'de' ? `Verbindliche Fakten:\n${factsFor(b, today)}\n\nKalender:\n${calendar()}\n\n` : '') +
+          'Fix exactly these problems (remove a claim if unsure). Keep everything else. Answer with the full corrected JSON in the same format.');
+        const r2 = evaluate(fixed, b);
+        if (r2.issues.length <= res.issues.length) { j = fixed; res = r2; }
+      } catch (err) { console.warn(`  fix round ${round} failed: ${err.message}`); }
+    }
+    const { issues, title, desc } = res;
     const publish = AUTO && !issues.length;
     const faq = (j.faq || []).slice(0, 4);
     const fm = [

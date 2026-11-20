@@ -37,7 +37,7 @@ Stack: Astro 7 (static), TypeScript, Cloudflare Pages, GitHub Actions, OpenAI (a
 | `ci.yml` | Har push | Tests, build, link check |
 | `indexnow.yml` | Content push / bot | Bing ko naye URLs |
 | `scheduled-rebuild.yml` | Har mahine 1 | Rebuild (saal/tareekh wali tables) |
-| Local task `taktfino-weekly-draft-check` | Saturday 10:00 PKT | Hafte ke articles fact-check + fix (Claude app khula hona chahiye) |
+| Local task `taktfino-weekly-draft-check` | Saturday 10:00 PKT | Extra check (optional). Asal fix ab bot khud karta hai: ghalti par 2 repair rounds |
 
 **Quality guards:** `scripts/lib/facts.ts` – Feiertage, Bundesländer, ginti, free-day spans, Mindestlohn, KW, Muttertag/Advent jaisi tareekhein, keyword stuffing check. Ghalti mile to article noindex. 163 tests.
 
