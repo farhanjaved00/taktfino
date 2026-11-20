@@ -36,10 +36,11 @@ Stack: Astro 7 (static), TypeScript, Cloudflare Pages, GitHub Actions, OpenAI (a
 | `language-launch.yml` | Har Monday | Schedule par nayi language khud draft + live (es Mar 2027, pt-br May, nl, fr, pl, it, en) |
 | `ci.yml` | Har push | Tests, build, link check |
 | `indexnow.yml` | Content push / bot | Bing ko naye URLs |
+| `roll-regions.yml` | Har saal 2 Jan | Bundesland pages khud naye saal par (fact check pass ho to hi) |
 | `scheduled-rebuild.yml` | Har mahine 1 | Rebuild (saal/tareekh wali tables) |
 | Local task `taktfino-weekly-draft-check` | Saturday 10:00 PKT | Extra check (optional). Asal fix ab bot khud karta hai: ghalti par 2 repair rounds |
 
-**Quality guards:** `scripts/lib/facts.ts` – Feiertage, Bundesländer, ginti, free-day spans, Mindestlohn, KW, Muttertag/Advent jaisi tareekhein, keyword stuffing check. Ghalti mile to article noindex. 163 tests.
+**Quality guards:** `scripts/lib/facts.ts` – Feiertage, Bundesländer, ginti, free-day spans, Mindestlohn, KW, Muttertag/Advent jaisi tareekhein, keyword stuffing check. Ghalti mile to bot 2 repair rounds chalata hai; phir bhi atka rahe to har agle run par dobara (max 5 runs), pass hote hi khud live. 163 tests.
 
 ## 5. Keyword queues (Semrush)
 | Language | Topics | Kab tak |
@@ -63,7 +64,7 @@ Volume: German pages ~584k + queue ~280k searches/mahina. Semrush reserve ~6k un
 4. **Privacy policy** lawyer/e-recht24 se check (AdSense se pehle); EU representative (Art. 27) dobara dekhna.
 5. **Trademark check** "Taktfino" (DPMA/EUIPO).
 6. **Cloud weekly check**: claude.ai par GitHub connect karein to routine cloud mein ban sakti hai.
-7. **Bundesland titles** "2026/2027" → Jan 2028 se pehle update.
+7. ~~Bundesland titles~~ → ab `roll-regions.yml` khud karta hai.
 8. **Country law tools** (MX finiquito/aguinaldo, BR rescisão/13º) – bada volume, rules code + test karne honge.
 9. German queue July 2027 tak; spring 2027 mein reserve units se aur research.
 

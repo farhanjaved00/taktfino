@@ -124,6 +124,22 @@ function evaluate(j, b) {
   return { issues, title, desc };
 }
 
+async function repair(j, b) {
+  let res = evaluate(j, b);
+  for (let round = 1; round <= FIX_ROUNDS && res.issues.length; round++) {
+    console.log(`  fix round ${round}: ${res.issues.length} issue(s)`);
+    try {
+      const fixed = await ask(LANG === 'de' ? SYSTEM_DE : systemFor(LANG),
+        `Here is your previous article as JSON:\n${JSON.stringify(j)}\n\nThe automatic checks found these problems:\n- ${res.issues.join('\n- ')}\n\n` +
+        (LANG === 'de' ? `Verbindliche Fakten:\n${factsFor(b, today)}\n\nKalender:\n${calendar()}\n\n` : '') +
+        'Fix exactly these problems (remove a claim if unsure). Keep everything else. Answer with the full corrected JSON in the same format.');
+      const r2 = evaluate(fixed, b);
+      if (r2.issues.length <= res.issues.length) { j = fixed; res = r2; }
+    } catch (err) { console.warn(`  fix round ${round} failed: ${err.message}`); }
+  }
+  return { j, res };
+}
+
 async function draft(b) {
   if (LANG !== 'de') {
     const user = `Primary keyword: ${b.keyword}
@@ -171,6 +187,50 @@ async function ask(system, user) {
 const ALL_REPORTS = [];
 const FIX_ROUNDS = Number(process.env.FIX_ROUNDS ?? 2);
 
+
+// Drafts that still failed after the repair rounds get another repair on every later run (max STUCK_TRIES runs).
+const STUCK_TRIES = 5;
+async function retryStuck(report) {
+  const trackFile = path.join(ROOT, 'content/autofix.json');
+  const track = fs.existsSync(trackFile) ? JSON.parse(fs.readFileSync(trackFile, 'utf8')) : {};
+  for (const f of fs.readdirSync(OUT).filter((x) => x.endsWith('.md'))) {
+    const file = path.join(OUT, f), src = fs.readFileSync(file, 'utf8');
+    const m = src.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
+    if (!m || !/^reviewed: false$/m.test(m[1]) || !/^reviewer: reviewer$/m.test(m[1])) continue; // only bot drafts
+    const key = `${LANG}/${f}`;
+    if ((track[key] || 0) >= STUCK_TRIES) continue;
+    track[key] = (track[key] || 0) + 1;
+    const get = (k) => { const x = m[1].match(new RegExp(`^${k}: (.*)$`, 'm')); return x ? x[1] : ''; };
+    const json = (k, d) => { try { return JSON.parse(get(k)); } catch { return d; } };
+    const b = { keyword: json('keyword', ''), title: json('title', ''), tool: get('tool'), category: get('category'), secondary: json('secondary', []), intent: '', h2s: '', questions: '' };
+    const ts = toolSlug(b.tool), cs = catSlug(b.category);
+    if (!ts || !cs) continue;
+    b.toolUrl = `/${LANG}/${ts}/`;
+    const faq = [...m[1].matchAll(/  - q: (.*)\n    a: (.*)/g)].map((x) => ({ q: JSON.parse(x[1]), a: JSON.parse(x[2]) }));
+    console.log(`retry stuck draft (${track[key]}/${STUCK_TRIES}): ${key}`);
+    let out;
+    try { out = await repair({ title: b.title, description: json('description', ''), body: m[2], faq }, b); } catch (err) { console.warn(`  retry failed: ${err.message}`); continue; }
+    if (out.res.issues.length) { report.push({ title: out.res.title, slug: f.replace(/\.md$/, ''), w: 0, issues: out.res.issues, publish: false, url: `/${LANG}/${cs}/${f.replace(/\.md$/, '')}/` }); continue; }
+    writeArticle(out.j, out.res, b, f.replace(/\.md$/, ''), get('date') || iso(today), true);
+    delete track[key];
+    report.push({ title: out.res.title, slug: f.replace(/\.md$/, ''), w: 0, issues: [], publish: true, url: `/${LANG}/${cs}/${f.replace(/\.md$/, '')}/` });
+  }
+  fs.writeFileSync(trackFile, JSON.stringify(track, null, 2) + '\n');
+}
+
+function writeArticle(j, res, b, slug, date, publish) {
+  const faq = (j.faq || []).slice(0, 4);
+  const fm = [
+    '---', `title: ${JSON.stringify(res.title)}`, `description: ${JSON.stringify(res.desc)}`, `keyword: ${JSON.stringify(b.keyword)}`, `secondary: ${JSON.stringify(b.secondary)}`,
+    `category: ${b.category}`, `tool: ${b.tool}`, `translationKey: ${slug}`, `date: ${date}`, `updated: ${iso(today)}`,
+    // Without a human review nobody is named as reviewer (E-E-A-T honesty).
+    'author: author', ...(publish ? [] : ['reviewer: reviewer']), `reviewed: ${publish}`,
+    ...(faq.length ? ['faq:', ...faq.flatMap((x) => [`  - q: ${JSON.stringify(x.q)}`, `    a: ${JSON.stringify(x.a)}`])] : []),
+    '---', '',
+  ].join('\n');
+  fs.writeFileSync(path.join(OUT, `${slug}.md`), fm + j.body.trim() + '\n');
+}
+
 async function runLang() {
   if (!fs.existsSync(QUEUE)) { console.warn(`no queue for ${LANG}`); return; }
   fs.mkdirSync(OUT, { recursive: true });
@@ -180,6 +240,7 @@ async function runLang() {
   const col = (r, name) => r[header.indexOf(name)] || '';
   const existing = new Set(fs.readdirSync(OUT).map((f) => f.replace(/\.md$/, '')));
   const used = [], report = [];
+  if (!DRY && AUTO) await retryStuck(report);
   for (const r of rows) {
     if (used.length >= COUNT) break;
     const b = { keyword: col(r, 'keyword'), title: col(r, 'title'), tool: col(r, 'tool'), category: col(r, 'category'), intent: col(r, 'intent'), h2s: col(r, 'h2s'), questions: col(r, 'questions'),
@@ -191,31 +252,12 @@ async function runLang() {
     if (existing.has(slug)) { console.warn(`skip (exists): ${slug}`); used.push({ r, slug }); continue; }
     console.log(`${DRY ? '[dry] ' : ''}draft: ${b.title || `[${b.keyword}]`} → /${LANG}/${cs}/${slug}/`);
     if (DRY) { used.push({ r, slug }); continue; }
-    // Auto-fix: up to 2 repair rounds – the model gets its own draft plus the exact problems.
-    let j = await draft(b), res = evaluate(j, b);
-    for (let round = 1; round <= FIX_ROUNDS && res.issues.length; round++) {
-      console.log(`  fix round ${round}: ${res.issues.length} issue(s)`);
-      try {
-        const fixed = await ask(LANG === 'de' ? SYSTEM_DE : systemFor(LANG),
-          `Here is your previous article as JSON:\n${JSON.stringify(j)}\n\nThe automatic checks found these problems:\n- ${res.issues.join('\n- ')}\n\n` +
-          (LANG === 'de' ? `Verbindliche Fakten:\n${factsFor(b, today)}\n\nKalender:\n${calendar()}\n\n` : '') +
-          'Fix exactly these problems (remove a claim if unsure). Keep everything else. Answer with the full corrected JSON in the same format.');
-        const r2 = evaluate(fixed, b);
-        if (r2.issues.length <= res.issues.length) { j = fixed; res = r2; }
-      } catch (err) { console.warn(`  fix round ${round} failed: ${err.message}`); }
-    }
+    const j0 = await draft(b);
+    const { j, res } = await repair(j0, b);
     const { issues, title, desc } = res;
     const publish = AUTO && !issues.length;
-    const faq = (j.faq || []).slice(0, 4);
-    const fm = [
-      '---', `title: ${JSON.stringify(title)}`, `description: ${JSON.stringify(desc)}`, `keyword: ${JSON.stringify(b.keyword)}`, `secondary: ${JSON.stringify(b.secondary)}`,
-      `category: ${b.category}`, `tool: ${b.tool}`, `translationKey: ${slug}`, `date: ${iso(today)}`, `updated: ${iso(today)}`,
-      // Without a human review nobody is named as reviewer (E-E-A-T honesty).
-      'author: author', ...(publish ? [] : ['reviewer: reviewer']), `reviewed: ${publish}`,
-      ...(faq.length ? ['faq:', ...faq.flatMap((x) => [`  - q: ${JSON.stringify(x.q)}`, `    a: ${JSON.stringify(x.a)}`])] : []),
-      '---', '',
-    ].join('\n');
-    fs.writeFileSync(path.join(OUT, `${slug}.md`), fm + j.body.trim() + '\n');
+    writeArticle(j, res, b, slug, iso(today), publish);
+    const w = j.body.split(/\s+/).filter(Boolean).length;
     report.push({ title, slug, w, issues, publish, url: `/${LANG}/${cs}/${slug}/` });
     used.push({ r, slug });
   }
