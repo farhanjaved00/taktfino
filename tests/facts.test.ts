@@ -7,6 +7,12 @@ import { checkFacts, factsFor, deHolidays, countsPerLand, keywordStuffing } from
 const brief = { keyword: 'feiertage 2027', title: 'Feiertage 2027' };
 
 describe('fact checker', () => {
+  it('checks minimum wages in tables whose header says Mindestlohn', () => {
+    const b = { keyword: 'minijob 2027', title: 'Minijob 2027' };
+    const table = (w: string) => `| Jahr | Mindestlohn | Minijob-Grenze |\n|---|---|---|\n| 2026 | ${w} | 603 € |\n| 2027 | 14,60 € | 633 € |`;
+    expect(checkFacts(table('12,41 €'), b).some((i) => i.includes('Mindestlohn 12,41'))).toBe(true);
+    expect(checkFacts(table('13,90 €'), b)).toEqual([]);
+  });
   it('knows the 2027 facts', () => {
     const h = deHolidays(2027);
     expect(h.filter((x) => x.full.length === 16)).toHaveLength(9);

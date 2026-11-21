@@ -272,7 +272,7 @@ export function checkFacts(body: string, brief: { keyword: string; title: string
       if (m && (words[m[1].toLowerCase()] ?? +m[1]) !== nat) { issues.push(`Es gibt ${nat} bundesweite Feiertage, nicht ${m[1]} – „${short}“`); break; }
     }
     // 6. minimum wage
-    if (/mindestlohn/i.test(line)) for (const m of line.matchAll(/(?<![\d.])(\d{2}),(\d{2})\s?(€|Euro)/g)) {
+    if (/mindestlohn/i.test(line) || (isRow && /mindestlohn/i.test(header))) for (const m of line.matchAll(/(?<![\d.])(\d{2}),(\d{2})\s?(€|Euro)/g)) {
       const v = +`${m[1]}.${m[2]}`; if (v < 8 || v > 25) continue; /* hourly rates only */ const ys = datesIn(line).map((d) => +d.slice(0, 4)).concat([...line.matchAll(/\b(20[2-4]\d)\b/g)].map((x) => +x[1]));
       const ok = (ys.length ? ys : years).some((y) => minWage(y) === v) || wage.DE.rates.some((r) => r.hourly === v && line.includes(r.from.slice(0, 4)));
       if (!ok) issues.push(`Mindestlohn ${m[1]},${m[2]} € passt zu keinem Jahr im Text (Daten: ${wage.DE.rates.map((r) => `${r.from.slice(0, 4)}: ${r.hourly}`).join(', ')})`);

@@ -7,7 +7,7 @@ category: pay
 tool: wage
 translationKey: minijob-2027
 date: 2026-11-20
-updated: 2026-11-20
+updated: 2026-11-21
 author: author
 reviewed: true
 faq:
@@ -20,75 +20,69 @@ faq:
   - q: "Welche Länder haben die Minijob-Regelung?"
     a: "Den klassischen Minijob gibt es nur in Deutschland. In Österreich und der Schweiz gelten andere Regeln für geringfügige Beschäftigungen."
 ---
-Die Minijob-Grenze 2027 liegt voraussichtlich bei 633 € pro Monat, sofern der Mindestlohn wie geplant bei 14,60 € pro Stunde liegt. Damit dürfen Sie 2027 monatlich maximal 43,36 Stunden im Minijob arbeiten (633 € / 14,60 €). Eine detaillierte Berechnung, einschließlich Brutto- und Nettolohn, bietet der [Stundenlohnrechner](/de/stundenlohnrechner/).
+Die Minijob-Grenze 2027 liegt bei 633 € pro Monat, weil der gesetzliche Mindestlohn am 1. Januar 2027 auf 14,60 € pro Stunde steigt. Wer genau den Mindestlohn bekommt, kann damit rund 43 Stunden im Monat arbeiten. Ihren Monatsverdienst für jede Stundenzahl rechnet der [Stundenlohnrechner](/de/stundenlohnrechner/) aus.
 
 ## Minijob-Grenze 2027
-Die Minijob-Grenze 2027 beträgt voraussichtlich 633 € im Monat. Hintergrund ist die gesetzliche Kopplung an den Mindestlohn: Die Minijob-Grenze (monatliches Einkommen) wird anhand des Mindestlohns für 43,33 Wochenarbeitsstunden im Monat berechnet. Da der Mindestlohn in Deutschland ab 1. Januar 2027 verbindlich auf 14,60 € steigt, ergibt sich:
 
-- Minijob-Grenze 2027 = 14,60 € (Mindestlohn) × 43,33 Stunden/Monat = rund 633 €
+Die Minijob-Grenze ist an den Mindestlohn gekoppelt: Sie entspricht dem Verdienst aus zehn Wochenstunden zum Mindestlohn, umgerechnet auf den Monat (Mindestlohn × 130 ÷ 3, aufgerundet auf volle Euro). Für 2027 heißt das:
 
-Das ist relevant für alle, die einen klassischen 520-Euro-Job (bisherige Grenze) ausüben oder planen: Ab 2027 dürfen Sie insgesamt mehr verdienen, falls sich die Pläne zum Mindestlohn bestätigen und keine unerwarteten gesetzlichen Änderungen beschlossen werden. In Österreich und der Schweiz gelten andere Regelungen – es gibt dort keinen bundesweiten gesetzlichen Mindestlohn, somit existiert die typische deutsche Minijob-Grenze in dieser Form nicht.
+- 14,60 € × 130 ÷ 3 = 632,67 € → Minijob-Grenze **633 €** im Monat
 
-### Übersicht: Entwicklung der Minijob-Grenze und Mindestlohn
+### Mindestlohn und Minijob-Grenze im Vergleich
 
-| Jahr    | Mindestlohn (Deutschland) | Minijob-Grenze   |
-|---------|---------------------------|------------------|
-| 2026    | 12,41 €                   | 520 €            |
-| 2027    | 14,60 €                   | 633 € (geplant)  |
+| Jahr | Mindestlohn | Minijob-Grenze |
+|------|-------------|----------------|
+| 2026 | 13,90 € | 603 € |
+| 2027 | 14,60 € | 633 € |
 
 ## Wie viele Stunden im Minijob
-Die maximal zulässige Stundenzahl im Minijob hängt direkt von der Minijob-Grenze und dem Mindestlohn ab. Für 2027 bedeutet das:
 
-- Maximales Monatsgehalt: 633 €
-- Mindestlohn: 14,60 € pro Stunde
-- Zulässige Arbeitszeit pro Monat: 633 € / 14,60 €/Std = 43,36 Stunden
+Teilt man die Grenze durch den Mindestlohn, ergibt sich die maximale Arbeitszeit:
 
-Geteilt durch durchschnittlich 4,33 Wochen pro Monat ergibt das etwa 10 Stunden pro Woche. Die tatsächliche Stundenanzahl kann durch bezahlte Urlaubszeiten, Krankheit, Feiertage oder unregelmäßige Arbeit schwanken, das Grundprinzip bleibt aber bestehen. Wenn Sie mehr als 633 € monatlich verdienen oder regelmäßig darüber liegen, handelt es sich nicht mehr um einen Minijob – Sozialversicherungspflichten greifen dann.
+- 633 € ÷ 14,60 € = 43,36 Stunden im Monat
+- bei durchschnittlich 4,33 Wochen pro Monat sind das rund 10 Stunden pro Woche
 
-Beispielrechnung: Sie arbeiten 10 Stunden pro Woche. 10 Std × 4,33 Wochen × 14,60 €/Std = ca. 633 € monatliches Einkommen.
+Wer mehr als den Mindestlohn verdient, darf entsprechend weniger Stunden arbeiten. Liegt der Verdienst regelmäßig über 633 € im Monat, ist die Beschäftigung kein Minijob mehr.
 
-### Tabelle: Mögliche Stunden im Minijob ab 2027
+### Stunden und Monatsverdienst bei 14,60 €
 
-| Wochenstunden | Monatsverdienst bei 14,60 €/Std. |
-|:-------------|:---------------------------|
-| 5 Std        | ca. 316 €                  |
-| 8 Std        | ca. 507 €                  |
-| 10 Std       | ca. 633 €                  |
+| Wochenstunden | Monatsverdienst (× 4,33 Wochen) |
+|:--------------|:--------------------------------|
+| 5 Std. | ca. 316 € |
+| 8 Std. | ca. 506 € |
+| 10 Std. | ca. 632 € |
 
 ## Urlaub und Pausen im Minijob
-Auch als Minijobber haben Sie Anspruch auf gesetzlichen Mindesturlaub. Das Bundesurlaubsgesetz sieht 24 Werktage Urlaub pro Jahr (bei einer Sechs-Tage-Woche) vor. Arbeiten Sie beispielsweise nur an zwei Tagen pro Woche, haben Sie anteilig vier Urlaubstage jährlich.
 
-Pausenregelungen im Minijob richten sich nach dem Arbeitszeitgesetz: Bereits ab einer Arbeitszeit von mehr als sechs Stunden am Stück steht Ihnen eine 30-minütige Pause (oder zwei Pausen zu je 15 Minuten) zu – das gilt auch, wenn Sie einen Minijob haben.
+Minijobber haben denselben gesetzlichen Mindesturlaub wie andere Beschäftigte: 24 Werktage bei einer Sechs-Tage-Woche, anteilig umgerechnet auf die eigenen Arbeitstage. Wer an zwei Tagen pro Woche arbeitet, hat Anspruch auf 24 × 2 ÷ 6 = 8 Urlaubstage im Jahr.
 
-Feiertage wie Neujahr am 1.1.2027 oder Karfreitag am 26.3.2027 werden wie bei jeder anderen Beschäftigungsform behandelt: Arbeiten Sie an einem Feiertag normalerweise, muss Ihr Lohn für diesen Tag fortgezahlt werden. Analog gilt das für einen krankheitsbedingten Arbeitsausfall.
+Auch das Arbeitszeitgesetz gilt: Bei mehr als sechs Stunden Arbeit am Tag stehen Ihnen mindestens 30 Minuten Pause zu (teilbar in Abschnitte von je 15 Minuten), bei mehr als neun Stunden 45 Minuten.
+
+Fällt ein regulärer Arbeitstag auf einen Feiertag wie Neujahr (1.1.2027) oder Karfreitag (26.3.2027), wird der Lohn für diesen Tag weitergezahlt – genau wie bei anderen Beschäftigungsformen.
 
 ## Rechenbeispiel
-Nehmen wir folgende konkrete Situation: Frau Meier arbeitet ab Januar 2027 als Reinigungskraft auf Minijob-Basis. Sie bekommt den gesetzlichen Mindestlohn von 14,60 € und arbeitet 3-mal pro Woche jeweils 3 Stunden.
 
-- Wöchentliche Stunden: 3 × 3 = 9 Stunden
-- Monatlich (9 Std × 4,33 Wochen): 38,97 Stunden
-- Monatslohn: 38,97 Std × 14,60 € = rund 569 €
+Frau Meier arbeitet ab Januar 2027 als Reinigungskraft im Minijob. Sie bekommt den Mindestlohn von 14,60 € und arbeitet dreimal pro Woche je 3 Stunden.
 
-Da das Gesamtgehalt unter der Minijob-Grenze 2027 liegt, bleibt Frau Meier im Minijob-Bereich. Würde sie 11 Stunden pro Woche arbeiten, käme sie auf 11 × 4,33 × 14,60 € = 693 €, läge also über der zulässigen Grenze und müsste sozialversicherungspflichtig beschäftigt werden.
+- Wochenstunden: 3 × 3 = 9 Stunden
+- Monatsstunden: 9 × 4,33 = 38,97 Stunden
+- Monatslohn: 38,97 × 14,60 € = rund 569 €
 
-**Zusammenfassung des Beispiels:**
+Damit bleibt sie unter der Grenze von 633 €. Bei 11 Stunden pro Woche käme sie auf 11 × 4,33 × 14,60 € = rund 695 € und läge über der Minijob-Grenze.
 
-| Name         | Wochenstunden | Minijob-Grenze | Monatslohn  |
-|--------------|--------------|----------------|-------------|
-| Frau Meier   | 9            | 633 €          | 569 €       |
-| (Vergleich)  | 11           | 633 €          | 693 €       |
-
-Eine komfortable Berechnung, wie viele Stunden pro Monat und welche monatliche Bezahlung ab 2027 möglich sind, bietet Ihnen der [Stundenlohnrechner](/de/stundenlohnrechner/).
+| Person | Wochenstunden | Minijob-Grenze | Monatslohn |
+|--------|---------------|----------------|------------|
+| Frau Meier | 9 | 633 € | 569 € |
+| Vergleich | 11 | 633 € | 695 € |
 
 ## Minijob-Änderungen 2027
-Die wichtigste Veränderung ist die Erhöhung des Mindestlohns ab 1.1.2027 auf 14,60 € pro Stunde. Diese Anhebung verschiebt die Minijob-Grenze von bisher 520 € auf künftig 633 € monatlich. Das betrifft auch bereits bestehende Minijobs: Arbeitgeber müssen den höheren Mindestlohn zahlen, dürfen aber den Monatsverdienst grundsätzlich nicht über die neue Grenze hinaus steigern, wenn die Beschäftigung weiterhin als Minijob laufen soll. Andernfalls wird das Verhältnis sozialversicherungspflichtig.
 
-In Österreich und der Schweiz existieren keine allgemeingültigen Minijob-Grenzen. Die rechtlichen Bedingungen für geringfügige Beschäftigung und Lohnuntergrenzen sind dort jeweils anders geregelt und zum Teil auch kantonal (Schweiz) oder je Branche (Österreich) zu unterscheiden.
+Die wichtigste Änderung ist der höhere Mindestlohn ab 1.1.2027: 14,60 € pro Stunde statt 13,90 € im Jahr 2026. Dadurch steigt die Minijob-Grenze von 603 € auf 633 € im Monat. Für bestehende Minijobs heißt das: Der Stundenlohn muss mindestens 14,60 € betragen. Wer bisher knapp unter 603 € lag, kann bei gleicher Stundenzahl weiter im Minijob bleiben, sollte die Stunden aber nachrechnen.
 
-### Wichtige Hinweise
-- Die Angaben gelten für Deutschland. Für Österreich und die Schweiz: immer lokale Bestimmungen prüfen.
-- Die Minijob-Grenze 2027 basiert auf dem aktuell bekannten Mindestlohn von 14,60 € pro Stunde, offizielle Anpassungen bleiben vorbehalten.
-- Minijob-Änderungen 2027 sind besonders für Arbeitnehmer und Arbeitgeber relevant, die bisher an der alten Grenze von 520 € lagen.
+## Österreich und Schweiz
+
+Den Minijob mit seiner an den Mindestlohn gekoppelten Grenze gibt es nur in Deutschland. Österreich und die Schweiz haben keinen allgemeinen gesetzlichen Mindestlohn; Mindestlöhne regeln dort Kollektivverträge beziehungsweise einzelne Kantone. Für geringfügige Beschäftigungen gelten eigene Regeln.
 
 ## Fazit
-2027 liegt die Minijob-Grenze bei 633 € monatlich, vorausgesetzt, der gesetzliche Mindestlohn beträgt 14,60 €. Damit dürfen Sie maximal rund 43 Stunden im Monat im Rahmen eines Minijobs arbeiten. Für genaue Lohn- und Stundenauswertung empfiehlt sich der kostenfreie [Stundenlohnrechner](/de/stundenlohnrechner/).
+
+2027 liegt die Minijob-Grenze bei 633 € im Monat. Zum Mindestlohn von 14,60 € sind das gut 43 Stunden im Monat oder rund 10 Stunden pro Woche. Ihren eigenen Stundenlohn und Monatsverdienst ermitteln Sie mit dem [Stundenlohnrechner](/de/stundenlohnrechner/).

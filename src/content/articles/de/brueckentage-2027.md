@@ -7,12 +7,12 @@ category: work
 tool: workdays
 translationKey: brueckentage-2027
 date: 2026-11-18
-updated: 2026-11-18
+updated: 2026-11-21
 author: author
 reviewed: true
 faq:
   - q: "Wie viele Brückentage gibt es 2027?"
-    a: "2027 gibt es bundesweit zwei klassische Brückentage – um Christi Himmelfahrt (6.5., Donnerstag) und, in vielen Ländern, Fronleichnam (27.5., Donnerstag)."
+    a: "Bundesweit gibt es 2027 einen klassischen Brückentag: den Freitag nach Christi Himmelfahrt (Donnerstag, 6.5.). In BW, BY, HE, NW, RP und SL kommt der Freitag nach Fronleichnam (Donnerstag, 27.5.) hinzu."
   - q: "Wann lohnt sich ein Brückentag?"
     a: "Brückentage lohnen sich besonders, wenn ein Feiertag auf Dienstag oder Donnerstag fällt. So können Sie mit einem Urlaubstag ein langes Wochenende erzielen."
   - q: "Welche Brückentage kann man 2027 in NRW nutzen?"
